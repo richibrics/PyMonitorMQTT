@@ -54,7 +54,7 @@ def on_message(client, userdata, message):
 
 def on_connect(client, userdata, flags, rc):
     # Quando ho la connessione mi iscrivo ai topic per ricevere i comandi
-    # Inserite qua le subscription per eserìguirle anche al riavvio del server
+    # Inserite qua le subscription per eseguirle anche al riavvio del server
     client.subscribe(shutdown_topic)
     client.subscribe(hibernate_topic)
     client.subscribe(reboot_topic)
@@ -64,7 +64,8 @@ def on_connect(client, userdata, flags, rc):
 if len(sys.argv) < 3:
     sys.exit()
 broker = sys.argv[1]
-main_topic = "monitor/"+sys.argv[2]+"/"
+name = sys.argv[2]
+main_topic = "monitor/"+name+"/"
 print("Broker: " + broker)
 print("Topic: " + main_topic)
 
@@ -81,7 +82,7 @@ lock_topic = main_topic+"lock_command"
 
 delay = 10
 # Preparo il client
-client = mqtt.Client("monitor_pc-di-riccardo")
+client = mqtt.Client("monitor-" + name)
 client.on_message = on_message
 client.on_connect = on_connect
 # Mi connetto al server
