@@ -1,6 +1,7 @@
 import time
 import sys
 import platform
+import subprocess
 import random
 import psutil
 import paho.mqtt.client as mqtt
@@ -25,25 +26,40 @@ def Get_Operating_System():
 
 def Shutdown():
     print("I am going to shutdown the computer")
-
-
-def Hibernate():
-    print("I am going to hibernate the computer")
+    if Get_Operating_System() == 'Windows':
+        cmdCommand = "shutdown -s"
+        subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
+    else:
+        cmdCommand = "sudo shutdown -h now"
+        subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
 
 
 def Reboot():
     print("I am going to reboot the computer")
+    if Get_Operating_System() == 'Windows':
+        cmdCommand = "shutdown -r"
+        subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
+    else:
+        cmdCommand = "sudo reboot"
+        subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
 
 
 def Lock():
     print("I am going to lock the computer")
+    if Get_Operating_System() == 'Windows':
+        cmdCommand = "rundll32.exe user32.dll,LockWorkStation"
+        subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
+    elif Get_Operating_System() == 'Darwin':  # MacOS command
+        cmdCommand = "pmset displaysleepnow"
+        subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
+    else:
+        cmdCommand = "sudo vlock -a"
+        subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
 
 
 def on_message(client, userdata, message):
     if message.topic == shutdown_topic:
         Shutdown()
-    elif message.topic == hibernate_topic:
-        Hibernate()
     elif message.topic == reboot_topic:
         Reboot()
     elif message.topic == lock_topic:
@@ -54,9 +70,8 @@ def on_message(client, userdata, message):
 
 def on_connect(client, userdata, flags, rc):
     # Quando ho la connessione mi iscrivo ai topic per ricevere i comandi
-    # Inserite qua le subscription per eseguirle anche al riavvio del server
+    # Inserire qua le subscription per eseguirle anche al riavvio del server
     client.subscribe(shutdown_topic)
-    client.subscribe(hibernate_topic)
     client.subscribe(reboot_topic)
     client.subscribe(lock_topic)
 
@@ -76,7 +91,6 @@ disk_topic = main_topic+'disk_used_percentage'
 os_topic = main_topic+'operating_system'
 # Topic comandi
 shutdown_topic = main_topic+"shutdown_command"
-hibernate_topic = main_topic+"hibernate_command"
 reboot_topic = main_topic+"reboot_command"
 lock_topic = main_topic+"lock_command"
 
