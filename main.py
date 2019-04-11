@@ -50,6 +50,10 @@ def Get_Operating_System():
     return platform.system()
 
 
+def Get_Desktop_Enviroment():
+    return os.environ.get('DESKTOP_SESSION')
+
+
 def Get_Time():
     return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -76,16 +80,21 @@ def Reboot():
 
 def Lock():
     print("I am going to lock the computer")
-    if Get_Operating_System() == 'Windows':
+    if Get_Operating_System() == 'Windows': #Windows command
         cmdCommand = "rundll32.exe user32.dll,LockWorkStation"
         subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
     elif Get_Operating_System() == 'Darwin':  # MacOS command
         cmdCommand = "pmset displaysleepnow"
         subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
-    else:
-        cmdCommand = "sudo vlock -a"
-        subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
-
+    elif Get_Operating_System() == 'Linux':  #Linux command
+        if Get_Desktop_Enviroment() == "cinnamon":
+            cmdCommand = "cinnamon-screensaver-command -a"
+            subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
+        elif Get_Desktop_Enviroment() == "gnome":
+            cmdCommand = "gnome-screensaver-command -l"
+            subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
+        else:
+            print("Desktop Enviroment non riconosciuto, segnala su https://github.com/richibrics/PyMonitorMQTT/issues")
 
 def on_connect(client, userdata, flags, rc):
     # Quando ho la connessione mi iscrivo ai topic per ricevere i comandi
