@@ -1,5 +1,5 @@
 # PyMonitorMQTT
-PyMonitorMQTT is an universal system monitor (works both on Windows, Linux and macOS) that sends real time information via MQTT to hubs like [HomeAssistant](https://github.com/home-assistant/home-assistant).
+PyMonitorMQTT is an universal system monitor (works both on Windows, Linux and macOS) that sends real time information via MQTT to home automations systems like [HomeAssistant](https://github.com/home-assistant/home-assistant).
 The information is sent every 10 seconds and the broker can perform certain actions on the monitor's computer.
 
 Available information:
@@ -52,6 +52,10 @@ On the server you must specify information and actions topics:
 * Shutdown action: monitor/PC_NAME/shutdown_command
 * Reboot action: monitor/PC_NAME/reboot_command
 * Lock action: monitor/PC_NAME/lock_command
+
+## HomeAssistant with PyMonitorMQTT example
+
+![HomeAssistant Example](Home%20Assistant%20Monitors.png?raw=true "HomeAssistant Example")
 
 ## Authors
 
