@@ -1,4 +1,5 @@
 import time
+import os
 import sys
 import platform
 import subprocess
@@ -78,15 +79,36 @@ def Reboot():
         subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
 
 
+comandi = {
+    'Windows': {
+        'shutdown': 'shutdown /s',
+        'reboot': 'shutdown /r',
+        'lock': 'rundll32.exe user32.dll,LockWorkStation'},
+    'Darwin': {
+        'shutdown': 'sudo shutdown -h now', 
+        'reboot': 'sudo reboot',
+        'lock': 'pmset displaysleepnow'},
+    'Linux': {
+        'shutdown': 'sudo shutdown -h now', 
+        'reboot': 'sudo reboot',
+        'lock': {
+            'gnome': 'gnome-screensaver-command -l', 
+            'cinnamon': 'cinnamon-screensaver-command -a'
+        }
+    }
+}
+
+
 def Lock():
+    comando = comandi[Get_Operating_System]['lock']
     print("I am going to lock the computer")
-    if Get_Operating_System() == 'Windows': #Windows command
+    if Get_Operating_System() == 'Windows':  # Windows command
         cmdCommand = "rundll32.exe user32.dll,LockWorkStation"
         subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
     elif Get_Operating_System() == 'Darwin':  # MacOS command
         cmdCommand = "pmset displaysleepnow"
         subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
-    elif Get_Operating_System() == 'Linux':  #Linux command
+    elif Get_Operating_System() == 'Linux':  # Linux command
         if Get_Desktop_Enviroment() == "cinnamon":
             cmdCommand = "cinnamon-screensaver-command -a"
             subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
@@ -95,6 +117,7 @@ def Lock():
             subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
         else:
             print("Desktop Enviroment non riconosciuto, segnala su https://github.com/richibrics/PyMonitorMQTT/issues")
+
 
 def on_connect(client, userdata, flags, rc):
     # Quando ho la connessione mi iscrivo ai topic per ricevere i comandi
@@ -143,8 +166,6 @@ client.loop_start()
 
 while True:
     if client_connected:
-        # Invio lo stato
-        client.publish(status_topic, "home")
         # Invio la % della RAM usata
         client.publish(ram_topic, Get_RAM_Percentage())
         # Invio la % della CPU usata
