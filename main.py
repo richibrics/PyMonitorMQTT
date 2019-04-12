@@ -17,7 +17,6 @@ name = sys.argv[2]
 
 main_topic = "monitor/"+name+"/"
 # Topic informazioni
-status_topic = main_topic+'status'
 ram_topic = main_topic+'ram_used_percentage'
 cpu_topic = main_topic+'cpu_used_percentage'
 disk_topic = main_topic+'disk_used_percentage'
@@ -30,9 +29,33 @@ lock_topic = main_topic+"lock_command"
 
 #Delay in second
 message_send_delay = 10
-connection_error_delay = 5
 client_connected = False
 connection_failed = False
+
+commands = {
+    'Windows': {
+        'shutdown': 'shutdown /s',
+        'reboot': 'shutdown /r',
+        'lock': {
+            'base': 'rundll32.exe user32.dll,LockWorkStation'
+        }
+    },
+    'Darwin': {
+        'shutdown': 'sudo shutdown -h now',
+        'reboot': 'sudo reboot',
+        'lock': {
+            'base': 'pmset displaysleepnow'
+        }
+    },
+    'Linux': {
+        'shutdown': 'sudo shutdown -h now',
+        'reboot': 'sudo reboot',
+        'lock': {
+            'gnome': 'gnome-screensaver-command -l',
+            'cinnamon': 'cinnamon-screensaver-command -a'
+        }
+    }
+}
 
 
 def Get_RAM_Percentage():
@@ -51,8 +74,12 @@ def Get_Operating_System():
     return platform.system()
 
 
-def Get_Desktop_Enviroment():
-    return os.environ.get('DESKTOP_SESSION')
+def Get_Desktop_Environment():
+    de = os.environ.get('DESKTOP_SESSION')
+    if de != None:
+        return de
+    else:
+        return "base"
 
 
 def Get_Time():
@@ -61,62 +88,21 @@ def Get_Time():
 
 def Shutdown():
     print("I am going to shutdown the computer")
-    if Get_Operating_System() == 'Windows':
-        cmdCommand = "shutdown -s"
-        subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
-    else:
-        cmdCommand = "sudo shutdown -h now"
-        subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
+    command = commands[Get_Operating_System()]['shutdown']
+    subprocess.Popen(command.split(), stdout=subprocess.PIPE)
 
 
 def Reboot():
     print("I am going to reboot the computer")
-    if Get_Operating_System() == 'Windows':
-        cmdCommand = "shutdown -r"
-        subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
-    else:
-        cmdCommand = "sudo reboot"
-        subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
-
-
-comandi = {
-    'Windows': {
-        'shutdown': 'shutdown /s',
-        'reboot': 'shutdown /r',
-        'lock': 'rundll32.exe user32.dll,LockWorkStation'},
-    'Darwin': {
-        'shutdown': 'sudo shutdown -h now', 
-        'reboot': 'sudo reboot',
-        'lock': 'pmset displaysleepnow'},
-    'Linux': {
-        'shutdown': 'sudo shutdown -h now', 
-        'reboot': 'sudo reboot',
-        'lock': {
-            'gnome': 'gnome-screensaver-command -l', 
-            'cinnamon': 'cinnamon-screensaver-command -a'
-        }
-    }
-}
+    command = commands[Get_Operating_System()]['reboot']
+    subprocess.Popen(command.split(), stdout=subprocess.PIPE)
 
 
 def Lock():
-    comando = comandi[Get_Operating_System]['lock']
     print("I am going to lock the computer")
-    if Get_Operating_System() == 'Windows':  # Windows command
-        cmdCommand = "rundll32.exe user32.dll,LockWorkStation"
-        subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
-    elif Get_Operating_System() == 'Darwin':  # MacOS command
-        cmdCommand = "pmset displaysleepnow"
-        subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
-    elif Get_Operating_System() == 'Linux':  # Linux command
-        if Get_Desktop_Enviroment() == "cinnamon":
-            cmdCommand = "cinnamon-screensaver-command -a"
-            subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
-        elif Get_Desktop_Enviroment() == "gnome":
-            cmdCommand = "gnome-screensaver-command -l"
-            subprocess.Popen(cmdCommand.split(), stdout=subprocess.PIPE)
-        else:
-            print("Desktop Enviroment non riconosciuto, segnala su https://github.com/richibrics/PyMonitorMQTT/issues")
+    command = commands[Get_Operating_System(
+    )]['lock'][Get_Desktop_Environment()]
+    subprocess.Popen(command.split(), stdout=subprocess.PIPE)
 
 
 def on_connect(client, userdata, flags, rc):
@@ -150,6 +136,10 @@ def on_disconnect(client, userdata, rc):
 
 print("Broker: " + broker)
 print("Topic: " + main_topic)
+print("OS: " + Get_Operating_System())
+print("Desktop Environment: " + Get_Desktop_Environment())
+print("Message send every " + str(message_send_delay) + " seconds")
+
 
 # Preparo il client
 client = mqtt.Client("monitor-" + name)
@@ -176,5 +166,4 @@ while True:
         client.publish(os_topic, Get_Operating_System())
         # Invio l'ora attuale
         client.publish(time_topic, Get_Time())
-        print(Get_Time())
     time.sleep(message_send_delay)
