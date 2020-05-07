@@ -9,11 +9,14 @@ import datetime
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 
-if len(sys.argv) < 3:
-    print("You must pass broker address and client name")
+if len(sys.argv) < 5:
+    print("You must pass broker address, client name, username and password")
     sys.exit()
 broker = sys.argv[1]
 name = sys.argv[2]
+
+username = sys.argv[3]
+password = sys.argv[4]
 
 main_topic = "monitor/"+name+"/"
 # Topic informazioni
@@ -52,7 +55,8 @@ commands = {
         'reboot': 'sudo reboot',
         'lock': {
             'gnome': 'gnome-screensaver-command -l',
-            'cinnamon': 'cinnamon-screensaver-command -a'
+            'cinnamon': 'cinnamon-screensaver-command -a',
+            'i3': 'i3lock'
         }
     }
 }
@@ -115,7 +119,8 @@ def on_connect(client, userdata, flags, rc):
         client.subscribe(shutdown_topic)
         client.subscribe(reboot_topic)
         client.subscribe(lock_topic)
-
+    else:
+        print("Can't connect")
 
 def on_message(client, userdata, message):
     if message.topic == shutdown_topic:
@@ -143,6 +148,7 @@ print("Message send every " + str(message_send_delay) + " seconds")
 
 # Preparo il client
 client = mqtt.Client("monitor-" + name)
+client.username_pw_set(username,password)
 client.on_message = on_message
 client.on_connect = on_connect
 client.on_disconnect = on_disconnect
