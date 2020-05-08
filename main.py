@@ -43,7 +43,7 @@ commands = {
             'base': 'rundll32.exe user32.dll,LockWorkStation'
         }
     },
-    'Darwin': {
+    'macOS': {
         'shutdown': 'sudo shutdown -h now',
         'reboot': 'sudo reboot',
         'lock': {
@@ -75,7 +75,10 @@ def Get_Disk_Used_Percentage():
 
 
 def Get_Operating_System():
-    return platform.system()
+    os=platform.system()
+    if os=='Darwin': # It's macOS
+	return 'macOS'
+    return os
 
 
 def Get_Desktop_Environment():
