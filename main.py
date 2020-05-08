@@ -77,7 +77,7 @@ def Get_Disk_Used_Percentage():
 def Get_Operating_System():
     os=platform.system()
     if os=='Darwin': # It's macOS
-	return 'macOS'
+        return 'macOS'
     return os
 
 
