@@ -8,27 +8,19 @@ from time import strftime
 import datetime
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
+import argparse
 
-if len(sys.argv) < 5:
-    print("You must pass broker address, client name, username and password")
-    sys.exit()
-broker = sys.argv[1]
-name = sys.argv[2]
+topics = {'ram': 'ram_used_percentage',
+          'cpu': 'cpu_used_percentage',
+          'disk': 'disk_used_percentage',
+          'os': 'operating_system',
+          'time': 'message_time',
+          'battery_level': 'battery_level_percentage',
+          'battery_charging': 'battery_charging',
+          'shutdown': 'shutdown_command',
+          'reboot': 'reboot_command',
+          'lock': 'lock_command'}
 
-username = sys.argv[3]
-password = sys.argv[4]
-
-main_topic = "monitor/"+name+"/"
-# Topic informazioni
-ram_topic = main_topic+'ram_used_percentage'
-cpu_topic = main_topic+'cpu_used_percentage'
-disk_topic = main_topic+'disk_used_percentage'
-os_topic = main_topic+'operating_system'
-time_topic = main_topic+'message_time'
-# Topic comandi
-shutdown_topic = main_topic+"shutdown_command"
-reboot_topic = main_topic+"reboot_command"
-lock_topic = main_topic+"lock_command"
 
 #Delay in second
 message_send_delay = 10
@@ -75,18 +67,29 @@ def Get_Disk_Used_Percentage():
 
 
 def Get_Operating_System():
-    os=platform.system()
-    if os=='Darwin': # It's macOS
+    os = platform.system()
+    if os == 'Darwin':  # It's macOS
         return 'macOS'
     return os
 
 
-def Get_Desktop_Environment():
-    de = os.environ.get('DESKTOP_SESSION')
-    if de != None:
-        return de
+def Get_Battery():
+    battery = psutil.sensors_battery()
+    if battery:  # Then the device has a battery
+        return {'level': battery.percent, 'charging': battery.power_plugged}
     else:
-        return "base"
+        return {'level': 'None', 'charging': 'None'}
+
+
+def Get_Desktop_Environment():
+    if not args.desktop_environment:
+        de = os.environ.get('DESKTOP_SESSION')
+        if de != None:
+            return de
+        else:
+            return "base"
+    else:
+        return args.desktop_environment
 
 
 def Get_Time():
@@ -119,18 +122,19 @@ def on_connect(client, userdata, flags, rc):
     if rc == 0:  # Se la connessione è riuscita
         print("Connection established")
         client_connected = True
-        client.subscribe(shutdown_topic)
-        client.subscribe(reboot_topic)
-        client.subscribe(lock_topic)
+        client.subscribe(GetTopic('shutdown'))
+        client.subscribe(GetTopic('reboot'))
+        client.subscribe(GetTopic('lock'))
     else:
         print("Can't connect")
 
+
 def on_message(client, userdata, message):
-    if message.topic == shutdown_topic:
+    if message.topic == GetTopic('shutdown'):
         Shutdown()
-    elif message.topic == reboot_topic:
+    elif message.topic == GetTopic('reboot'):
         Reboot()
-    elif message.topic == lock_topic:
+    elif message.topic == GetTopic('lock'):
         Lock()
     else:
         print("Unknown topic: " + message.topic)
@@ -142,37 +146,72 @@ def on_disconnect(client, userdata, rc):
     client_connected = False
 
 
-print("Broker: " + broker)
-print("Topic: " + main_topic)
-print("OS: " + Get_Operating_System())
-print("Desktop Environment: " + Get_Desktop_Environment())
-print("Message send every " + str(message_send_delay) + " seconds")
+def ParseArguments():
+    # Parse arguments
+    global args
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-b', '--broker', dest='broker', type=str, required=True,
+                        help="MQTT Broker")
+    parser.add_argument('-n', '--name', dest='name', type=str, required=True,
+                        help="Client name")
+    parser.add_argument('-u', '--username', dest='username', type=str, default='', required=False,
+                        help='Broker username (default set to ""')
+    parser.add_argument('-p', '--password', dest='password', type=str, default='', required=False,
+                        help='Broker password (default set to ""')
+    parser.add_argument('-de', '--desktop-environment', dest='desktop_environment', type=str, default=None, required=False,
+                        help='Desktop environment (to use if it\'s wrongly detected)')
+    args, unknown = parser.parse_known_args()
 
 
-# Preparo il client
-client = mqtt.Client("monitor-" + name)
-client.username_pw_set(username,password)
-client.on_message = on_message
-client.on_connect = on_connect
-client.on_disconnect = on_disconnect
+def GetTopic(name):
+    main_topic = "monitor/" + args.name + "/"
+    if name in topics:
+        return main_topic + topics[name]
+    else:
+        return
 
-# Mi connetto al server in modo asincrono:
-# se il server non è raggiungibile, appena sarà possibile avverrà la connessione
-client.connect_async(broker)
 
-# Inizio il loop di invio dei dati ogni {delay} secondi
-client.loop_start()
+def Main():
+    ParseArguments()
+    print("Broker: " + args.broker)
+    print("OS: " + Get_Operating_System())
+    print("Desktop Environment: " + Get_Desktop_Environment())
+    print("Message send every " + str(message_send_delay) + " seconds")
 
-while True:
-    if client_connected:
-        # Invio la % della RAM usata
-        client.publish(ram_topic, Get_RAM_Percentage())
-        # Invio la % della CPU usata
-        client.publish(cpu_topic, Get_CPU_Percentage())
-        # Invio la % del disco usato
-        client.publish(disk_topic, Get_Disk_Used_Percentage())
-        # Invio il Sistema Operativo
-        client.publish(os_topic, Get_Operating_System())
-        # Invio l'ora attuale
-        client.publish(time_topic, Get_Time())
-    time.sleep(message_send_delay)
+    # Preparo il client
+    client = mqtt.Client("monitor-" + args.name)
+    client.username_pw_set(args.username, args.password)
+    client.on_message = on_message
+    client.on_connect = on_connect
+    client.on_disconnect = on_disconnect
+
+    # Mi connetto al server in modo asincrono:
+    # se il server non è raggiungibile, appena sarà possibile avverrà la connessione
+    client.connect_async(args.broker)
+
+    # Inizio il loop di invio dei dati ogni {delay} secondi
+    client.loop_start()
+
+    while True:
+        if client_connected:
+            # Invio la % della RAM usata
+            client.publish(GetTopic('ram'), Get_RAM_Percentage())
+            # Invio la % della CPU usata
+            client.publish(GetTopic('cpu'), Get_CPU_Percentage())
+            # Invio la % del disco usato
+            client.publish(GetTopic('disk'), Get_Disk_Used_Percentage())
+            # Invio il Sistema Operativo
+            client.publish(GetTopic('os'), Get_Operating_System())
+            # Invio l'ora attuale
+            client.publish(GetTopic('time'), Get_Time())
+            # Invio lo stato della batteria
+            battery_status = Get_Battery()
+            client.publish(GetTopic('battery_level'), battery_status['level'])
+            client.publish(GetTopic('battery_charging'),
+                           battery_status['charging'])
+
+        time.sleep(message_send_delay)
+
+
+Main()
