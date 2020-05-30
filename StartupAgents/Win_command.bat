@@ -1,0 +1,1 @@
+python3 C:\Users\richi\Documents\Coding\PyMonitorMQTT\main.py 192.168.1.233 LenovoYoga "" ""

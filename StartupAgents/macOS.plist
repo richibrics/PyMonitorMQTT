@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>my.python.monitor-mqtt</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/Users/riccardobriccola/Documents/Coding/PyMonitorMQTT/main.py</string>
+        <string>192.168.1.233</string>
+        <string>iMacDiRiccardo</string>
+        <string>homeassistant</string>
+        <string>hello</string>
+    </array>
+    <key>StandardErrorPath</key>
+    <string>/Users/riccardobriccola/Documents/Coding/PyMonitorMQTT/log.err</string>
+    <key>StandardOutPath</key>
+    <string>/Users/riccardobriccola/Documents/Coding/PyMonitorMQTT/log.log</string>
+    <key>KeepAlive</key>
+    <true/>
+</dict>
+</plist>
