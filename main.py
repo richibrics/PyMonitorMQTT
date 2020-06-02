@@ -2,6 +2,7 @@ import time
 import os
 import sys
 import platform
+import json
 import subprocess
 import psutil
 from time import strftime
@@ -15,6 +16,7 @@ topics = {'ram': 'ram_used_percentage',
           'disk': 'disk_used_percentage',
           'os': 'operating_system',
           'time': 'message_time',
+          'temperatures': 'cpu_temperatures',
           'battery_level': 'battery_level_percentage',
           'battery_charging': 'battery_charging',
           'shutdown': 'shutdown_command',
@@ -92,6 +94,13 @@ def Get_Desktop_Environment():
         return args.desktop_environment
 
 
+def Get_Temperature():
+    temps = psutil.sensors_temperatures()['coretemp']
+    # Send the list as json
+    serialized = json.dumps(temps)
+    return str(serialized)
+
+
 def Get_Time():
     return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -116,10 +125,10 @@ def Lock():
 
 
 def on_connect(client, userdata, flags, rc):
-    # Quando ho la connessione mi iscrivo ai topic per ricevere i comandi
-    # Inserisco qua le subscription per eseguirle anche al riavvio del server
+    # Subscribe to thetopics to receive action command when connection is set
+    # Will subscribe also if server reboots
     global client_connected
-    if rc == 0:  # Se la connessione è riuscita
+    if rc == 0:  # Connections is OK
         print("Connection established")
         client_connected = True
         client.subscribe(GetTopic('shutdown'))
@@ -179,37 +188,39 @@ def Main():
     print("Desktop Environment: " + Get_Desktop_Environment())
     print("Message send every " + str(message_send_delay) + " seconds")
 
-    # Preparo il client
+    # Prepare client
     client = mqtt.Client("monitor-" + args.name)
     client.username_pw_set(args.username, args.password)
     client.on_message = on_message
     client.on_connect = on_connect
     client.on_disconnect = on_disconnect
 
-    # Mi connetto al server in modo asincrono:
-    # se il server non è raggiungibile, appena sarà possibile avverrà la connessione
+    # Connect async to the broker
+    # If broker is not reachable, wait till he's reachable
     client.connect_async(args.broker)
 
-    # Inizio il loop di invio dei dati ogni {delay} secondi
+    # Send data in this loop every {delay} seconds
     client.loop_start()
 
     while True:
         if client_connected:
-            # Invio la % della RAM usata
+            # Send used RAM
             client.publish(GetTopic('ram'), Get_RAM_Percentage())
-            # Invio la % della CPU usata
+            # Send used CPU
             client.publish(GetTopic('cpu'), Get_CPU_Percentage())
-            # Invio la % del disco usato
+            # Send used disk
             client.publish(GetTopic('disk'), Get_Disk_Used_Percentage())
-            # Invio il Sistema Operativo
+            # Send OS
             client.publish(GetTopic('os'), Get_Operating_System())
-            # Invio l'ora attuale
+            # Send current time
             client.publish(GetTopic('time'), Get_Time())
-            # Invio lo stato della batteria
+            # Send battery states
             battery_status = Get_Battery()
             client.publish(GetTopic('battery_level'), battery_status['level'])
             client.publish(GetTopic('battery_charging'),
                            battery_status['charging'])
+            # Send cores temperatues
+            client.publish(GetTopic('temperatures'), Get_Temperature())
 
         time.sleep(message_send_delay)
 
