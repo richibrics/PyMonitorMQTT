@@ -6,17 +6,24 @@ import json
 import subprocess
 import psutil
 from time import strftime
+import re
 import datetime
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 import argparse
+supports_temperature = True
+try:
+    import wmi  # Only to get windows temperature
+    openhardwaremonitor = wmi.WMI(namespace="root\\OpenHardwareMonitor")
+except:
+    supports_temperature = False
 
 topics = {'ram': 'ram_used_percentage',
           'cpu': 'cpu_used_percentage',
           'disk': 'disk_used_percentage',
           'os': 'operating_system',
           'time': 'message_time',
-          'temperatures': 'cpu_temperatures',
+          'temperatures': 'cpu_temperature',
           'battery_level': 'battery_level_percentage',
           'battery_charging': 'battery_charging',
           'shutdown': 'shutdown_command',
@@ -24,7 +31,7 @@ topics = {'ram': 'ram_used_percentage',
           'lock': 'lock_command'}
 
 
-#Delay in second
+# Delay in second
 message_send_delay = 10
 client_connected = False
 connection_failed = False
@@ -42,7 +49,8 @@ commands = {
         'reboot': 'sudo reboot',
         'lock': {
             'base': 'pmset displaysleepnow'
-        }
+        },
+        'temperature': 'sudo powermetrics -n 1'
     },
     'Linux': {
         'shutdown': 'sudo shutdown -h now',
@@ -94,11 +102,51 @@ def Get_Desktop_Environment():
         return args.desktop_environment
 
 
-def Get_Temperature():
+def Get_Temperatures():
+    if(Get_Operating_System() == 'Windows'):
+        return Get_Temperatures_Win()
+    # elif(Get_Operating_System() == 'macOS'):
+    #    return Get_Temperatures_macOS() NOT SUPPORTED
+    elif(Get_Operating_System() == 'Linux'):
+        return Get_Temperatures_Unix()
+
+
+def Get_Temperatures_Unix():
+    cpu_temps = []
     temps = psutil.sensors_temperatures()['coretemp']
+    for temp in temps:
+        if 'Core' in temp.label:
+            cpu_temps.append(temp.current)
     # Send the list as json
-    serialized = json.dumps(temps)
-    return str(serialized)
+    return str(json.dumps(cpu_temps))
+
+
+# def Get_Temperatures_macOS():
+    #command = commands['macOS']['temperature'] + ' | grep \'temperature\''
+    # print(command)
+    # out = subprocess.Popen(command.split(),
+    #                       stdout=subprocess.PIPE,
+    #                       stderr=subprocess.STDOUT)
+    #out, errors = out.communicate()
+    # from out, I have to get the float with temperature
+    #temperature = [re.findall("\d+\.\d+", str(out))]
+    # print(temperature)
+    # Send the list as json
+    # return str(json.dumps(temperature))
+
+
+def Get_Temperatures_Win():
+    if supports_temperature:
+        # Needs OpenHardwareMonitor interface for WMI
+        sensors = openhardwaremonitor.Sensor()
+        cpu_temps = []
+        for sensor in sensors:
+            if sensor.SensorType == u'Temperature' and not 'GPU' in sensor.Name:
+                cpu_temps += [float(sensor.Value)]
+        cpu_temps.pop()  # Cause last temp is the highest value (summary)
+        # Send the list as json
+        return str(json.dumps(cpu_temps))
+    return 'None'
 
 
 def Get_Time():
@@ -218,9 +266,9 @@ def Main():
             battery_status = Get_Battery()
             client.publish(GetTopic('battery_level'), battery_status['level'])
             client.publish(GetTopic('battery_charging'),
-                           battery_status['charging'])
+                           str(battery_status['charging']))
             # Send cores temperatues
-            client.publish(GetTopic('temperatures'), Get_Temperature())
+            client.publish(GetTopic('temperatures'), Get_Temperatures())
 
         time.sleep(message_send_delay)
 
