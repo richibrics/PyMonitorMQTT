@@ -72,12 +72,14 @@ commands = {
     }
 }
 
+
 def Take_Screenshot():
-    filename=scriptFolder+'.screenshot.png'
+    filename = os.path.join(scriptFolder, '.screenshot.png')
     ImageGrab.grab().save(filename)
-    f=open(filename, "rb") #3.7kiB in same folder
+    f = open(filename, "rb")  # 3.7kiB in same folder
     fileContent = f.read()
     image = bytearray(fileContent)
+    f.close()
     os.remove(filename)
     return image
 
@@ -292,5 +294,6 @@ def Main():
             time.sleep(message_send_delay)
         else:
             time.sleep(not_connected_delay)
+
 
 Main()
