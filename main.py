@@ -1,7 +1,10 @@
 import time
 import os
 import sys
+import base64
 import platform
+import pyscreenshot as ImageGrab
+from PIL import Image
 import json
 import subprocess
 import psutil
@@ -11,12 +14,13 @@ import datetime
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 import argparse
-supports_temperature = True
+
+supports_win_temperature = True
 try:
     import wmi  # Only to get windows temperature
     openhardwaremonitor = wmi.WMI(namespace="root\\OpenHardwareMonitor")
 except:
-    supports_temperature = False
+    supports_win_temperature = False
 
 topics = {'ram': 'ram_used_percentage',
           'cpu': 'cpu_used_percentage',
@@ -26,13 +30,18 @@ topics = {'ram': 'ram_used_percentage',
           'temperatures': 'cpu_temperature',
           'battery_level': 'battery_level_percentage',
           'battery_charging': 'battery_charging',
+          'screenshot': 'screenshot',
           'shutdown': 'shutdown_command',
           'reboot': 'reboot_command',
           'lock': 'lock_command'}
 
 
 # Delay in second
-message_send_delay = 10
+message_send_delay = 20
+not_connected_delay = 1
+
+scriptFolder = str(os.path.dirname(os.path.realpath(__file__)))
+
 client_connected = False
 connection_failed = False
 
@@ -62,6 +71,15 @@ commands = {
         }
     }
 }
+
+def Take_Screenshot():
+    filename=scriptFolder+'.screenshot.png'
+    ImageGrab.grab().save(filename)
+    f=open(filename, "rb") #3.7kiB in same folder
+    fileContent = f.read()
+    image = bytearray(fileContent)
+    os.remove(filename)
+    return image
 
 
 def Get_RAM_Percentage():
@@ -136,7 +154,7 @@ def Get_Temperatures_Unix():
 
 
 def Get_Temperatures_Win():
-    if supports_temperature:
+    if supports_win_temperature:
         # Needs OpenHardwareMonitor interface for WMI
         sensors = openhardwaremonitor.Sensor()
         cpu_temps = []
@@ -269,8 +287,10 @@ def Main():
                            str(battery_status['charging']))
             # Send cores temperatues
             client.publish(GetTopic('temperatures'), Get_Temperatures())
+            client.publish(GetTopic('screenshot'), Take_Screenshot())
 
-        time.sleep(message_send_delay)
-
+            time.sleep(message_send_delay)
+        else:
+            time.sleep(not_connected_delay)
 
 Main()
