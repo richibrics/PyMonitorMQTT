@@ -28,7 +28,7 @@ class LockCommand(Command):
             subprocess.Popen(command.split(), stdout=subprocess.PIPE)
         except:
             raise Exception(
-                'No Lock command for this Desktop Environment/Operating System')
+                'No lock command for this Desktop Environment/Operating System')
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os

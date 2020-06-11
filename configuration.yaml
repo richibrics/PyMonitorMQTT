@@ -14,6 +14,8 @@ sensors:
 
 commands:
   - Lock
+  - Reboot
+  - Shutdown
 
 values:
   DesktopEnvironment: i3
