@@ -1,7 +1,7 @@
 import subprocess
 from Commands.Command import Command
 
-TOPIC = 'lock_command'
+TOPIC = 'shutdown_command'
 
 
 commands = {

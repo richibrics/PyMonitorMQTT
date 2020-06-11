@@ -1,7 +1,7 @@
 import subprocess
 from Commands.Command import Command
 
-TOPIC = 'lock_command'
+TOPIC = 'reboot_command'
 
 commands = {
     'Windows': 'shutdown /r',
