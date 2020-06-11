@@ -49,7 +49,7 @@ class Sensor():
             self.Update()
         except Exception as exc:
             print('Error during', self.name, 'update')
-            print("Exception:",str(exc))
+            print("Exception:", str(exc))
             self.sensorManager.UnloadSensor(self.name)
 
     def Update(self):  # Implemented in sub-classes - Here values are taken
@@ -57,9 +57,9 @@ class Sensor():
         pass  # Must not be called directly, cause stops everything in exception, call only using CallUpdate
 
     def SendData(self):
-        if self.sensorManager.mqtt_client is not None:
+        if self.sensorManager.mqttClient is not None:
             for topic in self.topics:
-                self.sensorManager.mqtt_client.publish(self.GetTopic(
+                self.sensorManager.mqttClient.SendTopicData(self.GetTopic(
                     topic['topic']), topic['value'])
 
     def GetTopic(self, last_part_of_topic):

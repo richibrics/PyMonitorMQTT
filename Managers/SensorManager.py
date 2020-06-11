@@ -1,17 +1,28 @@
 import sys
 import inspect
+import time
 import Sensors
 
 CONFIG_SENSORS_KEY = 'sensors'
 
+# Delay in second
+message_send_loop_delay = 20
+not_connected_loop_delay = 1
+
 
 class SensorManager():
+    commandManager = None
     sensors = []
+    continue_sending = True  # Send loop condition
 
-    def __init__(self, config, mqtt_client):
+    def __init__(self, config, mqttClient):
         self.config = config
-        self.mqtt_client = mqtt_client
+        self.mqttClient = mqttClient
         self.LoadSensorsFromConfig()
+
+    def Start(self):
+        # Start the send loop
+        self.SendAllData()
 
     def LoadSensorsFromConfig(self):
         if CONFIG_SENSORS_KEY in self.config:
@@ -71,3 +82,17 @@ class SensorManager():
     def GetSensorName(self, sensor_class):
         # Only SENSORCLASS (without Sensor suffix)
         return self.GetClassName(sensor_class).split('.')[-1].split('Sensor')[0]
+
+    def SendAllData(self):
+        while self.continue_sending:
+            if self.mqttClient.connected:
+                # Update sensors and send data
+                self.UpdateSensors()
+                self.SendSensorsData()
+
+                time.sleep(message_send_loop_delay)
+            else:
+                time.sleep(not_connected_loop_delay)
+
+    def SetCommandManager(self, commandManager):
+        self.commandManager = commandManager

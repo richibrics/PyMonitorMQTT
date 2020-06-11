@@ -12,3 +12,8 @@ sensors:
   - Disk
   - Time
 
+commands:
+  - Lock
+
+values:
+  DesktopEnvironment: i3
