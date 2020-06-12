@@ -6,8 +6,7 @@ import Sensors
 CONFIG_SENSORS_KEY = 'sensors'
 
 # Delay in second
-message_send_loop_delay = 20
-not_connected_loop_delay = 1
+update_rate = 20  # If not set in config
 
 
 class SensorManager():
@@ -18,6 +17,8 @@ class SensorManager():
     def __init__(self, config, mqttClient):
         self.config = config
         self.mqttClient = mqttClient
+        self.update_rate = update_rate if 'update_rate' not in config else config[
+            'update_rate']
         self.LoadSensorsFromConfig()
 
     def Start(self):
@@ -90,9 +91,9 @@ class SensorManager():
                 self.UpdateSensors()
                 self.SendSensorsData()
 
-                time.sleep(message_send_loop_delay)
+                time.sleep(self.update_rate)
             else:
-                time.sleep(not_connected_loop_delay)
+                time.sleep(1)
 
     def SetCommandManager(self, commandManager):
         self.commandManager = commandManager

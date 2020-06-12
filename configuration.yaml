@@ -1,5 +1,6 @@
-broker: BROKER_ADDRESS
-name: PC_NAME
+broker: 192.168.1.233
+name: LenovoYoga
+update_rate: 20 # Seconds
 
 sensors:
   - Cpu
@@ -11,11 +12,11 @@ sensors:
   - Battery
   - Disk
   - Time
+  - Brightness
 
 commands:
   - Lock
   - Reboot
   - Shutdown
+  - Brightness
 
-values:
-  DesktopEnvironment: DE_TO_FORCE

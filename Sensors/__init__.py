@@ -8,3 +8,5 @@ from Sensors.CpuTemperaturesSensor.CpuTemperaturesSensor import CpuTemperaturesS
 from Sensors.BatterySensor.BatterySensor import BatterySensor
 from Sensors.ScreenshotSensor.ScreenshotSensor import ScreenshotSensor
 from Sensors.DesktopEnvironmentSensor.DesktopEnvironmentSensor import DesktopEnvironmentSensor
+from Sensors.VolumeSensor.VolumeSensor import VolumeSensor
+from Sensors.BrightnessSensor.BrightnessSensor import BrightnessSensor
