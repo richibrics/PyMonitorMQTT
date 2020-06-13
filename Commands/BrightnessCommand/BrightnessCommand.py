@@ -1,4 +1,5 @@
 from Commands.Command import Command
+import subprocess
 
 supports_win_brightness = True
 try:
@@ -18,12 +19,20 @@ class BrightnessCommand(Command):
         self.SetBrightness(int(message.payload))
 
     def SetBrightness(self, value):
+        # Value from 0 and 100
         os = self.GetOS()
         if(os == 'Windows'):
             return self.SetBrightness_Win(value)
+        elif(os == 'macOS'):
+            return self.SetBrightness_macOS(value)
         else:
             raise Exception(
                 'No brightness command available for this Operating System')
+
+    def SetBrightness_macOS(self,value):
+        value = value/100 # cause I need it from 0 to 1
+        command = 'brightness ' + str(value)
+        subprocess.Popen(command.split(), stdout=subprocess.PIPE)
 
     def SetBrightness_Win(self, value):
         if supports_win_brightness:

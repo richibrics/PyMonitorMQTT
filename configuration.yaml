@@ -1,5 +1,5 @@
 broker: 192.168.1.233
-name: LenovoYoga
+name: iMacDiRiccardo
 update_rate: 20 # Seconds
 
 sensors:

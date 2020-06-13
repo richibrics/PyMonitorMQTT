@@ -1,4 +1,6 @@
 from Sensors.Sensor import Sensor
+import subprocess
+import re
 
 supports_win_brightness = True
 try:
@@ -21,16 +23,20 @@ class BrightnessSensor(Sensor):
         os = self.GetOS()
         if(os == 'Windows'):
             return self.GetBrightness_Win()
+        elif(os == 'macOS'):
+            return self.GetBrightness_macOS()
         else:
             raise Exception(
                 'No brightness sensor available for this Operating System')
 
-    def GetOS(self):
-        # Get OS from OsSensor and get temperature based on the os
-        os = self.sensorManager.FindSensor('Os')
-        if os:
-            os.Update()
-            return os.GetTopicValue()
+    def GetBrightness_macOS(self):
+        command = 'brightness -l'
+        process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+        stdout = process.communicate()[0]
+        brightness = re.findall(
+            'display 0: brightness.*$', str(stdout))[0][22:30]
+        brightness = float(brightness)*100 # is between 0 and 1
+        return brightness
 
     def GetBrightness_Win(self):
         if supports_win_brightness:
@@ -39,3 +45,10 @@ class BrightnessSensor(Sensor):
         else:
             raise Exception(
                 'No WMI module installed')
+
+    def GetOS(self):
+        # Get OS from OsSensor and get temperature based on the os
+        os = self.sensorManager.FindSensor('Os')
+        if os:
+            os.Update()
+            return os.GetTopicValue()
