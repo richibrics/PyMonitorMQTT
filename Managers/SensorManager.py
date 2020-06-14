@@ -2,6 +2,7 @@ import sys
 import inspect
 import time
 import Sensors
+import Logger
 
 CONFIG_SENSORS_KEY = 'sensors'
 
@@ -14,11 +15,12 @@ class SensorManager():
     sensors = []
     continue_sending = True  # Send loop condition
 
-    def __init__(self, config, mqttClient):
+    def __init__(self, config, mqttClient, logger):
         self.config = config
         self.mqttClient = mqttClient
         self.update_rate = update_rate if 'update_rate' not in config else config[
             'update_rate']
+        self.logger = logger
         self.LoadSensorsFromConfig()
 
     def Start(self):
@@ -33,13 +35,14 @@ class SensorManager():
 
     def LoadSensor(self, name):
         obj = self.GetSensorObjectByName(name)
-        self.sensors.append(obj(self))
-        print(name, 'sensor loaded')
+        if obj:
+            self.sensors.append(obj(self, self.logger))
+            self.Log(Logger.LOG_INFO, name + ' sensor loaded')
 
     def UnloadSensor(self, name):
         obj = self.FindSensor(name)
         self.sensors.remove(obj)
-        print(name, 'sensor unloaded')
+        self.Log(Logger.LOG_WARNING, name + ' sensor unloaded')
 
     def FindSensor(self, name):
         # Return the sensor object present in sensors list: to get sensor value from another sensor for example
@@ -56,8 +59,8 @@ class SensorManager():
         for sensor in sensorList:
             if name == self.GetSensorName(sensor):
                 return sensor
-        print(name, 'sensor not found')
-        exit(1)
+        self.Log(Logger.LOG_ERROR, name + ' sensor not found')
+        return None
 
     def GetSensorObjectsList(self):
         classes = []
@@ -97,3 +100,6 @@ class SensorManager():
 
     def SetCommandManager(self, commandManager):
         self.commandManager = commandManager
+
+    def Log(self, messageType, message):
+        self.logger.Log(messageType, 'Sensor Manager', message)

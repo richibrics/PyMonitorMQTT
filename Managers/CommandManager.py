@@ -1,6 +1,7 @@
 import sys
 import inspect
 import Commands
+import Logger
 
 CONFIG_COMMANDS_KEY = 'commands'
 
@@ -9,9 +10,10 @@ class CommandManager():
     sensorManager = None
     commands = []
 
-    def __init__(self, config, mqttClient):
+    def __init__(self, config, mqttClient, logger):
         self.config = config
         self.mqttClient = mqttClient
+        self.logger = logger
         self.LoadCommandsFromConfig()
 
     def LoadCommandsFromConfig(self):
@@ -22,13 +24,14 @@ class CommandManager():
 
     def LoadCommand(self, name):
         obj = self.GetCommandObjectByName(name)
-        self.commands.append(obj(self))
-        print(name, 'command loaded')
+        if(obj):
+            self.commands.append(obj(self, self.logger))
+            self.Log(Logger.LOG_INFO, name + ' command loaded')
 
     def UnloadCommand(self, name):
         obj = self.FindCommand(name)
         self.commands.remove(obj)
-        print(name, 'command unloaded')
+        self.Log(Logger.LOG_WARNING, name + ' command unloaded')
 
     def FindCommand(self, name):
         # Return the command object present in commands list: to get command value from another command for example
@@ -45,8 +48,7 @@ class CommandManager():
         for command in commandList:
             if name == self.GetCommandName(command):
                 return command
-        print(name, 'command not found')
-        exit(1)
+        self.Log(Logger.LOG_ERROR, name + ' command not found')
 
     def GetCommandObjectsList(self):
         classes = []
@@ -67,3 +69,6 @@ class CommandManager():
 
     def SetSensorManager(self, sensorManager):
         self.sensorManager = sensorManager
+
+    def Log(self, messageType, message):
+        self.logger.Log(messageType, 'Command Manager', message)

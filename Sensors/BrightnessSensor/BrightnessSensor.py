@@ -30,13 +30,17 @@ class BrightnessSensor(Sensor):
                 'No brightness sensor available for this Operating System')
 
     def GetBrightness_macOS(self):
-        command = 'brightness -l'
-        process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
-        stdout = process.communicate()[0]
-        brightness = re.findall(
-            'display 0: brightness.*$', str(stdout))[0][22:30]
-        brightness = float(brightness)*100 # is between 0 and 1
-        return brightness
+        try:
+            command = 'brightness -l'
+            process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+            stdout = process.communicate()[0]
+            brightness = re.findall(
+                'display 0: brightness.*$', str(stdout))[0][22:30]
+            brightness = float(brightness)*100  # is between 0 and 1
+            return brightness
+        except:
+            raise Exception(
+                'You sure you installed Brightness from Homebrew ?')
 
     def GetBrightness_Win(self):
         if supports_win_brightness:

@@ -1,12 +1,14 @@
 from consts import *
+import Logger
 
 
 class Sensor():
 
-    def __init__(self, sensorManager):  # Config is args
+    def __init__(self, sensorManager, logger):  # Config is args
         self.topics = []  # List of {topic, value}
         self.sensorManager = sensorManager
         self.name = self.GetSensorName()
+        self.logger = logger
         self.Initialize()
 
     def Initialize(self):  # Implemented in sub-classes
@@ -48,12 +50,11 @@ class Sensor():
         try:
             self.Update()
         except Exception as exc:
-            print('Error during', self.name, 'update')
-            print("Exception:", str(exc))
+            self.Log(Logger.LOG_ERROR, 'Error occured during update: '+str(exc))
             self.sensorManager.UnloadSensor(self.name)
 
     def Update(self):  # Implemented in sub-classes - Here values are taken
-        print('Update method not implemented')
+        self.Log(Logger.LOG_WARNING, 'Update method not implemented')
         pass  # Must not be called directly, cause stops everything in exception, call only using CallUpdate
 
     def SendData(self):
@@ -72,3 +73,6 @@ class Sensor():
     def GetSensorName(self):
         # Only SENSORCLASS (without Sensor suffix)
         return self.GetClassName().split('.')[-1].split('Sensor')[0]
+
+    def Log(self, messageType, message):
+        self.logger.Log(messageType, self.name+' Sensor', message)

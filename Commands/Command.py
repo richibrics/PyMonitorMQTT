@@ -1,12 +1,14 @@
 from consts import *
+import Logger
 
 
 class Command():
     topic = ""
 
-    def __init__(self, commandManager):  # Config is args
+    def __init__(self, commandManager, logger):  # Config is args
         self.commandManager = commandManager
         self.name = self.GetCommandName()
+        self.logger = logger
         self.Initialize()
 
     # Implemented in sub-classes
@@ -15,10 +17,10 @@ class Command():
 
     def CallCallback(self, message):  # Safe method to run the Callback
         try:
+            self.Log(Logger.LOG_INFO, 'Command actioned')
             self.Callback(message)
         except Exception as exc:
-            print('Error during', self.name, 'callback')
-            print("Exception:", str(exc))
+            self.Log(Logger.LOG_ERROR, 'Error occured in callback: '+str(exc))
             self.commandManager.UnloadCommand(self.name)
 
     # Implemented in sub-classes
@@ -38,3 +40,6 @@ class Command():
     def GetCommandName(self):
         # Only SENSORCLASS (without Command suffix)
         return self.GetClassName().split('.')[-1].split('Command')[0]
+
+    def Log(self, messageType, message):
+        self.logger.Log(messageType, self.name+' Command', message)

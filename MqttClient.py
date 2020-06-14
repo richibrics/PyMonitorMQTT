@@ -1,5 +1,6 @@
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
+import Logger
 
 
 class MqttClient():
@@ -9,11 +10,14 @@ class MqttClient():
     topics = []  # Topics to subscribe, dict 'topic', 'command'
     subscribed_topics = []  # Topics already subscribed
 
-    def __init__(self, config):
+    def __init__(self, config, logger):
         self.config = config
+        self.logger = logger
         # Prepare the client
+        self.Log(Logger.LOG_INFO, 'Preparing MQTT client')
         self.SetupClient()
         self.AsyncConnect()
+        self.Log(Logger.LOG_INFO, 'MQTT Client ready')
 
     # SETUP PART
 
@@ -60,16 +64,14 @@ class MqttClient():
 
     def Event_OnClientConnect(self, client, userdata, flags, rc):
         if rc == 0:  # Connections is OK
-            print("Connection established")
+            self.Log(Logger.LOG_INFO, "Connection established")
             self.connected = True
-            self.client.subscribe("test")
-            self.client.subscribe('monitor/PcSenzaSchermo/shutdown_command')
             self.SubscribeToAllTopics()
         else:
             print("Can't connect")
 
     def Event_OnClientDisconnect(self, client, userdata, rc):
-        print("Connection lost")
+        self.Log(Logger.LOG_ERROR, "Connection lost")
         self.connected = False
         self.subscribed_topics.clear()
 
@@ -79,3 +81,6 @@ class MqttClient():
             if message.topic == topic['topic']:
                 # Run the callback function of the Command assigned to the topic
                 topic['callback'].CallCallback(message)
+
+    def Log(self, messageType, message):
+        self.logger.Log(messageType, 'MQTT', message)
