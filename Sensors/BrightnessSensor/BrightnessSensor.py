@@ -27,7 +27,7 @@ class BrightnessSensor(Sensor):
             return self.GetBrightness_macOS()
         else:
             raise Exception(
-                'No brightness sensor available for this Operating System')
+                'No brightness sensor available for this operating system')
 
     def GetBrightness_macOS(self):
         try:
@@ -40,7 +40,7 @@ class BrightnessSensor(Sensor):
             return brightness
         except:
             raise Exception(
-                'You sure you installed Brightness from Homebrew ?')
+                'You sure you installed Brightness from Homebrew ? (else try checking you PATH)')
 
     def GetBrightness_Win(self):
         if supports_win_brightness:

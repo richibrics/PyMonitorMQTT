@@ -28,6 +28,9 @@ class CpuTemperaturesSensor(Sensor):
         #    return Get_Temperatures_macOS() NOT SUPPORTED
         elif(os == 'Linux'):
             return self.GetCpuTemperatures_Unix()
+        else:
+            raise Exception(
+                'No temperature sensor available for this operating system')
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os
