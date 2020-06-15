@@ -1,0 +1,22 @@
+broker: BROKER_ADDRESS
+name: PC_NAME
+update_rate: 20 # Seconds
+
+sensors:
+  - Cpu
+  - CpuTemperatures
+  - Ram
+  - Os
+  - DesktopEnvironment
+  - Screenshot
+  - Battery
+  - Disk
+  - Time
+  - Brightness
+
+commands:
+  - Lock
+  - Reboot
+  - Shutdown
+  - Brightness
+
