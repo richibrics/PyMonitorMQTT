@@ -46,12 +46,13 @@ python -m pip install [REQUIRED_MODULE]
 to install the dependencies.
 
 #### Dependencies
-Then you need to install these dependencies:
-* paho-mqtt (module from pip)
-* psutil (module from pip)
+To install dependencies all together, you only have to type in your terminal
+```
+python -m pip install -r requirements.txt
+```
 
 In addition, to get CPU temperature from Windows you need:
-* wmi (module from pip)
+* wmi (module from pip) - should already be in requirements.txt file
 * Open Hardware Monitor (external software). [Download it](https://openhardwaremonitor.org/downloads/)
 
 ## Running the script
