@@ -4,7 +4,6 @@ jeepney==0.4.3
 mss==6.0.0
 paho-mqtt==1.5.0
 Pillow==7.2.0
-pkg-resources==0.0.0
 psutil==5.7.2
 pyscreenshot==2.2
 PyYAML==5.3.1
