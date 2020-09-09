@@ -1,7 +1,9 @@
 # PyMonitorMQTT
-PyMonitorMQTT is an universal system monitor (works both on Windows, Linux and macOS) that sends real time information via MQTT to home automations systems like [HomeAssistant](https://github.com/home-assistant/home-assistant).
+PyMonitorMQTT is a **cross-platform system monitor** (works both on Windows, Linux and macOS) that sends real time information via **MQTT**.
 The information is sent every 10 seconds and the broker can perform certain actions on the monitor's computer.
-Companion integration for HomeAssistant can be found [here](https://github.com/richibrics/HassMonitorMqtt)
+
+Information form this client are well managed by home automation systems like [HomeAssistant](https://github.com/home-assistant/home-assistant).
+**Companion integration for HomeAssistant can be found [here](https://github.com/richibrics/HassMonitorMqtt)**
 
 Available information:
 * RAM in use (%)
@@ -23,9 +25,9 @@ Actions:
 
 ## Compatibility
 
-Battery sensor works only with battery-powered computers.
-CPU Temperature works only in Linux and Windows (not in macOS)
-Brightness sensor and command doesn't work in Linux yet
+The battery sensor works only with battery-powered computers.
+CPU Temperature works only on Linux and Windows (not in macOS)
+Brightness sensor and command doesn't work on Linux yet
 
 ## Getting Started
 
@@ -48,11 +50,11 @@ to install the dependencies.
 #### Dependencies
 To install dependencies all together, you only have to type in your terminal
 ```
-python -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 In addition, to get CPU temperature from Windows you need:
-* wmi (module from pip) - should already be in requirements.txt file
+* wmi (module from pip): `python3 -m pip install wmi`
 * Open Hardware Monitor (external software). [Download it](https://openhardwaremonitor.org/downloads/)
 
 ## Running the script
@@ -67,9 +69,13 @@ To configure the montior client, you need to create a text file in the project f
 
 File example:
 ```
-broker: BROKER_ADDRESS
+broker: example.com
 name: PC_NAME
+username: example
+password: example
 update_rate: 20 # Seconds
+topic_prefix: example_prefix
+print_topics: False
 
 sensors:
   - Cpu
@@ -91,10 +97,22 @@ commands:
 
 ```
 
+Schema:
+* broker: {String} Address (IP or name) of MQTT broker **[COMPULSORY]**
+* name: {String} Name of the client; will be part of sensors and commands topics **[COMPULSORY]**
+* username: {String} Username to login with the broker **[OPTIONAL]**
+* password: {String} Password to login with the broker **[OPTIONAL - COMPULSORY if username is set]**
+* topic_prefix: {String} Prefix to add at the start of each topic (e.g. example_prefix/monitor/PC_NAME/mysensor_topic) **[OPTIONAL]**
+* print_topics: {Boolean} To discover all topics of the monitor **[OPTIONAL: default is False]**
+
+* sensors: {List of strings} List of sensors to enable **[COMPULSORY]**
+* commands: {List of strings} List of commands to enable **[COMPULSORY]**
 
 
 ## MQTT Topics
 On the server you must specify sensors and commands topics
+
+You can discover topics setting 'print_topics' as True in your configuration file
 ### Sensors
 ```
 Sensor Topic: monitor/PC_NAME/SENSOR_SPECIFIC_TOPIC
