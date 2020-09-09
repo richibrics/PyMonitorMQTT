@@ -9,6 +9,7 @@ class Sensor():
         self.sensorManager = sensorManager
         self.name = self.GetSensorName()
         self.logger = logger
+        # Do per sensor operations
         self.Initialize()
 
     def Initialize(self):  # Implemented in sub-classes
@@ -19,6 +20,10 @@ class Sensor():
 
     def AddTopic(self, topic):
         self.topics.append({'topic': topic, 'value': ""})
+        # Log the topic as debug if user wants
+        if 'print_topics' in self.sensorManager.config and self.sensorManager.config['print_topics'] is True:
+            self.Log(Logger.LOG_DEBUG, 'Sending to topic: ' +
+                     self.GetTopic(topic))
 
     def GetFirstTopic(self):
         return self.topics[0]['topic'] if len(self.topics) else None
@@ -44,7 +49,8 @@ class Sensor():
         if topic:
             topic['value'] = value
         else:
-            print('Topic', topic_name, 'does not exist !')
+            self.Log(Logger.LOG_ERROR, 'Topic ' +
+                     topic_name + ' does not exist !')
 
     def CallUpdate(self):  # Call the Update method safely
         try:
@@ -64,7 +70,11 @@ class Sensor():
                     topic['topic']), topic['value'])
 
     def GetTopic(self, last_part_of_topic):
-        return TOPIC_FORMAT.format(self.sensorManager.config['name'], last_part_of_topic)
+        model = TOPIC_FORMAT
+        if 'topic_prefix' in self.sensorManager.config:
+            model = self.sensorManager.config['topic_prefix'] + \
+                '/'+model
+        return model.format(self.sensorManager.config['name'], last_part_of_topic)
 
     def GetClassName(self):
         # Sensor.SENSORFOLDER.SENSORCLASS

@@ -29,9 +29,16 @@ class Command():
 
     def SubscribeToTopic(self, topic):
         self.commandManager.mqttClient.AddNewTopic(topic, self)
+        # Log the topic as debug if user wants
+        if 'print_topics' in self.commandManager.config and self.commandManager.config['print_topics'] is True:
+            self.Log(Logger.LOG_DEBUG, 'Subscribben to topic: ' + topic)
 
     def GetTopic(self, last_part_of_topic):
-        return TOPIC_FORMAT.format(self.commandManager.config['name'], last_part_of_topic)
+        model = TOPIC_FORMAT
+        if 'topic_prefix' in self.commandManager.config:
+            model = self.commandManager.config['topic_prefix'] + \
+                '/'+model
+        return model.format(self.commandManager.config['name'], last_part_of_topic)
 
     def GetClassName(self):
         # Command.SENSORFOLDER.SENSORCLASS

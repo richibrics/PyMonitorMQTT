@@ -4,9 +4,10 @@ import os
 LOG_INFO = 0
 LOG_ERROR = 1
 LOG_WARNING = 2
+LOG_DEBUG = 3
 
 # Fill start of string with spaces to jusitfy the message (0: no padding)
-STRINGS_LENGTH = [7, 20]  # First for type, second for source
+STRINGS_LENGTH = [7, 26]  # First for type, second for source
 
 DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
@@ -26,11 +27,13 @@ class Logger():
             messageType = 'Error'
         elif messageType == LOG_WARNING:
             messageType = 'Warning'
+        elif messageType == LOG_DEBUG:
+            messageType = 'Debug'
         else:
             messageType = 'Logger'
 
-        prestring = '['+self.GetDatetimeString()+' | '+messageType.center(STRINGS_LENGTH[0]) + \
-            ' | '+source.center(STRINGS_LENGTH[1])+'] '  # justify
+        prestring = '[ '+self.GetDatetimeString()+' | '+messageType.center(STRINGS_LENGTH[0]) + \
+            ' | '+source.center(STRINGS_LENGTH[1])+']  '  # justify
         string = prestring+message
 
         print(string)
