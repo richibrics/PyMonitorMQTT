@@ -41,11 +41,7 @@ PyMonitorMQTT needs Python3.7 to run.
 You can install it [here](https://www.python.org/downloads/).
 
 #### Install PIP
-To install required packages you need [pip](https://www.makeuseof.com/tag/install-pip-for-python/). Once you installed it, type
-```
-python -m pip install [REQUIRED_MODULE]
-```
-to install the dependencies.
+To install required packages you need [pip](https://www.makeuseof.com/tag/install-pip-for-python/)
 
 #### Dependencies
 To install dependencies all together, you only have to type in your terminal
@@ -61,7 +57,7 @@ In addition, to get CPU temperature from Windows you need:
 
 To start the monitor you need to type the following command in the terminal:
 ```
-python main.py
+python3 main.py
 ```
 
 ## Configure
