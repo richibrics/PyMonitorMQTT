@@ -21,11 +21,22 @@ class SensorManager():
         self.update_rate = update_rate if 'update_rate' not in config else config[
             'update_rate']
         self.logger = logger
-        self.LoadSensorsFromConfig()
 
     def Start(self):
         # Start the send loop
         self.SendAllData()
+
+    def InitializeSensors(self):
+        self.LoadSensorsFromConfig()
+
+    def PostInitializeSensors(self):
+        for sensor in self.sensors:
+            try:
+                sensor.PostInitialize()
+            except Exception as exc:
+                self.Log(Logger.LOG_ERROR, sensor.name +
+                         ': error during post-initialization: '+str(exc))
+                self.UnloadSensor(sensor.name)
 
     def LoadSensorsFromConfig(self):
         if CONFIG_SENSORS_KEY in self.config:
@@ -33,10 +44,18 @@ class SensorManager():
             for sensor in sensorsToAdd:
                 self.LoadSensor(sensor)
 
-    def LoadSensor(self, name):
+    def LoadSensor(self, sensorString):
+        name = sensorString
+        options = None
+
+        # If in the list I have a dict then I have some options for that command
+        if type(sensorString) == dict:
+            name = list(sensorString.keys())[0]
+            options = sensorString[name]
+
         obj = self.GetSensorObjectByName(name)
         if obj:
-            self.sensors.append(obj(self, self.logger))
+            self.sensors.append(obj(self, options, self.logger))
             self.Log(Logger.LOG_INFO, name + ' sensor loaded')
 
     def UnloadSensor(self, name):

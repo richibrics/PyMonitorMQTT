@@ -7,7 +7,7 @@ class MqttClient():
     client = None
     connected = False
 
-    topics = []  # Topics to subscribe, dict 'topic', 'command'
+    topics = []  # Topics to subscribe, dict 'topic', Command (as 'callback')
     subscribed_topics = []  # Topics already subscribed
 
     def __init__(self, config, logger):
@@ -29,7 +29,10 @@ class MqttClient():
         self.client.loop_start()
 
     def SetupClient(self):
-        self.client = mqtt.Client(self.config['name'])
+        if 'mqtt_id' in self.config:
+            self.client = mqtt.Client(self.config['mqtt_id'])
+        else:
+            self.client = mqtt.Client(self.config['name'])
 
         if 'username' in self.config and 'password' in self.config:
             self.client.username_pw_set(
@@ -68,7 +71,7 @@ class MqttClient():
             self.connected = True
             self.SubscribeToAllTopics()
         else:
-            print("Can't connect")
+            self.Log(Logger.LOG_ERROR, "Connection error")
 
     def Event_OnClientDisconnect(self, client, userdata, rc):
         self.Log(Logger.LOG_ERROR, "Connection lost")

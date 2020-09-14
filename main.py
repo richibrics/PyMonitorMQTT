@@ -26,7 +26,14 @@ if __name__ == "__main__":
     mqttClient = MqttClient(config, logger)
     commandManager = Managers.CommandManager(config, mqttClient, logger)
     sensorManager = Managers.SensorManager(config, mqttClient, logger)
+    # Link them
     commandManager.SetSensorManager(sensorManager)
     sensorManager.SetCommandManager(commandManager)
+    # Init sensors and commands
+    sensorManager.InitializeSensors()
+    commandManager.InitializeCommands()
+    # Some need post-initialize configuration
+    sensorManager.PostInitializeSensors()
+    commandManager.PostInitializeCommands()
     # All configurations must go above
     sensorManager.Start()  # Start the loop

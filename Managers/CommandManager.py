@@ -14,7 +14,18 @@ class CommandManager():
         self.config = config
         self.mqttClient = mqttClient
         self.logger = logger
+
+    def InitializeCommands(self):
         self.LoadCommandsFromConfig()
+
+    def PostInitializeCommands(self):
+        for command in self.commands:
+            try:
+                command.PostInitialize()
+            except Exception as exc:
+                self.Log(Logger.LOG_ERROR, command.name +
+                         ': error during post-initialization: '+str(exc))
+                self.UnloadCommand(command.name)
 
     def LoadCommandsFromConfig(self):
         if CONFIG_COMMANDS_KEY in self.config:
@@ -22,10 +33,18 @@ class CommandManager():
             for command in commandsToAdd:
                 self.LoadCommand(command)
 
-    def LoadCommand(self, name):
+    def LoadCommand(self, commandString):
+        name = commandString
+        options = None
+
+        # If in the list I have a dict then I have some options for that command
+        if type(commandString) == dict:
+            name = list(commandString.keys())[0]
+            options = commandString[name]
+
         obj = self.GetCommandObjectByName(name)
         if(obj):
-            self.commands.append(obj(self, self.logger))
+            self.commands.append(obj(self, options, self.logger))
             self.Log(Logger.LOG_INFO, name + ' command loaded')
 
     def UnloadCommand(self, name):
@@ -48,7 +67,7 @@ class CommandManager():
         for command in commandList:
             if name == self.GetCommandName(command):
                 return command
-        self.Log(Logger.LOG_ERROR, name + ' command not found')
+        self.Log(Logger.LOG_ERROR, str(name) + ' command not found')
 
     def GetCommandObjectsList(self):
         classes = []
