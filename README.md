@@ -24,10 +24,15 @@ Actions:
 * Set Brightness
 
 ## Compatibility
+The monitor works both on Windows, Linux and macOS
 
 The battery sensor works only with battery-powered computers.
-CPU Temperature works only on Linux and Windows (not in macOS)
-Brightness sensor and command doesn't work on Linux yet
+
+CPU Temperature works only on Linux and Windows (not in macOS).
+
+Brightness sensor and command doesn't work on Linux yet.
+
+Most commands require both the **OS** sensor and the **DesktopEnvironment** sensor **enabled** to ensure proper operation for the operating system and the desktop environment!
 
 ## Getting Started
 
@@ -78,11 +83,13 @@ sensors:
   - CpuTemperatures
   - Ram
   - Os
-  - DesktopEnvironment
+  - DesktopEnvironment:
+      dont_send: True      
   - Battery
   - Disk
   - Time
-  - Screenshot
+  - Screenshot:
+      custom_topic: shevchenko/photo
   - Brightness
 
 commands:
@@ -103,6 +110,10 @@ Schema:
 
 * sensors: {List of strings} List of sensors to enable **[COMPULSORY]**
 * commands: {List of strings} List of commands to enable **[COMPULSORY]**
+
+Each sensor/command in the list sensors/commands list to enable, can have other options:
+* custom_topic: {String} Use a custom topic for that sensor/command **[OPTIONAL]**
+* dont_send: {Boolean} Prevents a sensor from sending information to the broker (only for sensors) **[OPTIONAL]**
 
 
 ## MQTT Topics
