@@ -41,8 +41,9 @@ class Command():
             self.Log(Logger.LOG_INFO, 'Using custom topic defined in options')
 
         self.commandManager.mqttClient.AddNewTopic(topic, self)
+
         # Log the topic as debug if user wants
-        if 'print_topics' in self.commandManager.config and self.commandManager.config['print_topics'] is True:
+        if 'debug' in self.commandManager.config and self.commandManager.config['debug'] is True:
             self.Log(Logger.LOG_DEBUG, 'Subscribben to topic: ' + topic)
 
         return topic  # Return the topic cause upper function should now that topic may have been edited

@@ -41,20 +41,6 @@ class Sensor():
 
         self.topics.append({'topic': topic, 'value': ""})
 
-        # Log the topic as debug if user wants
-        if 'print_topics' in self.sensorManager.config and self.sensorManager.config['print_topics'] is True:
-            # If send disabled in config for this sensor
-            if self.options and 'dont_send' in self.options and self.options['dont_send'] is True:
-                self.Log(
-                    Logger.LOG_DEBUG, "Won't send data cause 'don't_send' is True in your configuration")
-            else:
-                if not replaced:
-                    self.Log(Logger.LOG_DEBUG, 'Sending to topic: ' +
-                             self.GetTopic(topic))
-                else:  # Print the replaced topic and not the original one
-                    self.Log(Logger.LOG_DEBUG, 'Sending to topic: ' +
-                             self.options['custom_topics'][self.addedTopics-1])
-
     def GetFirstTopic(self):
         return self.topics[0]['topic'] if len(self.topics) else None
 
@@ -107,6 +93,10 @@ class Sensor():
                     # If it's in the list of topics to replaced
                     if topic['topic'] == customs['original']:
                         topicToUse = customs['custom']
+
+                # Log the topic as debug if it's on
+                if 'debug' in self.sensorManager.config and self.sensorManager.config['debug'] is True:
+                    self.Log(Logger.LOG_DEBUG, "Sending data to " + topicToUse)
 
                 self.sensorManager.mqttClient.SendTopicData(
                     topicToUse, topic['value'])

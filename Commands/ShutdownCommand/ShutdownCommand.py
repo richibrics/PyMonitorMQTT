@@ -5,7 +5,7 @@ TOPIC = 'shutdown_command'
 
 
 commands = {
-    'Windows': 'shutdown /s',
+    'Windows': 'shutdown /s /t 0',
     'macOS': 'sudo shutdown -h now',
     'Linux': 'sudo shutdown -h now'
 }
@@ -20,7 +20,7 @@ class ShutdownCommand(Command):
             command = commands[self.GetOS()]
             subprocess.Popen(command.split(), stdout=subprocess.PIPE)
         except:
-            raise Exception(
+            raise Exception( 
                 'No shutdown command for this Operating System')
 
     def GetOS(self):
