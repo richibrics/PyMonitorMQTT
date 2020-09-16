@@ -72,6 +72,7 @@ File example:
 ```
 broker: example.com
 name: PC_NAME
+port: 1883
 username: example
 password: example
 update_rate: 20 # Seconds
@@ -104,7 +105,7 @@ Schema:
 * broker: {String} Address (IP or name) of MQTT broker **[COMPULSORY]**
 * name: {String} Name of the client; will be part of sensors and commands topics **[COMPULSORY]**
 * username: {String} Username to login with the broker **[OPTIONAL]**
-* password: {String} Password to login with the broker **[OPTIONAL - COMPULSORY if username is set]**
+* password: {String} Password to login with the broker **[OPTIONAL - COMPULSORY if username is set]** 
 * topic_prefix: {String} Prefix to add at the start of each topic (e.g. example_prefix/monitor/PC_NAME/mysensor_topic) **[OPTIONAL]**
 * print_topics: {Boolean} To discover all topics of the monitor **[OPTIONAL: default is False]**
 

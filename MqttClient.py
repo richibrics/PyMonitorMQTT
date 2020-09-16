@@ -17,14 +17,18 @@ class MqttClient():
         self.Log(Logger.LOG_INFO, 'Preparing MQTT client')
         self.SetupClient()
         self.AsyncConnect()
-        self.Log(Logger.LOG_INFO, 'MQTT Client ready')
+        self.Log(Logger.LOG_INFO, 'MQTT Client ready to connect')
 
     # SETUP PART
 
     def AsyncConnect(self):
         # Connect async to the broker
         # If broker is not reachable, wait till he's reachable
-        self.client.connect_async(self.config['broker'])
+        if 'port' in self.config:
+            self.client.connect_async(
+                self.config['broker'], port=self.config['port'])
+        else:
+            self.client.connect_async(self.config['broker'])
         # Client ready to start -> activate callback
         self.client.loop_start()
 
