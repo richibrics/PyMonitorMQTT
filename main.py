@@ -39,8 +39,7 @@ def SetupMonitors():
             monitor = Monitor(monitor_config, commandManager,
                               sensorManager, monitor_id)
 
-    # Start sensors loop (before wait for mqtt to connect !)
-    time.sleep(2)
+    # Start sensors loop
     sensorManager.Start()
 
 
