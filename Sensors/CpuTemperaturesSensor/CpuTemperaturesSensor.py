@@ -34,7 +34,7 @@ class CpuTemperaturesSensor(Sensor):
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os
-        os = self.sensorManager.FindSensor('Os')
+        os = self.FindSensor('Os')
         if os:
             os.Update()
             return os.GetTopicValue()

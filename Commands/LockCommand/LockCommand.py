@@ -32,21 +32,15 @@ class LockCommand(Command):
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os
-        if(self.commandManager.sensorManager):
-            os = self.commandManager.sensorManager.FindSensor('Os')
-            if os:
-                os.Update()
-                return os.GetTopicValue()
-        else:
-            print('SensorManager not set in the CommandManager!')
+        os = self.FindSensor('Os')
+        if os:
+            os.Update()
+            return os.GetTopicValue()
 
     def GetDE(self):
         # Get OS from OsSensor and get temperature based on the os
-        if(self.commandManager.sensorManager):
-            de = self.commandManager.sensorManager.FindSensor(
-                'DesktopEnvironment')
-            if de:
-                de.Update()
-                return de.GetTopicValue()
-        else:
-            print('SensorManager not set in the CommandManager!')
+        de = self.FindSensor(
+            'DesktopEnvironment')
+        if de:
+            de.Update()
+            return de.GetTopicValue()

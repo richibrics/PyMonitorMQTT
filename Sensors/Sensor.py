@@ -1,3 +1,4 @@
+import datetime
 from consts import *
 import Logger
 
@@ -7,14 +8,19 @@ class Sensor():
     # When a sensor send the data with a topic, if the user choose a fixed topic in config,
     # then when I send the data I don't use the topic defined in the function but I replaced that
     # with the user's one that I store in this list of dict
+    lastSendingTime = None
     replacedTopics = []
 
-    def __init__(self,  sensorManager, options, logger):  # Config is args
+    def __init__(self, monitor_id, config, mqtt_client, send_interval, options, logger, sensorManager):  # Config is args
         self.topics = []  # List of {topic, value}
-        self.sensorManager = sensorManager
-        self.name = self.GetSensorName()
+        self.monitor_id = monitor_id
+        self.config = config
+        self.mqtt_client = mqtt_client
+        self.send_interval = send_interval
         self.options = options
         self.logger = logger
+        self.sensorManager = sensorManager
+        self.name = self.GetSensorName()
         self.addedTopics = 0
         # Do per sensor operations
         self.Initialize()
@@ -73,7 +79,7 @@ class Sensor():
             self.Update()
         except Exception as exc:
             self.Log(Logger.LOG_ERROR, 'Error occured during update: '+str(exc))
-            self.sensorManager.UnloadSensor(self.name)
+            self.sensorManager.UnloadSensor(self.name, self.monitor_id)
 
     def Update(self):  # Implemented in sub-classes - Here values are taken
         self.Log(Logger.LOG_WARNING, 'Update method not implemented')
@@ -83,7 +89,7 @@ class Sensor():
         if self.options and 'dont_send' in self.options and self.options['dont_send'] is True:
             return  # Don't send if disabled in config
 
-        if self.sensorManager.mqttClient is not None:
+        if self.mqtt_client is not None:
             for topic in self.topics:  # Send data for all topic
 
                 # For each topic I check if I send to that or if it has to be replaced with a custom topic defined in options
@@ -95,17 +101,60 @@ class Sensor():
                         topicToUse = customs['custom']
 
                 # Log the topic as debug if it's on
-                if 'debug' in self.sensorManager.config and self.sensorManager.config['debug'] is True:
+                if 'debug' in self.config and self.config['debug'] is True:
                     self.Log(Logger.LOG_DEBUG, "Sending data to " + topicToUse)
 
-                self.sensorManager.mqttClient.SendTopicData(
+                self.mqtt_client.SendTopicData(
                     topicToUse, topic['value'])
+
+    def FindCommand(self, name):  # Find active commands for some specific action
+        if(self.sensorManager):
+            if(self.sensorManager.commandManager):
+                return self.sensorManager.commandManager.FindCommand(name, self.monitor_id)
+            else:
+                self.Log(Logger.LOG_ERROR,
+                         'SensorManager not set in the CommandManager!')
+        else:
+            self.Log(Logger.LOG_ERROR,
+                     'SensorManager not set in the sensor!')
+        return None
+
+    def FindSensor(self, name):  # Find active sensors for some specific action
+        if(self.sensorManager):
+            return self.sensorManager.FindSensor(name, self.monitor_id)
+        else:
+            self.Log(Logger.LOG_ERROR,
+                     'SensorManager not set in the sensor!')
+        return None
 
     def GetTopic(self, last_part_of_topic):
         model = TOPIC_FORMAT
-        if 'topic_prefix' in self.sensorManager.config:
-            model = self.sensorManager.config['topic_prefix'] + '/'+model
-        return model.format(self.sensorManager.config['name'], last_part_of_topic)
+        if 'topic_prefix' in self.config:
+            model = self.config['topic_prefix'] + '/'+model
+        return model.format(self.config['name'], last_part_of_topic)
+
+    # Calculate if a send_interval spent since the last sending time
+    def ShouldSend(self):
+        if self.GetLastSendingTime() is None:  # Never sent anything
+            return True  # Definitely yes, you should send
+        else:
+            # Calculate time elapsed
+            # Get current time
+            now = datetime.datetime.now()
+            # Calculate
+            seconds_elapsed = (now-self.GetLastSendingTime()).total_seconds()
+            # Check if now I have to send
+            if seconds_elapsed >= self.GetSendInterval():
+                return True
+            else:
+                return False
+
+    # Save the time when last message is sent. If no time passed, will be used current time
+    def SaveTimeMessageSent(self, time=None):
+        if time is not None:
+            self.lastSendingTime = time
+        else:
+            self.lastSendingTime = datetime.datetime.now()
 
     def GetClassName(self):
         # Sensor.SENSORFOLDER.SENSORCLASS
@@ -114,6 +163,21 @@ class Sensor():
     def GetSensorName(self):
         # Only SENSORCLASS (without Sensor suffix)
         return self.GetClassName().split('.')[-1].split('Sensor')[0]
+
+    def GetSendInterval(self):
+        return self.send_interval
+
+    def GetMqttClient(self):
+        return self.mqtt_client
+
+    def GetLogger(self):
+        return self.logger
+
+    def GetMonitorID(self):
+        return self.monitor_id
+
+    def GetLastSendingTime(self):
+        return self.lastSendingTime
 
     def Log(self, messageType, message):
         self.logger.Log(messageType, self.name+' Sensor', message)

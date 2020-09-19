@@ -3,20 +3,15 @@ import inspect
 import Commands
 import Logger
 
-CONFIG_COMMANDS_KEY = 'commands'
-
 
 class CommandManager():
-    sensorManager = None
+    # commands is a list of object (Command)
     commands = []
+    sensorManager = None
 
-    def __init__(self, config, mqttClient, logger):
+    def __init__(self, config):
         self.config = config
-        self.mqttClient = mqttClient
-        self.logger = logger
-
-    def InitializeCommands(self):
-        self.LoadCommandsFromConfig()
+        self.logger = Logger.Logger()
 
     def PostInitializeCommands(self):
         for command in self.commands:
@@ -25,15 +20,12 @@ class CommandManager():
             except Exception as exc:
                 self.Log(Logger.LOG_ERROR, command.name +
                          ': error during post-initialization: '+str(exc))
-                self.UnloadCommand(command.name)
+                self.UnloadCommand(command.name, command.GetMonitorID())
 
-    def LoadCommandsFromConfig(self):
-        if CONFIG_COMMANDS_KEY in self.config:
-            commandsToAdd = self.config[CONFIG_COMMANDS_KEY]
-            for command in commandsToAdd:
-                self.LoadCommand(command)
-
-    def LoadCommand(self, commandString):
+    # Here I receive the name of the command (or maybe also the options) and pass it to a function to get the object
+    # which will be initialized and appended in the list of commands
+    # Here configs are specific for the monitor, it's not the same as this manager
+    def LoadCommand(self, commandString, monitor_id, config, mqtt_client, logger):
         name = commandString
         options = None
 
@@ -44,18 +36,27 @@ class CommandManager():
 
         obj = self.GetCommandObjectByName(name)
         if(obj):
-            self.commands.append(obj(self, options, self.logger))
-            self.Log(Logger.LOG_INFO, name + ' command loaded')
+            # Initialize here object and append it
+            try:
+                self.commands.append(
+                    obj(monitor_id, config, mqtt_client, options, logger, self))
+                self.Log(Logger.LOG_INFO, name +
+                         ' command loaded', logger=logger)
+            except Exception as exc:
+                self.Log(Logger.LOG_ERROR, name +
+                         ' command occured an error during loading: ' + str(exc), logger=logger)
 
-    def UnloadCommand(self, name):
-        obj = self.FindCommand(name)
-        self.commands.remove(obj)
-        self.Log(Logger.LOG_WARNING, name + ' command unloaded')
+    def UnloadCommand(self, name, monitor_id):
+        command = self.FindCommand(name, monitor_id)
+        self.Log(Logger.LOG_WARNING, name +
+                 ' command unloaded', logger=command.GetLogger())
+        self.commands.remove(command)
 
-    def FindCommand(self, name):
+    def FindCommand(self, name, monitor_id):
         # Return the command object present in commands list: to get command value from another command for example
         for command in self.ActiveCommands():
-            if name == command.name:  # If it's an object->obj.name, if a class must use the .__dict__ for the name
+            # If it's an object->obj.name, if a class must use the .__dict__ for the name
+            if name == command.name and monitor_id == command.GetMonitorID():
                 return command
         return None
 
@@ -89,5 +90,7 @@ class CommandManager():
     def SetSensorManager(self, sensorManager):
         self.sensorManager = sensorManager
 
-    def Log(self, messageType, message):
-        self.logger.Log(messageType, 'Command Manager', message)
+    def Log(self, messageType, message, logger=None):
+        if logger is None:
+            logger = self.logger
+        logger.Log(messageType, 'Command Manager', message)

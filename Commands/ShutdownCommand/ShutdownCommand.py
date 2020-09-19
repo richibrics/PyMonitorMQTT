@@ -20,15 +20,12 @@ class ShutdownCommand(Command):
             command = commands[self.GetOS()]
             subprocess.Popen(command.split(), stdout=subprocess.PIPE)
         except:
-            raise Exception( 
+            raise Exception(
                 'No shutdown command for this Operating System')
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os
-        if(self.commandManager.sensorManager):
-            os = self.commandManager.sensorManager.FindSensor('Os')
-            if os:
-                os.Update()
-                return os.GetTopicValue()
-        else:
-            print('SensorManager not set in the CommandManager!')
+        os = self.FindSensor('Os')
+        if os:
+            os.Update()
+            return os.GetTopicValue()

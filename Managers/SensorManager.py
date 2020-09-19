@@ -4,30 +4,23 @@ import time
 import Sensors
 import Logger
 
-CONFIG_SENSORS_KEY = 'sensors'
-
 # Delay in second
 update_rate = 20  # If not set in config
 
 
 class SensorManager():
-    commandManager = None
+    # sensors is a list of dicts: [{sensor, mqtt_client, logger}]
     sensors = []
-    continue_sending = True  # Send loop condition
+    commandManager = None
+    continue_sending = True  # Stop loop condition
 
-    def __init__(self, config, mqttClient, logger):
+    def __init__(self, config):
         self.config = config
-        self.mqttClient = mqttClient
-        self.update_rate = update_rate if 'update_rate' not in config else config[
-            'update_rate']
-        self.logger = logger
+        self.logger = Logger.Logger()
 
     def Start(self):
         # Start the send loop
         self.SendAllData()
-
-    def InitializeSensors(self):
-        self.LoadSensorsFromConfig()
 
     def PostInitializeSensors(self):
         for sensor in self.sensors:
@@ -36,15 +29,13 @@ class SensorManager():
             except Exception as exc:
                 self.Log(Logger.LOG_ERROR, sensor.name +
                          ': error during post-initialization: '+str(exc))
-                self.UnloadSensor(sensor.name)
+                self.UnloadSensor(sensor.name, sensor.GetMonitorID())
 
-    def LoadSensorsFromConfig(self):
-        if CONFIG_SENSORS_KEY in self.config:
-            sensorsToAdd = self.config[CONFIG_SENSORS_KEY]
-            for sensor in sensorsToAdd:
-                self.LoadSensor(sensor)
+    # Here I receive the name of the sensor (or maybe also the options) and pass it to a function to get the object
+    # which will be initialized and appended in the list of sensors
+    # Here configs are specific for the monitor, it's not the same as this manager
 
-    def LoadSensor(self, sensorString):
+    def LoadSensor(self, sensorString, monitor_id, config, mqtt_client, send_interval, logger):
         name = sensorString
         options = None
 
@@ -55,18 +46,26 @@ class SensorManager():
 
         obj = self.GetSensorObjectByName(name)
         if obj:
-            self.sensors.append(obj(self, options, self.logger))
-            self.Log(Logger.LOG_INFO, name + ' sensor loaded')
+            try:
+                self.sensors.append(
+                    obj(monitor_id, config, mqtt_client, send_interval, options, logger, self))
+                self.Log(Logger.LOG_INFO, name +
+                         ' sensor loaded', logger=logger)
+            except Exception as exc:
+                self.Log(Logger.LOG_ERROR, name +
+                         ' sensor occured an error during loading: ' + str(exc), logger=logger)
 
-    def UnloadSensor(self, name):
-        obj = self.FindSensor(name)
+    def UnloadSensor(self, name, monitor_id):
+        obj = self.FindSensor(name, monitor_id)
+        self.Log(Logger.LOG_WARNING, name +
+                 ' sensor unloaded', logger=obj.GetLogger())
         self.sensors.remove(obj)
-        self.Log(Logger.LOG_WARNING, name + ' sensor unloaded')
 
-    def FindSensor(self, name):
+    def FindSensor(self, name, monitor_id):
         # Return the sensor object present in sensors list: to get sensor value from another sensor for example
         for sensor in self.ActiveSensors():
-            if name == sensor.name:  # If it's an object->obj.name, if a class must use the .__dict__ for the name
+            # If it's an object->obj.name, if a class must use the .__dict__ for the name
+            if name == sensor.name and monitor_id == sensor.GetMonitorID():
                 return sensor
         return None
 
@@ -108,17 +107,18 @@ class SensorManager():
 
     def SendAllData(self):
         while self.continue_sending:
-            if self.mqttClient.connected:
-                # Update sensors and send data
-                self.UpdateSensors()
-                self.SendSensorsData()
-
-                time.sleep(self.update_rate)
-            else:
-                time.sleep(1)
+            for sensor in self.ActiveSensors():
+                if sensor.GetMqttClient().connected and sensor.ShouldSend():
+                    sensor.CallUpdate()
+                    sensor.SendData()
+                    # Save this time as time when last message is sent
+                    sensor.SaveTimeMessageSent()
+            time.sleep(1)  # Wait a second and recheck if someone has to send
 
     def SetCommandManager(self, commandManager):
         self.commandManager = commandManager
 
-    def Log(self, messageType, message):
-        self.logger.Log(messageType, 'Sensor Manager', message)
+    def Log(self, messageType, message, logger=None):
+        if logger is None:
+            logger = self.logger
+        logger.Log(messageType, 'Sensor Manager', message)
