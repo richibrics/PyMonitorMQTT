@@ -7,12 +7,12 @@ class MqttClient():
     client = None
     connected = False
 
-    topics = []  # Topics to subscribe, dict 'topic', Command (as 'callback')
-    subscribed_topics = []  # Topics already subscribed
-
     def __init__(self, config, logger):
         self.config = config
         self.logger = logger
+        # Topics to subscribe, dict 'topic', Command (as 'callback')
+        self.topics = []
+        self.subscribed_topics = []  # Topics already subscribed
         # Prepare the client
         self.Log(Logger.LOG_INFO, 'Preparing MQTT client')
         self.SetupClient()
@@ -85,9 +85,25 @@ class MqttClient():
     def Event_OnMessageReceive(self, client, userdata, message):
         # Compare message topic whith topics in my list
         for topic in self.topics:
-            if message.topic == topic['topic']:
+            if self.TopicArrivedMatches(message, topic):
                 # Run the callback function of the Command assigned to the topic
                 topic['callback'].CallCallback(message)
+
+    # Check if topic of the message that just arrived is the same with the one I'm checking.
+    # Some subscription (that end with #) receive messages from topics that start only in the same way but the end is different
+    # (it's like the * wildcard) then I have to match also them
+    def TopicArrivedMatches(self, message, topic):
+        if message.topic == topic['topic']:
+            return True
+        if topic['topic'].endswith('#'):
+            if topic['topic'] == '#':
+                return True
+            # Cut the # and check if message topic starts with my topic without #
+            myTopic = topic['topic'][:-1]
+            if message.topic.startswith(myTopic):
+                return True
+
+        return False
 
     def Log(self, messageType, message):
         self.logger.Log(messageType, 'MQTT', message)

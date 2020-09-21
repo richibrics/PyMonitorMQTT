@@ -5,15 +5,16 @@ LOG_INFO = 0
 LOG_ERROR = 1
 LOG_WARNING = 2
 LOG_DEBUG = 3
+LOG_MESSAGE = 4
 
 # Fill start of string with spaces to jusitfy the message (0: no padding)
 # First for type, second for monitor, third for source
 STRINGS_LENGTH = [8, 12, 26]
 # Split in more lines if message's too long
-MAX_MESSAGE_LEN = 55
+MAX_MESSAGE_LEN = 70
 # Number of spaces between prestring (date,source,ecc..) and message
 PRESTRING_MESSAGE_SEPARATOR_LEN = 2
-LONG_MESSAGE_PRESTRING_CHAR = '>'
+LONG_MESSAGE_PRESTRING_CHAR = ' '
 
 DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
@@ -36,6 +37,8 @@ class Logger():
             messageType = 'Warning'
         elif messageType == LOG_DEBUG:
             messageType = 'Debug'
+        elif messageType == LOG_MESSAGE:
+            messageType = 'Message'
         else:
             messageType = 'Logger'
 
