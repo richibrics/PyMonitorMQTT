@@ -28,7 +28,9 @@ class SensorManager():
                 sensor.PostInitialize()
             except Exception as exc:
                 self.Log(Logger.LOG_ERROR, sensor.name +
-                         ': error during post-initialization: '+str(exc))
+                         ': error during post-initialization')
+                self.Log(Logger.LOG_ERROR,
+                         Logger.ExceptionTracker.TrackString(exc))
                 self.UnloadSensor(sensor.name, sensor.GetMonitorID())
 
     # Here I receive the name of the sensor (or maybe also the options) and pass it to a function to get the object
@@ -54,6 +56,8 @@ class SensorManager():
             except Exception as exc:
                 self.Log(Logger.LOG_ERROR, name +
                          ' sensor occured an error during loading: ' + str(exc), logger=logger)
+                self.Log(Logger.LOG_ERROR, Logger.ExceptionTracker.TrackString(
+                    exc), logger=logger)
 
     def UnloadSensor(self, name, monitor_id):
         obj = self.FindSensor(name, monitor_id)

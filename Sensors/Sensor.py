@@ -78,7 +78,8 @@ class Sensor():
         try:
             self.Update()
         except Exception as exc:
-            self.Log(Logger.LOG_ERROR, 'Error occured during update: '+str(exc))
+            self.Log(Logger.LOG_ERROR, 'Error occured during update')
+            self.Log(Logger.LOG_ERROR, Logger.ExceptionTracker.TrackString(exc))
             self.sensorManager.UnloadSensor(self.name, self.monitor_id)
 
     def Update(self):  # Implemented in sub-classes - Here values are taken

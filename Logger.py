@@ -1,5 +1,6 @@
 import datetime
 import os
+import sys
 
 LOG_INFO = 0
 LOG_ERROR = 1
@@ -75,3 +76,20 @@ class Logger():
         print(string)
         with open(os.path.join(scriptFolder, LOGS_FOLDER, MAIN_LOG_FILENAME), "a") as logFile:
             logFile.write(string+' \n')
+
+
+class ExceptionTracker():
+
+    # Call this static method inside an except block
+    def Track():
+        # Return file and line where exception occured
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        return {'filename': filename, 'line': line_number}
+
+    # Call this static method inside an except block, will return a formatted string with data
+    def TrackString(exception):
+        data = ExceptionTracker.Track()
+        message = str(exception)
+        return "Critical error in '{}' at line {}: {}".format(data['filename'], data['line'], message)

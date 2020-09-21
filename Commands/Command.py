@@ -29,6 +29,7 @@ class Command():
             self.Callback(message)
         except Exception as exc:
             self.Log(Logger.LOG_ERROR, 'Error occured in callback: '+str(exc))
+            self.Log(Logger.LOG_ERROR, Logger.ExceptionTracker.TrackString(exc))
             self.commandManager.UnloadCommand(self.name, self.monitor_id)
 
     # Implemented in sub-classes

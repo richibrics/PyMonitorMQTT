@@ -20,6 +20,8 @@ class CommandManager():
             except Exception as exc:
                 self.Log(Logger.LOG_ERROR, command.name +
                          ': error during post-initialization: '+str(exc))
+                self.Log(Logger.LOG_ERROR,
+                         Logger.ExceptionTracker.TrackString(exc))
                 self.UnloadCommand(command.name, command.GetMonitorID())
 
     # Here I receive the name of the command (or maybe also the options) and pass it to a function to get the object
@@ -44,7 +46,9 @@ class CommandManager():
                          ' command loaded', logger=logger)
             except Exception as exc:
                 self.Log(Logger.LOG_ERROR, name +
-                         ' command occured an error during loading: ' + str(exc), logger=logger)
+                         ' command occured an error during loading', logger=logger)
+                self.Log(Logger.LOG_ERROR, Logger.ExceptionTracker.TrackString(
+                    exc), logger=logger)
 
     def UnloadCommand(self, name, monitor_id):
         command = self.FindCommand(name, monitor_id)

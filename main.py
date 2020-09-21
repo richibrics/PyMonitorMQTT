@@ -49,7 +49,8 @@ if __name__ == "__main__":
         SetupMonitors()
     except Exception as exc:  # Main try except to give information about exception management
         logger = Logger.Logger()
-        logger.Log(Logger.LOG_ERROR, 'Main', 'Critical error: ' + str(exc))
+        logger.Log(Logger.LOG_ERROR, 'Main',
+                   Logger.ExceptionTracker.TrackString(exc))
         logger.Log(Logger.LOG_ERROR, 'Main',
                    'Try to check your configuration.yaml')
         logger.Log(Logger.LOG_ERROR, 'Main',

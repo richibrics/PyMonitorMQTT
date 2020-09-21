@@ -10,7 +10,7 @@ except:
 
 supports_unix = True
 try:
-    import wmi  # Only to get windows temperature
+    import notify2  # Only to get windows temperature
 except:
     supports_unix = False
 
@@ -20,6 +20,7 @@ TOPIC = 'notify'
 # If I haven't value for the notification I use these
 DEFAULT_MESSAGE = 'Notification'
 DEFAULT_TITLE = 'PyMonitorMQTT'
+
 DEFAULT_DURATION = 10  # Seconds
 
 
@@ -35,7 +36,10 @@ class NotifyCommand(Command):
                 raise Exception(
                     'Notify not available, have you installed \'win10toast\' on pip ?')
         else:
-            if not supports_unix:
+            if supports_unix:
+                # Init notify2
+                notify2.init('PyMonitorMQTT')
+            else:
                 raise Exception(
                     'Notify not available, have you installed \'notify2\' on pip ?')
 
@@ -68,21 +72,15 @@ class NotifyCommand(Command):
         else:
             title = DEFAULT_TITLE
 
-        # Look for notification duration
-        if 'duration' in self.options:
-            duration = self.options['duration']
-        elif 'duration' in messageDict:
-            duration = messageDict['duration']
-        else:
-            duration = DEFAULT_DURATION
-
         # Check only the os (if it's that os, it's supported because if it wasn't supported,
         # an execption would be thrown in post-inits)
-
         if self.os == 'Windows':
             toaster = win10toast.ToastNotifier()
             toaster.show_toast(
-                title, content, duration=duration, threaded=False)
+                title, content, duration=DEFAULT_DURATION, threaded=False)
+        elif self.os == 'Linux':
+            notification = notify2.Notification(title, content)
+            notification.show()
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os
