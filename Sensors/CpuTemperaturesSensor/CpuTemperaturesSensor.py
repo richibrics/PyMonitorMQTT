@@ -1,4 +1,4 @@
-from Sensors.Sensor import Sensor
+from Sensors.Sensor import *
 import psutil
 import json
 
@@ -10,7 +10,7 @@ except:
     supports_win_temperature = False
 
 
-TOPIC = 'cpu_temperatures'
+TOPIC = 'cpu/temperatures'
 
 
 class CpuTemperaturesSensor(Sensor):

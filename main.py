@@ -30,13 +30,13 @@ def SetupMonitors():
 
     # If I have not a list of monitors, I setup only a monitor
     if('monitors' not in config):
-        monitor = Monitor(config, commandManager, sensorManager)
+        monitor = Monitor(config, config, commandManager, sensorManager)
     else:  # More Monitors
         # Now setup monitors
         monitor_id = 0
         for monitor_config in config['monitors']:
             monitor_id += 1
-            monitor = Monitor(monitor_config, commandManager,
+            monitor = Monitor(monitor_config, config, commandManager,
                               sensorManager, monitor_id)
 
     # Start sensors loop
@@ -48,7 +48,7 @@ if __name__ == "__main__":
         LoadYAML()
         SetupMonitors()
     except Exception as exc:  # Main try except to give information about exception management
-        logger = Logger.Logger()
+        logger = Logger.Logger(config)
         logger.Log(Logger.LOG_ERROR, 'Main',
                    Logger.ExceptionTracker.TrackString(exc))
         logger.Log(Logger.LOG_ERROR, 'Main',

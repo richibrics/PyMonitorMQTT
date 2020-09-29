@@ -1,9 +1,9 @@
 import psutil
-from Sensors.Sensor import Sensor
+from Sensors.Sensor import *
 
 
-TOPIC_PERCENTAGE = 'battery_level_percentage'
-TOPIC_CHARGING_STATUS = 'battery_charging'
+TOPIC_PERCENTAGE = 'battery/battery_level_percentage'
+TOPIC_CHARGING_STATUS = 'battery/battery_charging'
 
 
 class BatterySensor(Sensor):
@@ -13,7 +13,7 @@ class BatterySensor(Sensor):
 
     def Update(self):
         batteryInfo = self.GetBatteryInformation()
-        self.SetTopicValue(TOPIC_PERCENTAGE, batteryInfo['level'])
+        self.SetTopicValue(TOPIC_PERCENTAGE, batteryInfo['level'],ValueFormatter.TYPE_PERCENTAGE)
         self.SetTopicValue(TOPIC_CHARGING_STATUS, str(batteryInfo['charging']))
 
     def GetBatteryInformation(self):

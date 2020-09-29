@@ -1,6 +1,7 @@
 import datetime
 import os
 import sys
+from consts import *
 
 LOG_INFO = 0
 LOG_ERROR = 1
@@ -11,8 +12,7 @@ LOG_MESSAGE = 4
 # Fill start of string with spaces to jusitfy the message (0: no padding)
 # First for type, second for monitor, third for source
 STRINGS_LENGTH = [8, 12, 26]
-# Split in more lines if message's too long
-MAX_MESSAGE_LEN = 70
+
 # Number of spaces between prestring (date,source,ecc..) and message
 PRESTRING_MESSAGE_SEPARATOR_LEN = 2
 LONG_MESSAGE_PRESTRING_CHAR = ' '
@@ -25,8 +25,13 @@ MAIN_LOG_FILENAME = 'Log.log'
 
 
 class Logger():
-    def __init__(self, monitor_id=None):
+    def __init__(self, globalConfig, monitor_id=None):
+        self.globalConfig = globalConfig
         self.monitor_id = monitor_id
+        if 'logger_message_width' in self.globalConfig:
+            self.logger_message_width = self.globalConfig['logger_message_width']
+        else:
+            self.logger_message_width = DEFAULT_LOGGER_MESSAGE_WIDTH
         self.SetupFolder()
 
     def Log(self, messageType, source, message):
@@ -54,9 +59,9 @@ class Logger():
 
         # Manage string to print in more lines if it's too long
         while len(message) > 0:
-            string = prestring+message[:MAX_MESSAGE_LEN]
+            string = prestring+message[:self.logger_message_width]
             # Cut for next iteration if message is longer than a line
-            message = message[MAX_MESSAGE_LEN:]
+            message = message[self.logger_message_width:]
             if(len(message) > 0):
                 string = string+'-'  # Print new line indicator if I will go down in the next iteration
             self.PrintAndSave(string)

@@ -1,12 +1,13 @@
-from Sensors.Sensor import Sensor
+from Sensors.Sensor import *
 from os import path
-from ctypes import*
+from ctypes import *
 
 TOPIC_LEVEL = 'volume_level_get'
 TOPIC_MUTE = 'volume_mute_get'
 
 scriptFolder = str(path.dirname(path.realpath(__file__)))
 #EXTERNAL_SOFTWARE_FILENAME = path.join(scriptFolder,'..','..','ExternalUtilities','FILE')
+
 
 class VolumeSensor(Sensor):
     def Initialize(self):
@@ -19,11 +20,11 @@ class VolumeSensor(Sensor):
 
     def GetSystemVolume(self):
         os = self.GetOS()
-        raise Exception('No volume method coded') # for this Operating System')
+        # for this Operating System')
+        raise Exception('No volume method coded')
 
     def GetWindowsVolume(self):
         pass
-
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os
@@ -31,4 +32,3 @@ class VolumeSensor(Sensor):
         if os:
             os.Update()
             return os.GetTopicValue()
-

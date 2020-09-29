@@ -1,4 +1,4 @@
-from Sensors.Sensor import Sensor
+from Sensors.Sensor import *
 import subprocess
 import re
 
@@ -9,7 +9,7 @@ except:
     supports_win_brightness = False
 
 
-TOPIC = 'brightness_get'
+TOPIC = 'brightness/get'
 
 
 class BrightnessSensor(Sensor):
@@ -17,7 +17,7 @@ class BrightnessSensor(Sensor):
         self.AddTopic(TOPIC)
 
     def Update(self):
-        self.SetTopicValue(TOPIC, self.GetBrightness())
+        self.SetTopicValue(TOPIC, self.GetBrightness(),ValueFormatter.TYPE_PERCENTAGE)
 
     def GetBrightness(self):
         os = self.GetOS()

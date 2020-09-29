@@ -9,8 +9,9 @@ from consts import *
 
 class Monitor():
 
-    def __init__(self, config, commandManager, sensorManager, monitor_id=1):
+    def __init__(self, config, globalConfig, commandManager, sensorManager, monitor_id=1):
         self.config = config
+        self.globalConfig = globalConfig
         self.monitor_id = monitor_id
         self.commandManager = commandManager
         self.sensorManager = sensorManager
@@ -18,7 +19,7 @@ class Monitor():
 
     def Setup(self):
         # Setip logger
-        self.logger = Logger.Logger(self.monitor_id)
+        self.logger = Logger.Logger(self.globalConfig, self.monitor_id)
         self.Log(Logger.LOG_INFO, 'Starting')
         # Setup MQTT client
         self.mqttClient = MqttClient(self.config, self.logger)
@@ -35,7 +36,9 @@ class Monitor():
             for sensor in sensorsToAdd:
                 self.sensorManager.LoadSensor(
                     sensor, self.monitor_id, self.config, self.mqttClient, self.config['send_interval'], self.logger)
-
+        # Some need post-initialize configuration
+        self.sensorManager.PostInitializeSensors()
+        # All configurations must go above
 
     def LoadCommands(self):
         # From configs I read commands list and I give the names to the commands manager which will initialize them
@@ -49,7 +52,6 @@ class Monitor():
         # Some need post-initialize configuration
         self.commandManager.PostInitializeCommands()
         # All configurations must go above
-
 
     def Log(self, messageType, message):
         self.logger.Log(messageType, 'Main', message)

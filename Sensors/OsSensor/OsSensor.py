@@ -1,5 +1,5 @@
 import platform
-from Sensors.Sensor import Sensor
+from Sensors.Sensor import *
 
 
 TOPIC = 'operating_system'

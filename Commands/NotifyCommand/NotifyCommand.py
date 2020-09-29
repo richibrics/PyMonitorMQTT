@@ -1,4 +1,5 @@
-from Commands.Command import Command
+import os
+from Commands.Command import *
 import Logger
 
 supports_win = True
@@ -35,7 +36,7 @@ class NotifyCommand(Command):
             if not supports_win:
                 raise Exception(
                     'Notify not available, have you installed \'win10toast\' on pip ?')
-        else:
+        elif self.os == 'Linux':
             if supports_unix:
                 # Init notify2
                 notify2.init('PyMonitorMQTT')
@@ -55,8 +56,8 @@ class NotifyCommand(Command):
         # Priority for configuration content and title. If not set there, will try to find them in the payload
 
         # Look for notification content
-        if 'message' in self.options:
-            content = self.options['message']
+        if self.GetOption(CONTENTS_OPTION_KEY) and 'message' in self.GetOption(CONTENTS_OPTION_KEY):
+            content = self.GetOption(CONTENTS_OPTION_KEY)['message']
         elif 'message' in messageDict:
             content = messageDict['message']
         else:
@@ -65,15 +66,15 @@ class NotifyCommand(Command):
                      'No message for the notification set in configuration or in the received payload')
 
         # Look for notification title
-        if 'title' in self.options:
-            title = self.options['title']
+        if self.GetOption(CONTENTS_OPTION_KEY) and 'title' in self.GetOption(CONTENTS_OPTION_KEY):
+            title = self.GetOption(CONTENTS_OPTION_KEY)['title']
         elif 'title' in messageDict:
             title = messageDict['title']
         else:
             title = DEFAULT_TITLE
 
         # Check only the os (if it's that os, it's supported because if it wasn't supported,
-        # an execption would be thrown in post-inits)
+        # an exception would be thrown in post-inits)
         if self.os == 'Windows':
             toaster = win10toast.ToastNotifier()
             toaster.show_toast(
@@ -81,6 +82,10 @@ class NotifyCommand(Command):
         elif self.os == 'Linux':
             notification = notify2.Notification(title, content)
             notification.show()
+        else:
+            command = 'osascript -e \'display notification "{}" with title "{}"\''.format(
+                content, title)
+            os.system(command)
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os

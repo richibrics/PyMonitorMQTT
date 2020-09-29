@@ -1,5 +1,5 @@
 import os
-from Sensors.Sensor import Sensor
+from Sensors.Sensor import *
 
 
 TOPIC = 'desktop_environment'

@@ -1,7 +1,7 @@
 import os
 import pyscreenshot as ImageGrab
 from PIL import Image
-from Sensors.Sensor import Sensor
+from Sensors.Sensor import *
 
 
 TOPIC = 'screenshot'

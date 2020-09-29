@@ -1,5 +1,5 @@
 import datetime
-from Sensors.Sensor import Sensor
+from Sensors.Sensor import *
 
 
 TOPIC_MESSAGE_TIME = 'message_time'

@@ -16,7 +16,7 @@ class SensorManager():
 
     def __init__(self, config):
         self.config = config
-        self.logger = Logger.Logger()
+        self.logger = Logger.Logger(config)
 
     def Start(self):
         # Start the send loop

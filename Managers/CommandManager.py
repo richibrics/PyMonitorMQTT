@@ -11,7 +11,7 @@ class CommandManager():
 
     def __init__(self, config):
         self.config = config
-        self.logger = Logger.Logger()
+        self.logger = Logger.Logger(config)
 
     def PostInitializeCommands(self):
         for command in self.commands:

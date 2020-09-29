@@ -1,6 +1,7 @@
 import datetime
 from consts import *
 import Logger
+from ValueFormatter import ValueFormatter
 
 
 class Sensor():
@@ -11,18 +12,20 @@ class Sensor():
     lastSendingTime = None
     replacedTopics = []
 
-    def __init__(self, monitor_id, config, mqtt_client, send_interval, options, logger, sensorManager):  # Config is args
+    def __init__(self, monitor_id, brokerConfigs, mqtt_client, send_interval, sensorConfigs, logger, sensorManager):  # Config is args
         self.topics = []  # List of {topic, value}
+        self.options = {}
         self.monitor_id = monitor_id
-        self.config = config
+        self.brokerConfigs = brokerConfigs
         self.mqtt_client = mqtt_client
         self.send_interval = send_interval
-        self.options = options
+        self.sensorConfigs = sensorConfigs
         self.logger = logger
         self.sensorManager = sensorManager
         self.name = self.GetSensorName()
         self.addedTopics = 0
         # Do per sensor operations
+        self.ParseOptions()
         self.Initialize()
 
     def Initialize(self):  # Implemented in sub-classes
@@ -30,6 +33,27 @@ class Sensor():
 
     def PostInitialize(self):  # Implemented in sub-classes
         pass
+
+    def ParseOptions(self):
+        # I can have options both in broker configs and single sensor configs
+        # At first I search in broker config. Then I check the per-sensor option and if I find
+        # something there, I replace - if was set from first step -  broker configs (or simply add a new entry)
+
+        for optionToSearch in POSSIBLE_OPTIONS:
+            # 1: Set from broker's configs
+            if optionToSearch in self.brokerConfigs:
+                self.options[optionToSearch] = self.brokerConfigs[optionToSearch]
+
+            # 2: Set from sensor's configs
+            if self.sensorConfigs and optionToSearch in self.sensorConfigs:
+                self.options[optionToSearch] = self.sensorConfigs[optionToSearch]
+
+    def GetOption(self, option):
+        # if in options I have a value for that option rerturn that else return False
+        if option in self.options:
+            return self.options[option]
+        else:
+            return False
 
     def ListTopics(self):
         return self.topics
@@ -39,9 +63,9 @@ class Sensor():
 
         # If user in options defined custom topics, store original and custom topic and replace it in the send function
         replaced = False
-        if self.options and 'custom_topics' in self.options and len(self.options['custom_topics']) >= self.addedTopics:
+        if self.GetOption('custom_topics') is not False and len(self.GetOption('custom_topics')) >= self.addedTopics:
             self.replacedTopics.append(
-                {'original': topic, 'custom': self.options['custom_topics'][self.addedTopics-1]})
+                {'original': topic, 'custom': self.GetOption('custom_topics')[self.addedTopics-1]})
             self.Log(Logger.LOG_INFO, 'Using custom topic defined in options')
             replaced = True
 
@@ -51,6 +75,7 @@ class Sensor():
         return self.topics[0]['topic'] if len(self.topics) else None
 
     def GetTopicByName(self, name):
+        # Using topic string, I get his dict from topics list
         for topic in self.topics:
             if topic['topic'] == name:
                 return topic
@@ -66,11 +91,18 @@ class Sensor():
         else:
             return None
 
-    def SetTopicValue(self, topic_name, value):
+    def SetTopicValue(self, topic_name, value, valueType=ValueFormatter.TYPE_NONE):
+        # At first using topic string, I get his dict from topics list
         topic = self.GetTopicByName(topic_name)
-        if topic:
+        if topic:  # Found
+
+            # If user defined in options he wants formatted values (1200,byte -> 1,2KB)
+            if self.GetOption('formatted_values'):
+                value = ValueFormatter.GetFormattedValue(value, valueType)
+
+            # Set the value
             topic['value'] = value
-        else:
+        else:  # Not found, log error
             self.Log(Logger.LOG_ERROR, 'Topic ' +
                      topic_name + ' does not exist !')
 
@@ -87,7 +119,7 @@ class Sensor():
         pass  # Must not be called directly, cause stops everything in exception, call only using CallUpdate
 
     def SendData(self):
-        if self.options and 'dont_send' in self.options and self.options['dont_send'] is True:
+        if self.GetOption('dont_send') is True:
             return  # Don't send if disabled in config
 
         if self.mqtt_client is not None:
@@ -102,7 +134,7 @@ class Sensor():
                         topicToUse = customs['custom']
 
                 # Log the topic as debug if it's on
-                if 'debug' in self.config and self.config['debug'] is True:
+                if 'debug' in self.brokerConfigs and self.brokerConfigs['debug'] is True:
                     self.Log(Logger.LOG_DEBUG, "Sending data to " + topicToUse)
 
                 self.mqtt_client.SendTopicData(
@@ -130,9 +162,9 @@ class Sensor():
 
     def GetTopic(self, last_part_of_topic):
         model = TOPIC_FORMAT
-        if 'topic_prefix' in self.config:
-            model = self.config['topic_prefix'] + '/'+model
-        return model.format(self.config['name'], last_part_of_topic)
+        if 'topic_prefix' in self.brokerConfigs:
+            model = self.brokerConfigs['topic_prefix'] + '/'+model
+        return model.format(self.brokerConfigs['name'], last_part_of_topic)
 
     # Calculate if a send_interval spent since the last sending time
     def ShouldSend(self):
