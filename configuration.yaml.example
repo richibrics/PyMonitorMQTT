@@ -1,24 +1,25 @@
-broker: BROKER_ADDRESS
-name: PC_NAME
-update_rate: 20 # Seconds
+monitors:
+  - broker: BROKER_ADDRESS
+    name: PC_NAME
+    send_interval: 20 # Seconds
 
-sensors:
-  - Cpu
-  - CpuTemperatures
-  - Ram
-  - Os
-  - DesktopEnvironment
-  - Screenshot
-  - Battery
-  - Disk
-  - Time
-  - Brightness
+    sensors:
+      - Cpu
+      - CpuTemperatures
+      - Ram
+      - Os
+      - DesktopEnvironment
+      - Screenshot
+      - Battery
+      - Disk
+      - Time
+      - Brightness
 
-commands:
-  - Lock
-  - Reboot
-  - Shutdown
-  - Brightness
-  - Notify
+    commands:
+      - Lock
+      - Reboot
+      - Shutdown
+      - Brightness
+      - Notify
 
 
