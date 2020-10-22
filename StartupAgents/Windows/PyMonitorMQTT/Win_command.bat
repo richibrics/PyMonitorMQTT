@@ -1,0 +1,1 @@
+python D:\Projects\PyMonitorMQTT\main.py
