@@ -1,1 +1,1 @@
-CreateObject("Wscript.Shell").Run """" & "PyMonitorMQTT\Win_command.bat" & """", 0, False
+CreateObject("Wscript.Shell").Run """" & "D:\Projects\PyMonitorMQTT\StartupAgents\Windows\Win_command.bat" & """", 0, False
