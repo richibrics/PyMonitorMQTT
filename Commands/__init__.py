@@ -5,3 +5,4 @@ from Commands.ShutdownCommand.ShutdownCommand import ShutdownCommand
 from Commands.BrightnessCommand.BrightnessCommand import BrightnessCommand
 from Commands.NotifyCommand.NotifyCommand import NotifyCommand
 from Commands.InboxCommand.InboxCommand import InboxCommand
+from Commands.TurnOffMonitorsCommand.TurnOffMonitorsCommand import TurnOffMonitorsCommand
