@@ -1,25 +1,14 @@
-monitors:
-  - broker: BROKER_ADDRESS
-    name: PC_NAME
-    send_interval: 20 # Seconds
+- broker: 3.122.209.170
+  name: 5f685dc02e9d83468db6e0f7
+  send_interval: 20 # Seconds
 
-    sensors:
-      - Cpu
-      - CpuTemperatures
-      - Ram
-      - Os
-      - DesktopEnvironment
-      - Screenshot
-      - Battery
-      - Disk
-      - Time
-      - Brightness
+  sensors:
+    - Os
+    - DesktopEnvironment
 
-    commands:
-      - Lock
-      - Reboot
-      - Shutdown
-      - Brightness
-      - Notify
+  commands:
+    - Notify:
+        custom_topics:
+          - 5f685dc02e9d83468db6e0f7/directive/powerState
 
 

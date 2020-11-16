@@ -25,6 +25,8 @@ class BrightnessCommand(Command):
             return self.SetBrightness_Win(value)
         elif(os == 'macOS'):
             return self.SetBrightness_macOS(value)
+        elif(os == 'Linux'):
+            return self.SetBrightness_Linux(value)
         else:
             raise Exception(
                 'No brightness command available for this Operating System')
@@ -32,6 +34,10 @@ class BrightnessCommand(Command):
     def SetBrightness_macOS(self, value):
         value = value/100  # cause I need it from 0 to 1
         command = 'brightness ' + str(value)
+        subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+
+    def SetBrightness_Linux(self, value):
+        command = 'xbacklight -set ' + str(value)
         subprocess.Popen(command.split(), stdout=subprocess.PIPE)
 
     def SetBrightness_Win(self, value):
