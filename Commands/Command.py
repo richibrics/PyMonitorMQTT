@@ -54,10 +54,23 @@ class Command():
 
     def GetOption(self, option):
         # if in options I have a value for that option rerturn that else return False
-        if option in self.options:
-            return self.options[option]
+        if type(option) == str:
+            if option in self.options:
+                return self.options[option]
+            else:
+                return False
+        elif type(option) == list:  # It's a list with the option Path like contents -> values -> first
+            currentDict = self.options
+            while (len(option)):
+                current_option = option.pop(0)
+                if type(currentDict) == dict and current_option in currentDict:
+                    currentDict = currentDict[current_option]
+                else:
+                    return False  # Not found
+            return currentDict  # All ok, found
         else:
-            return False
+            raise Exception(
+                "Error during GetOption: option type not valid " + str(type(option)))
 
     def FindCommand(self, name):  # Find active commands for some specific action
         if(self.commandManager):
