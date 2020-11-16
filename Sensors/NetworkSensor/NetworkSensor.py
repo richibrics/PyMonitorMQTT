@@ -2,8 +2,8 @@ import psutil
 import math
 from Sensors.Sensor import *
 
-DOWNLOAD_TOPIC = 'bytes_recv'
-UPLOAD_TOPIC = 'bytes_sent'
+DOWNLOAD_TOPIC = 'network/bytes_recv'
+UPLOAD_TOPIC = 'network/bytes_sent'
 
 # Supports FORMATTED
 

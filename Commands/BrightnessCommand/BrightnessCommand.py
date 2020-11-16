@@ -4,11 +4,12 @@ import subprocess
 supports_win_brightness = True
 try:
     import wmi  # Only to get windows brightness
+    import pythoncom
 except:
     supports_win_brightness = False
 
 
-TOPIC = 'brightness_set'
+TOPIC = 'brightness/set'
 
 
 class BrightnessCommand(Command):
@@ -42,6 +43,7 @@ class BrightnessCommand(Command):
 
     def SetBrightness_Win(self, value):
         if supports_win_brightness:
+            pythoncom.CoInitialize()
             return wmi.WMI(namespace='wmi').WmiMonitorBrightnessMethods()[0].WmiSetBrightness(value, 0)
         else:
             raise Exception(
