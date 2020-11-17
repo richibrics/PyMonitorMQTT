@@ -1,9 +1,11 @@
 from consts import *
 import Logger
+import sys
+import yaml
+from os import path
 
 
 class Command():
-    #topic = ""
 
     def __init__(self, monitor_id, brokerConfigs, mqtt_client, commandConfigs, logger, commandManager):  # Config is args
         self.name = self.GetCommandName()
@@ -15,6 +17,11 @@ class Command():
         self.commandManager = commandManager
         self.logger = logger
         self.subscribedTopics = 0
+
+        # Get for some features the pathof the folder cutting the py filename (abs path to avoid windows problems)
+        self.commandPath = path.dirname(path.abspath(
+            sys.modules[self.__class__.__module__].__file__))
+
         self.ParseOptions()
         self.Initialize()
 
@@ -132,6 +139,21 @@ class Command():
 
     def GetMonitorID(self):
         return self.monitor_id
+
+    def LoadRequirements(self):
+        # 1: Get path of the single object
+        # 2: If I dont find a requirements.yaml in that folder, I return None
+        # 3: If I find it, I parse the yaml and I return the dict
+        # Start:
+        # 1
+        requirements_path = path.join(
+            self.commandPath, OBJECT_REQUIREMENTS_FILENAME)
+        # try 3 except 2
+        try:
+            with open(requirements_path) as f:
+                return yaml.load(f, Loader=yaml.FullLoader)
+        except:
+            return None
 
     def Log(self, messageType, message):
         self.logger.Log(messageType, self.name+' Command', message)

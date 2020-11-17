@@ -40,15 +40,19 @@ class CommandManager():
         if(obj):
             # Initialize here object and append it
             try:
-                self.commands.append(
-                    obj(monitor_id, config, mqtt_client, options, logger, self))
+                objAlive = obj(monitor_id, config, mqtt_client,
+                               options, logger, self)
+                self.commands.append(objAlive)
+                req = objAlive.LoadRequirements()
                 self.Log(Logger.LOG_INFO, name +
                          ' command loaded', logger=logger)
+                return req  # Return the requirements
             except Exception as exc:
                 self.Log(Logger.LOG_ERROR, name +
                          ' command occured an error during loading', logger=logger)
                 self.Log(Logger.LOG_ERROR, Logger.ExceptionTracker.TrackString(
                     exc), logger=logger)
+        return None
 
     def UnloadCommand(self, name, monitor_id):
         command = self.FindCommand(name, monitor_id)

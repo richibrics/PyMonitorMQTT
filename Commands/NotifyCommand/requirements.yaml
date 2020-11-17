@@ -1,0 +1,5 @@
+requirements:
+  sensors:
+    - Os:
+        dont_send: True
+      
