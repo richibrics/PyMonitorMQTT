@@ -1,6 +1,7 @@
 from Sensors.Sensor import *
 import psutil
 import json
+import Logger
 
 supports_win_temperature = True
 try:
@@ -41,10 +42,19 @@ class CpuTemperaturesSensor(Sensor):
 
     def GetCpuTemperatures_Unix(self):
         cpu_temps = []
-        temps = psutil.sensors_temperatures()['coretemp']
-        for temp in temps:
-            if 'Core' in temp.label:
-                cpu_temps.append(temp.current)
+        temps = psutil.sensors_temperatures()
+        if 'coretemp' in temps:
+            for temp in temps['coretemp']:
+                if 'Core' in temp.label:
+                    cpu_temps.append(temp.current)
+        elif 'cpu_thermal' in temps:
+            for temp in temps['cpu_thermal']:
+                    cpu_temps.append(temp.current)
+        else:
+            self.Log(Logger.LOG_ERROR,"Can't get temperature for your system.")
+            self.Log(Logger.LOG_ERROR,"Open a Git Issue and show this: " + str(temps))
+            self.Log(Logger.LOG_ERROR,"Thank you")
+            raise Exception("No dict data")
         # Send the list as json
         return str(json.dumps(cpu_temps))
 
