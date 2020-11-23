@@ -11,3 +11,4 @@ from Sensors.DesktopEnvironmentSensor.DesktopEnvironmentSensor import DesktopEnv
 from Sensors.VolumeSensor.VolumeSensor import VolumeSensor
 from Sensors.BrightnessSensor.BrightnessSensor import BrightnessSensor
 from Sensors.NetworkSensor.NetworkSensor import NetworkSensor
+from Sensors.FileReadSensor.FileReadSensor import FileReadSensor

@@ -18,7 +18,7 @@ FORMATTED_VALUES_OPTION_KEY = 'formatted_values'
 CUSTOM_TOPICS_OPTION_KEY = 'custom_topics'
 DONT_SEND_DATA_OPTION_KEY = 'dont_send'
 DEBUG_OPTION_KEY = 'debug'
-# For excample notify takes title and message. Then here I will pass specifics dato for sensors/commands
+# For example notify takes title and message. Then here I will pass specifics dato for sensors/commands
 CONTENTS_OPTION_KEY = 'contents'
 POSSIBLE_OPTIONS = [DEBUG_OPTION_KEY, ADVANCED_INFO_OPTION_KEY,
                     FORMATTED_VALUES_OPTION_KEY, CUSTOM_TOPICS_OPTION_KEY, DONT_SEND_DATA_OPTION_KEY, CONTENTS_OPTION_KEY]
@@ -28,3 +28,5 @@ FIXED_VALUE_OS_WINDOWS = "Windows"
 FIXED_VALUE_OS_LINUX = "Linux"
 
 OBJECT_REQUIREMENTS_FILENAME = "requirements.yaml"
+
+FILE_READ_SENSOR_FILENAME_CONTENTS_OPTION ="filename"
