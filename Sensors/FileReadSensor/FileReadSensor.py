@@ -16,7 +16,7 @@ class FileReadSensor(Sensor):
         if not self.FileExists():
             raise Exception("File must exist (and can't be a directory) !")
         with open(self.filename,"r") as f:
-            return f.read()
+            self.SetTopicValue(TOPIC,f.read())
 
     def FileExists(self):
         return os.path.exists(self.filename) and os.path.isfile(self.filename)
