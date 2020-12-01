@@ -68,36 +68,37 @@ python3 main.py
 ## Configure
 To configure the montior client, you need to create a text file in the project folder named "configuration.yaml"
 
-File example:
+File example: (UPDATED IN WIKI)
 ```
-broker: example.com
-name: PC_NAME
-port: 1883
-username: example
-password: example
-update_rate: 20 # Seconds
-topic_prefix: example_prefix
-print_topics: False
+monitors:
+  - broker: example.com
+    name: PC_NAME
+    port: 1883
+    username: example
+    password: example
+    update_rate: 20 # Seconds
+    topic_prefix: example_prefix
+    print_topics: False
 
-sensors:
-  - Cpu
-  - CpuTemperatures
-  - Ram
-  - Os
-  - DesktopEnvironment:
-      dont_send: True      
-  - Battery
-  - Disk
-  - Time
-  - Screenshot:
-      custom_topic: shevchenko/photo
-  - Brightness
+    sensors:
+      - Cpu
+      - CpuTemperatures
+      - Ram
+      - Os
+      - DesktopEnvironment:
+          dont_send: True      
+      - Battery
+      - Disk
+      - Time
+      - Screenshot:
+          custom_topic: shevchenko/photo
+      - Brightness
 
-commands:
-  - Lock
-  - Reboot
-  - Shutdown
-  - Brightness
+    commands:
+      - Lock
+      - Reboot
+      - Shutdown
+      - Brightness
 
 ```
 
