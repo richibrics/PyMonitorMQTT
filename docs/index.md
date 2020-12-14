@@ -1,6 +1,6 @@
 # PyMontitorMQTT
 
-* TOC {:toc}
+{% include toc.html html=content %}
 
 ## About the application
 PyMonitorMQTT is a **cross-platform system monitor** (works both on Windows, Linux and macOS) that sends real time information via **MQTT**.
