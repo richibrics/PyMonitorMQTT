@@ -1,3 +1,6 @@
+logger_message_width: 50
+
+monitors:
 - broker: 3.122.209.170
   name: 5f685dc02e9d83468db6e0f7
   send_interval: 20 # Seconds
