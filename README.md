@@ -76,7 +76,7 @@ monitors:
     port: 1883
     username: example
     password: example
-    update_rate: 20 # Seconds
+    send_interval: 20 # Seconds
     topic_prefix: example_prefix
     print_topics: False
 
