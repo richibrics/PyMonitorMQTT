@@ -1,4 +1,4 @@
-# PyMontitorMQTT
+# PyMonitorMQTT
 
 {% include toc.html html=content %}
 
