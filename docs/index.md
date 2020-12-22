@@ -9,6 +9,20 @@ The information is sent every 10 seconds and the broker can perform certain acti
 Information form this client are well managed by home automation systems like [HomeAssistant](https://github.com/home-assistant/home-assistant).
 **Companion integration for HomeAssistant can be found [here](https://github.com/richibrics/HassMonitorMqtt)**
 
+## Why you should use it
+Many home automation systems support MQTT so in no time you can connect the monitor and receive the data.
+
+You can choose which information you want to send, to which topic and which not.
+
+You can automate scripts to run when a topic message is received (with the Terminal command) and report the output to a file which content will be sent as a message (with the File sensor).
+
+**Soon** will be available a Serial sensor to report via MQTT the status of a Serial device connected to the computer and a Serial command to communicate with the device and trigger some actions. Possible uses:
+* Receive via Serial USB the room temperature via thermometer
+* Get Relay status (open/close)
+* Trigger Relay to power on/off lights/air conditioners/...
+* many other purposes !
+Best to be used with Arduino and microcontrollers.
+
 ## Compatibility
 
 PyMonitorMQTT just needs Python 3.7 and some pip modules to work. What are you waiting for ? These requirements are available on all possible operating systems and architectures.
