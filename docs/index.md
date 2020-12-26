@@ -2,7 +2,9 @@
 
 ## About the application
 PyMonitorMQTT is a **cross-platform system monitor** (works both on Windows, Linux and macOS) that sends real time information via **MQTT**.
-The information is sent every 10 seconds and the broker can perform certain actions on the monitor's computer.
+The information is sent periodically and the broker can perform certain actions on the monitor's computer.
+
+The specialty of script is the high level of customization: for example you can add as much brokers as you want, choose the data send interval, which sensors and commands to enable, on which custom topic, and so much more !
 
 Information form this client are well managed by home automation systems like [HomeAssistant](https://github.com/home-assistant/home-assistant).
 **Companion integration for HomeAssistant can be found [here](https://github.com/richibrics/HassMonitorMqtt)**
