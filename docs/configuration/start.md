@@ -19,13 +19,13 @@ Each element of this list must respect a schema.
 
 This element is a dict that will contain several options both mandatory and optional:
 
-- **broker** *(**required**)*
+- **broker**
 > Address of the broker
 
-- **name** *(**required**)*
+- **name**
 > Name of the computer to monitor, you can choose it as you want (there isn't a correct value)
 
-- **send_interval** *(**required**)*
+- **send_interval**
 > Interval of seconds between sending two sensors' data
 
 - **port** *(optional, default: 1883)*
