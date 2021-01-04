@@ -21,11 +21,15 @@ Each element of this list must respect a schema.
 
 This element is a dict that will contain several options both mandatory and optional:
 
-#### broker
+#### Key: broker
 Address of the broker
 
+#### Key: port
+Port of the broker 
+default: 1883
 
-* port: Port of the broker [default: 1883]
+
+* : 
 * username: Username to authenticate with the broker [default: no authentication]
 * password**: Password of the set username to authenticate with the broker
 * name*: Name of the computer to monitor, you can choose it as you want (there isn't a correct value)
