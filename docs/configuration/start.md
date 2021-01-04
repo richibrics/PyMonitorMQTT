@@ -24,8 +24,7 @@ This element is a dict that will contain several options both mandatory and opti
 
 - **port** *(optional)*
 > Port of the broker 
-
-> Default: 1883
+  Default: 1883
 
 - **username** *(optional)*
 > Username to authenticate with the broker [default: no authentication]
