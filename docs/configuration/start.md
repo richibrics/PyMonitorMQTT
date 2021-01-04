@@ -1,9 +1,4 @@
----
-theme: jekyll-theme-cayman
-layout: page
-title: "Start"
-permalink: /configuration/start
----
+# Start
 
 To configure the monitor client, you need to create a text file in the monitor folder named "configuration.yaml"
 
