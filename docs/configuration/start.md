@@ -6,13 +6,13 @@ This file is written in YAML syntax. If you don't know how to make it work, [rea
 
 ## Monitor configuration
 
-PyMonitorMQTT supports more than one broker connection simultaneously. Each monitor configuration must be placed in the 'brokers' key that will contatin a list. 
+PyMonitorMQTT supports more than one broker connection simultaneously. Each monitor configuration must be placed in the 'monitors' key that will contatin a list. 
 
 ```
 monitors:
-  - first  element
-  - second element
-  - third element
+  - first monitor
+  - second monitor
+  - third monitor
 ```
 
 Each element of this list must respect a schema.
@@ -20,7 +20,11 @@ Each element of this list must respect a schema.
 ### Broker element 
 
 This element is a dict that will contain several options both mandatory and optional:
-* broker*: Address of the broker
+
+##### broker
+Address of the broker
+
+
 * port: Port of the broker [default: 1883]
 * username: Username to authenticate with the broker [default: no authentication]
 * password**: Password of the set username to authenticate with the broker
