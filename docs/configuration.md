@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: template
 title: "Start"
 permalink: /configuration/start
 ---
