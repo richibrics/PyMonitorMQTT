@@ -21,7 +21,7 @@ Each element of this list must respect a schema.
 
 This element is a dict that will contain several options both mandatory and optional:
 
-##### broker
+#### broker
 Address of the broker
 
 
