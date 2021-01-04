@@ -22,20 +22,31 @@ This element is a dict that will contain several options both mandatory and opti
 - **broker** *(required)*
 > Address of the broker
 
-- **port** *(required)*
+- **port** *(optional)*
 > Port of the broker 
 > default: 1883
 
 
-* username: Username to authenticate with the broker [default: no authentication]
-* password**: Password of the set username to authenticate with the broker
-* name*: Name of the computer to monitor, you can choose it as you want (there isn't a correct value)
-* mqtt_id: If your broker wants a specific mqtt id, it can be set from here [default: name options will be used]
-* send_interval*: Interval of seconds between sending two sensors' data
-* debug: Log more information such as topic subscription and data send events [default: False]
-* sensors*: List of sensors to enable - check the following pages
-* commands*: List of commands to enable - check the following pages
+- **username** *(optional)*
+> Username to authenticate with the broker [default: no authentication]
 
-\* Mandatory field
+- **password** *(optional, required if you added an username)*
+> Password of the set username to authenticate with the broker
 
-\** Password field is mandatory only if username is set
+- **name** *(required)*
+> Name of the computer to monitor, you can choose it as you want (there isn't a correct value)
+
+- **mqtt_id** *(optional)*
+> If your broker wants a specific mqtt id, it can be set from here [default: name options will be used]
+
+- **send_interval** *(required)*
+> Interval of seconds between sending two sensors' data
+
+- **debug** *(optional)*
+> Log more information such as topic subscription and data send events [default: False]
+
+- **sensors** *(optional)*
+> List of sensors to enable
+
+- **commands** *(optional)*
+> List of commands to enable
