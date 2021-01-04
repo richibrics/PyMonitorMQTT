@@ -19,13 +19,13 @@ Each element of this list must respect a schema.
 
 This element is a dict that will contain several options both mandatory and optional:
 
-- **broker** *(required)*
+- **broker** *(**required**)*
 > Address of the broker
 
 - **port** *(optional)*
 > Port of the broker 
-> default: 1883
 
+> Default: 1883
 
 - **username** *(optional)*
 > Username to authenticate with the broker [default: no authentication]
@@ -33,13 +33,13 @@ This element is a dict that will contain several options both mandatory and opti
 - **password** *(optional, required if you added an username)*
 > Password of the set username to authenticate with the broker
 
-- **name** *(required)*
+- **name** *(**required**)*
 > Name of the computer to monitor, you can choose it as you want (there isn't a correct value)
 
 - **mqtt_id** *(optional)*
 > If your broker wants a specific mqtt id, it can be set from here [default: name options will be used]
 
-- **send_interval** *(required)*
+- **send_interval** *(**required**)*
 > Interval of seconds between sending two sensors' data
 
 - **debug** *(optional)*
