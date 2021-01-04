@@ -4,29 +4,29 @@ import os as sys_os
 from Commands.Command import Command
 from ctypes import *
 
-TOPIC = 'turn_off_monitors_command'
+TOPIC = 'turn_on_monitors_command'
 
 
-class TurnOffMonitorsCommand(Command):
+class TurnOnMonitorsCommand(Command):
     def Initialize(self):
         self.SubscribeToTopic(self.GetTopic(TOPIC))
 
     def Callback(self, message):
         os = self.GetOS()
         if os == 'Windows':
-            ctypes.windll.user32.SendMessageA(0xFFFF, 0x0112, 0xF170, 2)
+            ctypes.windll.user32.SendMessageA(0xFFFF, 0x0112, 0xF170, -1)  # Untested
         elif os == 'Linux':
             # Check if X11 or something else
             if sys_os.environ.get('DISPLAY'):
-                command = 'xset dpms force off'
+                command = 'xset dpms force on'
                 subprocess.Popen(command.split(), stdout=subprocess.PIPE)
             else:
                 raise Exception(
-                    'The Turn Off Monitors command is not available for this Linux Window System')
+                    'The Turn ON Monitors command is not available for this Linux Window System')
 
         else:
             raise Exception(
-                'The Turn Off Monitors command is not available for this Operating System')
+                'The Turn ON Monitors command is not available for this Operating System')
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os

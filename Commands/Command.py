@@ -112,7 +112,7 @@ class Command():
 
         # Log the topic as debug if user wants
         if self.GetOption(DEBUG_OPTION_KEY):
-            self.Log(Logger.LOG_DEBUG, 'Subscribben to topic: ' + topic)
+            self.Log(Logger.LOG_DEBUG, 'Subscribed to topic: ' + topic)
 
         return topic  # Return the topic cause upper function should now that topic may have been edited
 
