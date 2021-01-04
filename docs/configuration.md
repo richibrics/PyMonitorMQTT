@@ -1,6 +1,8 @@
+---
 layout: page
 title: "Start"
-permalink: /configuration
+permalink: /configuration/start
+---
 
 To configure the monitor client, you need to create a text file in the monitor folder named "configuration.yaml"
 
@@ -12,7 +14,7 @@ PyMonitorMQTT supports more than one broker connection simultaneously. Each moni
 
 ```
 monitors:
-  - first element
+  - first  element
   - second element
   - third element
 ```
