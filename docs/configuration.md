@@ -1,5 +1,6 @@
 ---
-layout: template
+theme: jekyll-theme-cayman
+layout: page
 title: "Start"
 permalink: /configuration/start
 ---
