@@ -22,9 +22,14 @@ This element is a dict that will contain several options both mandatory and opti
 - **broker** *(**required**)*
 > Address of the broker
 
-- **port** *(optional)*
+- **name** *(**required**)*
+> Name of the computer to monitor, you can choose it as you want (there isn't a correct value)
+
+- **send_interval** *(**required**)*
+> Interval of seconds between sending two sensors' data
+
+- **port** *(optional, default: 1883)*
 > Port of the broker 
-  Default: 1883
 
 - **username** *(optional)*
 > Username to authenticate with the broker [default: no authentication]
@@ -32,16 +37,10 @@ This element is a dict that will contain several options both mandatory and opti
 - **password** *(optional, required if you added an username)*
 > Password of the set username to authenticate with the broker
 
-- **name** *(**required**)*
-> Name of the computer to monitor, you can choose it as you want (there isn't a correct value)
-
 - **mqtt_id** *(optional)*
 > If your broker wants a specific mqtt id, it can be set from here [default: name options will be used]
 
-- **send_interval** *(**required**)*
-> Interval of seconds between sending two sensors' data
-
-- **debug** *(optional)*
+- **debug** *(optional, default: False)*
 > Log more information such as topic subscription and data send events [default: False]
 
 - **sensors** *(optional)*
