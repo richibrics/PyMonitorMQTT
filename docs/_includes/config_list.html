@@ -6,7 +6,12 @@
 
 {% if site.data.yaml[include.yaml] %}
 <table>
-<thead><th>Key</th><th>Required</th><th>Description</th></thead>
+<thead>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Description</th>
+</thead>
 {% for entry in site.data.yaml[include.yaml] %}
 {% if entry.required == "Yes" %}
 <tr class="required">
