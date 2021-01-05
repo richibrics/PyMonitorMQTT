@@ -13,9 +13,7 @@
 {% assign pages_list = site.pages %}
 {% for node in pages_list %}
     {% if node.title != null %}
-        {% if node.layout == "page" %}
-            <a href="{{ site.baseurl }}{{ node.url  | remove_first: '/' }}">{{ node.title }}</a>
-        {% endif %}
+        <a href="{{ site.baseurl }}{{ node.url  | remove_first: '/' }}">{{ node.title }}</a>
     {% endif %}
 {% endfor %}
 
