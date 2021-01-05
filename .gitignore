@@ -1,4 +1,6 @@
 __pycache__
 configuration.yaml
 .vscode
+.idea
+venv
 Logs
