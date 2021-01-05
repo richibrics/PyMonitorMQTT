@@ -1,0 +1,10 @@
+- title: About
+  url: /
+
+- title: Configuration
+  url: /configuration/
+  sublinks:
+    - title: Root
+      url: /configuration/global
+    - title: Monitor
+      url: /configuration/monitor
