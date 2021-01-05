@@ -1,10 +1,10 @@
-{% include navigation.html sito=ciaoooo %}
+{% include navigation.html %}
 
 # YAML root
 
 In the root of the configuration.yaml file you can place all these configuration keys:
 
-{% include config_list.html json=global.json %}
+{% include config_list.html json='global.json' %}
 
 - **broker**
 > Address of the broker
