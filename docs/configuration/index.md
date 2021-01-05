@@ -2,7 +2,7 @@
 title: Start
 ---
 
-{% include navigation.html}
+{% include navigation.html %}
 
 
 To configure the monitor client, you need to create a text file in the monitor folder named "configuration.yaml"
