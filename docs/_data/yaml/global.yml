@@ -1,6 +1,0 @@
-- key: Address
-  Required: Yes
-  Description: Broker's address
-- key: Port
-  Required: "No (default: 1883)"
-  Description: Broker's port
