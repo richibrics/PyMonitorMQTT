@@ -85,7 +85,8 @@ class SensorManager():
         for sensor in sensorList:
             if name == self.GetSensorName(sensor):
                 return sensor
-        self.Log(Logger.LOG_ERROR, name + ' sensor not found')
+        self.Log(Logger.LOG_ERROR, str(name) + ' sensor not found - check the module import line is added'
+                                               ' to Sensors/__init__.py')
         return None
 
     def GetSensorObjectsList(self):
