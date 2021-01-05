@@ -1,21 +1,6 @@
 # PyMonitorMQTT
 
-{% for page in site.pages %}
-<a href={{ page.path }}>{{ page.title }}</a>
-{% endfor %}
-
-
-{% for file in site.static_files %}
-<a href={{ file.path }}>a</a>
-{% endfor %}
-
-
-{% for item in site.pages %}
-{% if item.title != null %}
-<a class="sidebar-nav-item{% if item.url == page.url %} active{% endif %}" href="{{ site.baseurl }}/{{ item.url  | remove_first: '/' }}">{{ item.title }}</a>
-{% endif %}
-{% endfor %}
-
+{% include navigation.html}
 
 ## About the application
 PyMonitorMQTT is a **cross-platform system monitor** (works both on Windows, Linux and macOS) that sends real time information via **MQTT**.
