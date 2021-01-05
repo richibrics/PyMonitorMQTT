@@ -1,4 +1,4 @@
-{% include navigation.html %}
+{% include navigation.html sito=ciaoooo %}
 
 # YAML root
 

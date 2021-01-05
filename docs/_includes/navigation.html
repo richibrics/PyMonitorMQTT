@@ -21,6 +21,9 @@
 <div id="toc_container">
 <!-- Then we build the nav bar. -->
 <p class="toc_title">PyMonitorMQTT</p>
+{% if include.sito %}
+<h1>{{include.sito}}</h1>
+{% endif %}
 <ul class="toc_list">
 {% for entry in site.data.navigation %}
     {% if entry.url == current_page %}
