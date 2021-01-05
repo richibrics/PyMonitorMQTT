@@ -1,6 +1,6 @@
 <html>
 {% if site.data.yaml.global %}
-<h2>{{site.data.yaml.global[0].key}}</h2>
+<h2>{{site.data.yaml[include.yaml][0].key}}</h2>
 {% else %}
 <h1>NOO</h1>
 {% endif %}
