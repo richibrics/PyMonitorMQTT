@@ -2,10 +2,14 @@ table {
     border-collapse:collapse;
 }
 
+thead {
+    background-color: #bbff9b;
+}
+
 .optional {
     background-color: #fefefe;
 }
 
 .required {
-    background-color: #ffeeba;
+    background-color: #fff6db;
 }
