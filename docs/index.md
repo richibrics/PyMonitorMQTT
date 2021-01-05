@@ -1,12 +1,12 @@
 # PyMonitorMQTT
 
 {% for page in site.pages %}
-    <a href={{ page.path }}>{{ page.title }}</a>
+<a href={{ page.path }}>{{ page.title }}</a>
 {% endfor %}
 
 
 {% for file in site.static_files %}
-    <a href={{ file.path }}>a</a>
+<a href={{ file.path }}>a</a>
 {% endfor %}
 
 
