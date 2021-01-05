@@ -1,11 +1,12 @@
 import subprocess
+import os as sys_os
 from Commands.Command import Command
 
 TOPIC = 'sleep_command'
 
-
 commands = {
-    'Windows': 'rundll32.exe powrprof.dll,SetSuspendState 0,1,0'
+    'Windows': 'rundll32.exe powrprof.dll,SetSuspendState 0,1,0',
+    'Linux_X11': 'xset dpms force standby'
 }
 
 
@@ -15,8 +16,20 @@ class SleepCommand(Command):
 
     def Callback(self, message):
         try:
-            command = commands[self.GetOS()]
+            prefix = ''
+            os_type = self.GetOS()
+
+            # Additional linux checking to find Window Manager
+            # TODO: Update TurnOffMonitors, TurnOnMonitors, ShutdownCommand, LockCommand to use prefix lookup below
+            if os_type == 'Linux':
+                # Check running X11
+                if sys_os.environ.get('DISPLAY'):
+                    prefix = '_X11'
+
+            lookup_key = os_type + prefix
+            command = commands[lookup_key]
             subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+
         except:
             raise Exception(
                 'No Sleep command for this Operating System')
