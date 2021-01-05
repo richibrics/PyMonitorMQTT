@@ -1,6 +1,6 @@
 - key: address
   required: "Yes"
-  description: Broker's address
+  description: "Broker's address"
 - key: port
   required: "No"
-  description: Broker's port
+  description: "Broker's port"
