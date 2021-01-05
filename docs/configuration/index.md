@@ -12,7 +12,7 @@ This file is written in YAML syntax. If you don't know how to make it work, [rea
 
 ## Main configuration
 
-PyMonitorMQTT supports more than one broker connection simultaneously. Each monitor configuration must be placed in the 'monitors' key that will contatin a list. 
+PyMonitorMQTT supports more than one broker connection simultaneously. Each monitor configuration must be placed in the 'monitors' key that will contain a list. 
 
 ```
 monitors:
