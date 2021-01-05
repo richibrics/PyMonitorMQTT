@@ -8,9 +8,9 @@
 <table>
 <thead><th>Key</th><th>Required</th><th>Description</th></thead>
 {% for entry in site.data.yaml[include.yaml] %}
-{{% if entry.required == "true" %}}
+{% if entry.required == true %}
 <tr class="required">
-{{% else %}}
+{% else %}
 <tr class="optional">
 {% endif %}
 <td>{{entry.key}}</td>
