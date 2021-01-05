@@ -8,7 +8,7 @@ layout: null
 {% for item in site.pages %}
 {% if item.title != null %}
 <url>
-<loc>{{site.url}}{{ site.baseurl }}/{{ item.url  | remove_first: '/' }}">{{ item.title }}</loc>
+<loc>{{site.url}}{{ site.baseurl }}/{{ item.url  | remove_first: '/' }}</loc>
 </url>
 {% endif %}
 {% endfor %}
