@@ -1,9 +1,14 @@
 <html>
+<head><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"></head>
 {% if site.data.yaml[include.yaml] %}
-<table>
+<table class="table">
 <thead><th>Key</th><th>Required</th><th>Description</th></thead>
 {% for entry in site.data.yaml[include.yaml] %}
-<tr>
+{{% if entry.required == true %}}
+<tr class="table-warning">
+{{% else %}}
+<tr class="table-primary">
+{% endif %}
 <td>{{entry.key}}</td>
 <td>{{entry.required}}</td>
 <td>{{entry.description}}</td>
