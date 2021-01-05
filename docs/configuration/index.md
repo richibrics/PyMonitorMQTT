@@ -24,13 +24,19 @@ Each element of this list must respect a schema.
 
 ## Monitor element 
 
-This element is a dict that will contain several options both mandatory and optional:
+This element is a dict that will contain several options both mandatory and optional (order isn't relevant)
 
 - **broker**
 > Address of the broker
 
 - **name**
 > Name of the computer to monitor, you can choose it as you want (there isn't a correct value)
+
+- **sensors** 
+> List of sensors to enable
+
+- **commands**
+> List of commands to enable
 
 - **send_interval**
 > Interval of seconds between sending two sensors' data
@@ -50,8 +56,3 @@ This element is a dict that will contain several options both mandatory and opti
 - **debug** *(optional, default: False)*
 > Log more information such as topic subscription and data send events [default: False]
 
-- **sensors** *(optional)*
-> List of sensors to enable
-
-- **commands** *(optional)*
-> List of commands to enable
