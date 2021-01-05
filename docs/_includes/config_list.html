@@ -1,7 +1,14 @@
 <html>
 {% if site.data.yaml[include.yaml] %}
+<table>
+<thead><th>Key</th><th>Required</th><th>Description</th></thead>
 {% for entry in site.data.yaml[include.yaml] %}
-<h1>{{entry.key}}</h1>
+<tr>
+<td>{{entry.key}}</td>
+<td>{{entry.required}}</td>
+<td>{{entry.description}}</td>
+</tr>
 {% endfor %}
+</table>
 {% endif %}
 </html>
