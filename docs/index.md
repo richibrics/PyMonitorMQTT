@@ -1,6 +1,6 @@
-# PyMonitorMQTT
-
 {% include navigation.html %}
+
+# PyMonitorMQTT
 
 ## About the application
 PyMonitorMQTT is a **cross-platform system monitor** (works both on Windows, Linux and macOS) that sends real time information via **MQTT**.
