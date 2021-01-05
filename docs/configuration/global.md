@@ -1,12 +1,13 @@
 {% include navigation.html %}
 
-# Global configuration
+# YAML root
 
 In the root of the configuration.yaml file you can place all these configuration keys:
 
-TO WRITE
-...............
+{% include config_list.html json=global.json  %}
 
+- **broker**
+> Address of the broker
 
 ## Example
 
