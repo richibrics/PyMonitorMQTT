@@ -4,5 +4,7 @@
 - title: Configuration
   url: /configuration/
   sublinks:
-    - title: Start
-      url: /configuration/
+    - title: Global configuration
+      url: /configuration/global
+    - title: Monitor element
+      url: /configuration/global
