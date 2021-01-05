@@ -12,7 +12,7 @@
 
 {% for item in site.pages %}
     {% if item.title != null %}
-        <a class="sidebar-nav-item{% if item.url == page.url %} active{% endif %}" href="{{ site.baseurl }}{{ item.url}}">{{ item.title }}</a>
+        <a class="sidebar-nav-item{% if item.url == page.url %} active{% endif %}" href="{{ site.baseurl }}/{{ item.url  | remove_first: '/' }}">{{ item.title }}</a>
     {% endif %}
 {% endfor %}
 
