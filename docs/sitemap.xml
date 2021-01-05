@@ -5,11 +5,17 @@ layout: null
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-{% for item in site.pages %}
-{% if item.title != null %}
+{% for entry in site.data.navigation %}
+{% assign sublinks = entry.sublinks %}
+{% if sublinks %}
 <url>
-<loc>{{site.url}}{{ site.baseurl }}/{{ item.url  | remove_first: '/' }}</loc>
+<loc>{{ site.baseurl }}{{ entry.url }}</loc>
 </url>
+{% for sublink in sublinks %}
+<url>
+<loc>{{ site.baseurl }}{{ sublink.url }}</loc>
+</url>
+{% endfor %}
 {% endif %}
 {% endfor %}
 
