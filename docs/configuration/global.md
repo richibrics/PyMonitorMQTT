@@ -6,9 +6,6 @@ In the root of the configuration.yaml file you can place all these configuration
 
 {% include config_list.html yaml='conf_root' %}
 
-- **broker**
-> Address of the broker
-
 ## Example
 
 EXAMPLE HERE
