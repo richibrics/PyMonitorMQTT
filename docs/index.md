@@ -10,10 +10,9 @@
 {% endfor %}
 
 
-{% assign pages_list = site.pages %}
-{% for node in pages_list %}
-    {% if node.title != null %}
-        <a href="{{ site.baseurl }}{{ node.url  | remove_first: '/' }}">{{ node.title }}</a>
+{% for page in site.pages %}
+    {% if page.title != null %}
+        <a class="sidebar-nav-item{% if page.url == page.url %} active{% endif %}" href="{{ site.baseurl }}{{ page.url  | remove_first: '/' }}">{{ page.title }}</a>
     {% endif %}
 {% endfor %}
 
