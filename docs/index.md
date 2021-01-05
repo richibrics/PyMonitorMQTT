@@ -5,6 +5,12 @@
 {% endfor %}
 
 
+{% for file in site.static_files %}
+    <a href={{ file.path }}>a</a>
+{% endfor %}
+
+
+
 ## About the application
 PyMonitorMQTT is a **cross-platform system monitor** (works both on Windows, Linux and macOS) that sends real time information via **MQTT**.
 The information is sent periodically and the broker can perform certain actions on the monitor's computer.
