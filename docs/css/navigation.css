@@ -6,6 +6,8 @@
     margin-bottom: 1em;
     padding: 20px;
     width: auto;
+    padding-left: 1px;
+    padding-right: 40px;
 }
 
 .toc_title {
