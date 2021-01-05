@@ -1,5 +1,5 @@
 <html>
-{% if site.data.json.global %}
-<h2>{{include.json}}</h2>
+{% if site.data.yaml.global %}
+<h2>{{site.data.yaml[include.yaml][0].api}}</h2>
 {% endif %}
 </html>

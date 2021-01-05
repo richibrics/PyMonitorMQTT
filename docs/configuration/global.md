@@ -4,7 +4,7 @@
 
 In the root of the configuration.yaml file you can place all these configuration keys:
 
-{% include config_list.html json='global' %}
+{% include config_list.html yaml='global' %}
 
 - **broker**
 > Address of the broker
