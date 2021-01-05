@@ -3,13 +3,13 @@ table {
 }
 
 thead {
-    background-color: #bbff9b;
+    background-color: #c6ffac;
+}
+
+.required {
+    background-color: #ffecb5;
 }
 
 .optional {
     background-color: #fefefe;
-}
-
-.required {
-    background-color: #fff6db;
 }
