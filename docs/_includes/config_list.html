@@ -1,7 +1,7 @@
 <html>
-{% if site.data.yaml.global %}
-<h2>{{site.data.yaml[include.yaml][1].key}}</h2>
-{% else %}
-<h1>NOO</h1>
+{% if site.data.yaml[include.yaml] %}
+{% for entry in site.data.yaml[include.yaml] %}
+<h1>{{entry.key}}</h1>
+{% endfor %}
 {% endif %}
 </html>
