@@ -5,15 +5,15 @@ layout: null
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
+<url>
+<loc>{{  site.url  }}{{ site.baseurl }}</loc>
+</url>
 {% for entry in site.data.navigation %}
 {% assign sublinks = entry.sublinks %}
 {% if sublinks %}
-<url>
-<loc>{{ site.baseurl }}{{ entry.url }}</loc>
-</url>
 {% for sublink in sublinks %}
 <url>
-<loc>{{ site.baseurl }}{{ sublink.url }}</loc>
+<loc>{{  site.url  }}{{ site.baseurl }}{{ sublink.url }}</loc>
 </url>
 {% endfor %}
 {% endif %}
