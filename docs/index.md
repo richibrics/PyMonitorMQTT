@@ -14,7 +14,7 @@
 {% for node in pages_list %}
     {% if node.title != null %}
         {% if node.layout == "page" %}
-            jdeijci
+            <a href="{{ site.baseurl }}{{ node.url  | remove_first: '/' }}">{{ node.title }}</a>
         {% endif %}
     {% endif %}
 {% endfor %}
