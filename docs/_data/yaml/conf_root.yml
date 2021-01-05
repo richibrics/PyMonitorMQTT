@@ -1,6 +1,8 @@
 - key: address
   required: "Yes"
+  type: String
   description: "Broker's address"
 - key: port
   required: "No"
+  type: Integer
   description: "Broker's port"
