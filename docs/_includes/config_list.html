@@ -1,12 +1,16 @@
 <html>
+<head>
+    <link rel="stylesheet" href="/PyMonitorMQTT/css/config_list.css">
+</head>
+
 {% if site.data.yaml[include.yaml] %}
-<table class="table">
+<table>
 <thead><th>Key</th><th>Required</th><th>Description</th></thead>
 {% for entry in site.data.yaml[include.yaml] %}
 {{% if entry.required == true %}}
-<tr class="table-warning">
+<tr class="required">
 {{% else %}}
-<tr class="table-primary">
+<tr class="optional">
 {% endif %}
 <td>{{entry.key}}</td>
 <td>{{entry.required}}</td>
