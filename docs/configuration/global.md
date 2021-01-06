@@ -14,12 +14,14 @@ monitors:
   - second monitor
   - third monitor
 
-logger_message_width: 55
+logger_message_width: integer
 ```
 
 ## Example
 
 ```
+logger_message_width: 55
+
 monitors:
   - broker: mqtt.eclipse.org
     name: MyLenovo
@@ -28,6 +30,11 @@ monitors:
     send_interval: 600 # 10 minutes 
 
     sensors:
+      - Ram
+      - Disk
+      - DesktopEnvironment
+      - Cpu
+      - Brightness
       - FileRead:
           contents:
             filename: "/home/plex/movielist.txt"
@@ -39,32 +46,4 @@ monitors:
             - notify_system/leave
           contents:
             message: 'It's time to leave !'
-
-
-  - broker: mqtt.example.com
-    name: Lenovo
-    send_interval: 20 # seconds
-
-    sensors:
-      - Os
-      - Ram
-      - Disk
-      - DesktopEnvironment
-      - Cpu
-      - Brightness
-      - Battery
-      - CpuTemperatures
-      - Network
-      - Screenshot
-      - Time
-
-
-    commands:
-      - Shutdown
-      - Lock
-      - Reboot
-      - Brightness
-      - Sleep
-      - TurnOffMonitors
-      - TurnOnMonitors
 ```
