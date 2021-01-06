@@ -5,4 +5,4 @@
 - key: logger_message_width
   required: "No"
   type: Integer
-  description: "Number of characters to be displayed in a single line of the terminal/logviewer before a new line"
+  description: "Number of characters to be displayed in a single line of terminal and file editor before a new line"
