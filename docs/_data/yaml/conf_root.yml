@@ -1,8 +1,8 @@
-- key: address
+- key: monitors
   required: "Yes"
-  type: String
-  description: "Broker's address"
-- key: port
+  type: List of **monitors**
+  description: "PyMonitorMQTT supports more than one broker connection simultaneously. Each monitor configuration must be placed here"
+- key: logger_message_width
   required: "No"
   type: Integer
-  description: "Broker's port"
+  description: "Number of characters to be displayed in a single line of the terminal/logviewer before a new line"
