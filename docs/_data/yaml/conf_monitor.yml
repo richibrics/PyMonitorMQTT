@@ -29,7 +29,7 @@
 - key: password
   required: "No"
   type: "String"
-  description: "Password of the set username to authenticate with the broker"
+  description: "Password of the set username to authenticate with the broker. <b>Required if you added an username</b>"
 - key: mqtt_id
   required: "No"
   type: "String"
