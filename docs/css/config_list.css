@@ -3,7 +3,8 @@ table {
 }
 
 thead {
-    background-color: #c6ffac;
+    background-color: #159957;
+    color: #fefefe;
 }
 
 .required {
