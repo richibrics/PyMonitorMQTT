@@ -1,6 +1,6 @@
 - key: monitors
   required: "Yes"
-  type: List of <b>monitors</b>
+  type: List of <a href="https://richibrics.github.io/PyMonitorMQTT/configuration/monitor"><b>monitor</b></a>
   description: "PyMonitorMQTT supports more than one broker connection simultaneously. Each monitor configuration must be placed here"
 - key: logger_message_width
   required: "No"
