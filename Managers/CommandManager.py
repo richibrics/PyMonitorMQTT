@@ -76,7 +76,7 @@ class CommandManager():
         for command in commandList:
             if name == self.GetCommandName(command):
                 return command
-        self.Log(Logger.LOG_ERROR, str(name) + ' command not found')
+        self.Log(Logger.LOG_ERROR, str(name) + ' command not found - check the module import line is added to Commands/__init__.py')
 
     def GetCommandObjectsList(self):
         classes = []
