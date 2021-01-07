@@ -4,19 +4,7 @@
         <link rel="stylesheet" href="/PyMonitorMQTT/css/navigation.css">
     </head>
 
-<!-- This finds the current page so it can be highlighted. -->
-
-{% for entry in site.data.navigation %}
-{% capture fullurl %}{{ site.baseurl }}{{ entry.url }}{% endcapture %}
-    {% if fullurl == page.url %}
-        {% assign current_page = fullurl %}
-        {% break %}
-    {% elsif page.url contains fullurl %}
-        {% assign current_page = fullurl %}
-    {% endif %}
-{% endfor %}
-
-
+    
 <div id="toc_container">
 <!-- Then we build the nav bar. -->
 <p class="toc_title">PyMonitorMQTT</p>
