@@ -15,13 +15,13 @@
 <tr>
 <td>{{entry.name}}</td>
 <td  class="os-compatiblity">
-{% if entry.compatibility contains "macOS" %}
+{% if entry.compatibility contains "m" %}
 <img class="os-compatiblity" src="/PyMonitorMQTT/assets/os/macos.png">
 {% endif %}
-{% if entry.compatibility contains "Linux" %}
+{% if entry.compatibility contains "l" %}
 <img class="os-compatiblity" src="/PyMonitorMQTT/assets/os/linux.png">
 {% endif %}
-{% if entry.compatibility contains "Windows" %}
+{% if entry.compatibility contains "w" %}
 <img class="os-compatiblity" src="/PyMonitorMQTT/assets/os/windows.png">
 {% endif %}
 </td>
