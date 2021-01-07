@@ -1,3 +1,5 @@
+{% include navigation.html %}
+
 # Sensors
 
 This monitor uses sensors, created ad-hoc for each operating system, that take data from the system it's working on and sends them to the broker.
