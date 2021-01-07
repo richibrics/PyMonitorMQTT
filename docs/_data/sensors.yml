@@ -2,5 +2,5 @@
   compatibility: "mwl"
   description: "Reports volume usage and other disk information"
 - name: File
-  compatibility: "mwl"
+  compatibility: "m wl"
   description: "Reports the content of a specified file"
