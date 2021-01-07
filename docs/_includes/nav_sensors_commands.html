@@ -1,7 +1,7 @@
 <ul class="toc_list">
     <li>
         <a href="{{ site.baseurl }}/configuration/sensors">Sensors</a>
-        {% for entry in site.data.table_data.elements.sensors %}
+        {% for entry in site.data.sensors %}
         <ul>
             <li><a href="{{ site.baseurl }}/sensors/{{ entry.name | downcase}}">{{ entry.name }}</a></li>
         </ul>

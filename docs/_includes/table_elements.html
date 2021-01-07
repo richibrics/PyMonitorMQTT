@@ -11,7 +11,7 @@
 <th>Compatibility</th>
 <th>Description</th>
 </thead>
-{% for entry in site.data.table_data.elements[include.yaml]] %}
+{% for entry in site.data[include.yaml]] %}
 <tr>
 <td><a href="/PyMonitorMQTT/sensors/{{entry.name | downcase}}">{{entry.name}}</a></td>
 <td  class="os-compatiblity">
