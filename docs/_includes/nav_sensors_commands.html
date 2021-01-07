@@ -1,13 +1,10 @@
-<div id="toc_container">
-    <!-- Then we build the nav bar. -->
-    <ul class="toc_list">
-        <li>
-            <a href="{{ site.baseurl }}/configuration/sensors">Sensors</a>
-            {% for entry in site.data.table_data.elements.sensors %}
-            <ul>
-                <li><a href="{{ site.baseurl }}/sensors/{{ entry.name | downcase}}">{{ entry.name }}</a></li>
-            </ul>
-            {% endfor %}
-        </li>
-    </ul>
-</div>
+<ul class="toc_list">
+    <li>
+        <a href="{{ site.baseurl }}/configuration/sensors">Sensors</a>
+        {% for entry in site.data.table_data.elements.sensors %}
+        <ul>
+            <li><a href="{{ site.baseurl }}/sensors/{{ entry.name | downcase}}">{{ entry.name }}</a></li>
+        </ul>
+        {% endfor %}
+    </li>
+</ul>
