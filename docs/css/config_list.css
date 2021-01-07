@@ -15,8 +15,12 @@ thead {
     background-color: #fefefe;
 }
 
-.os-compatiblity {
+img.os-compatiblity {
     border: 0;
-    width: 30%;
+    width: 20%;
     height: auto;
+}
+
+td.os-compatiblity {
+    text-align: center;
 }
