@@ -1,3 +1,5 @@
+
+
 {% include navigation.html %}
 
 # PyMonitorMQTT
