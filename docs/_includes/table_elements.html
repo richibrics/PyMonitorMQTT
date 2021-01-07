@@ -1,0 +1,22 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/PyMonitorMQTT/css/config_list.css">
+</head>
+
+{% if site.data.table_data.elements[include.yaml] %}
+<table>
+<thead>
+<th>Name</th>
+<th>Compatibility</th>
+<th>Description</th>
+</thead>
+{% for entry in site.data.table_data.conf_keys[include.yaml] %}
+<td>{{entry.name}}</td>
+<td>{{entry.dompatibility}}</td>
+<td>{{entry.description}}</td>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+</html>

@@ -1,0 +1,3 @@
+- name: File
+  compatibility: "Windows<br>macOS<br>Linux"
+  description: "Sensor that reads the content of a file and reports it"
