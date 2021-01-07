@@ -1,1 +1,4 @@
+---
+layout: none
+---
 google-site-verification: googlede438fb77ced7112.html
