@@ -14,7 +14,7 @@
 {% for entry in site.data.table_data.elements[include.yaml]] %}
 <tr>
 <td>{{entry.name}}</td>
-<td>
+<td  class="os-compatiblity">
 {% if entry.compatibility contains "macOS" %}
 <img class="os-compatiblity" src="/PyMonitorMQTT/assets/os/macos.png">
 {% endif %}
