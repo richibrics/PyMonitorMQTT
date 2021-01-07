@@ -4,3 +4,8 @@ sass:
 
 plugins:
   - jekyll-datapage-generator
+
+ data_gen:
+ - data: sensors
+   name: name
+   dir: sensors
