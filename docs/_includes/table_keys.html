@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="/PyMonitorMQTT/css/config_list.css">
 </head>
 
-{% if site.data.yaml[include.yaml] %}
+{% if site.data.table_data.conf_keys[include.yaml] %}
 <table>
 <thead>
 <th>Key</th>
@@ -12,7 +12,7 @@
 <th>Type</th>
 <th>Description</th>
 </thead>
-{% for entry in site.data.yaml[include.yaml] %}
+{% for entry in site.data.table_data.conf_keys[include.yaml] %}
 {% if entry.required == "Yes" %}
 <tr class="required">
 {% else %}
