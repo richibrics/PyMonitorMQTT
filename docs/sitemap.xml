@@ -12,7 +12,7 @@ layout: null
 {% assign sublinks = entry.sublinks %}
 {% if sublinks %}
 <url>
-<loc>{{ site.baseurl }}{{ entry.url }}</loc>
+<loc>{{  site.url  }}{{ site.baseurl }}{{ entry.url }}</loc>
 </url>
 {% for sublink in sublinks %}
 <url>
