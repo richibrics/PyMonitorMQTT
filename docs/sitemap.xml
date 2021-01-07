@@ -11,6 +11,9 @@ layout: null
 {% for entry in site.data.navigation %}
 {% assign sublinks = entry.sublinks %}
 {% if sublinks %}
+<url>
+<loc>{{ site.baseurl }}{{ entry.url }}</loc>
+</url>
 {% for sublink in sublinks %}
 <url>
 <loc>{{  site.url  }}{{ site.baseurl }}{{ sublink.url }}</loc>
