@@ -31,7 +31,7 @@
                 {% else %}
                     {% assign pagetype = 'common_link' %}
                 {% endif %}
-                Check '{{ sublink.url }}' with '{{ page.url | replace: ".html", "" }}' and set {{pagetype}} {{i}}
+                Check '{{ sublink.url | absolute_url }}' with '{{ page.url  | absolute_url  }}' and set {{pagetype}} {{i}}
                 {% assign i = i | plus:1 %}
                 <li><a class="{{ pagetype }}" href="{{ site.baseurl }}{{ sublink.url }}">{{ sublink.title }}</a></li>
             {% endfor %}
