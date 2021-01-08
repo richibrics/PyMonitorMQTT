@@ -34,7 +34,12 @@
         </ul>
     </li>
     {% else %}
-    <li{{ current }}><a href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a></li>
+        {% if sublink.url == {{ page.url | replace: ".html", "" }} %}
+            {% assign pagetype = 'current_link' %}
+        {% else %}
+            {% assign pagetype = 'common_link' %}
+        {% endif %}
+        <li><a class="{{ pagetype }}" href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a></li>
     {% endif %}
 {% endfor %}
 </ul>

@@ -1,10 +1,20 @@
 <ul class="toc_list">
     <li>
-        <a href="{{ site.baseurl }}/configuration/sensors">Sensors</a>
+        {% if "/configuration/sensors" == {{ page.url | replace: ".html", "" }} %}
+            {% assign pagetype = 'current_link' %}
+        {% else %}
+            {% assign pagetype = 'common_link' %}
+        {% endif %}
+        <a class="{{ pagetype }}" href="{{ site.baseurl }}/configuration/sensors">Sensors</a>
         {% for entry in site.data.sensors %}
-        <ul>
-            <li><a href="{{ site.baseurl }}/sensors/{{ entry.name | downcase}}">{{ entry.name }}</a></li>
-        </ul>
+            {% if entry.url == {{ page.url | replace: ".html", "" }} %}
+                {% assign pagetype = 'current_link' %}
+            {% else %}
+                {% assign pagetype = 'common_link' %}
+            {% endif %}
+            <ul>
+                <li><a class="{{ pagetype }}" href="{{ site.baseurl }}/sensors/{{ entry.name | downcase}}">{{ entry.name }}</a></li>
+            </ul>
         {% endfor %}
     </li>
 </ul>
