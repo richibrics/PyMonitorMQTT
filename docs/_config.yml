@@ -2,9 +2,6 @@ theme: jekyll-theme-cayman
 sass:
     sass_dir: PyMonitorMQTT/
 
-plugins:
-  - jekyll-datapage-generator
-
 page_gen:
   - data: 'sensors'
     name: 'name'
