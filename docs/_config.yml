@@ -5,6 +5,7 @@ sass:
 plugins:
   - jekyll-datapage-generator
 
-data_gen:
+page_gen:
   - data: 'sensors'
     name: 'name'
+    layout: 'default'
