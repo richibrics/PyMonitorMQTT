@@ -9,17 +9,18 @@
 <!-- Then we build the nav bar. -->
 <p class="toc_title">PyMonitorMQTT</p>
 <ul class="toc_list">
+    {{page.url}}
 {% for entry in site.data.navigation %}
     {% assign sublinks = entry.sublinks %}
     {% if sublinks %}
         {{ entry.url }}
-        <li class="{{ pagetype }}">
+        <li>
         {% if entry.url == {{ page.url }} %}
             {% assign pagetype = 'current_link' %}
         {% else %}
             {% assign pagetype = 'common_link' %}  
         {% endif %}
-        <a href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a>
+        <a class="{{ pagetype }}" href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a>
         <ul>
             {% for sublink in sublinks %}
                 {{ sublink.url }}
@@ -28,7 +29,7 @@
                 {% else %}
                     {% assign pagetype = 'common_link' %}
                 {% endif %}
-                <li class="{{ pagetype }}"><a href="{{ site.baseurl }}{{ sublink.url }}">{{ sublink.title }}</a></li>
+                <li><a class="{{ pagetype }}" href="{{ site.baseurl }}{{ sublink.url }}">{{ sublink.title }}</a></li>
             {% endfor %}
         </ul>
     </li>
