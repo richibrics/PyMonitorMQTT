@@ -16,9 +16,9 @@
     {% if sublinks %}
         {{ entry.url }}
         {% if entry.url == {{ page.url | replace: ".html", ""  }} %}
-            {% assign pagetype = 'current_link' %}
+            {% assign pagetype = 'current_link'| append: "x" %}
         {% else %}
-            {% assign pagetype = 'common_link' %}  
+            {% assign pagetype = 'common_link' | append: "x" %}  
         {% endif %}
         Check '{{ entry.url }}' with '{{ page.url | replace: ".html", "" }}' and set {{pagetype}} {{ i }}
         {% assign i = i | plus:1 %}
@@ -27,9 +27,9 @@
         <ul>
             {% for sublink in sublinks %}
                 {% if sublink.url == {{ page.url | replace: ".html", "" }} %}
-                    {% assign pagetype = 'current_link' %}
+                    {% assign pagetype = 'current_link'| append: "x" %}
                 {% else %}
-                    {% assign pagetype = 'common_link' %}
+                    {% assign pagetype = 'common_link'| append: "x" %}
                 {% endif %}
                 Check '{{ sublink.url }}' with '{{ page.url | replace: ".html", "" }}' and set {{pagetype}} {{i}}
                 {% assign i = i | plus:1 %}
@@ -39,9 +39,9 @@
     </li>
     {% else %}
         {% if sublink.url == {{ page.url | replace: ".html", "" }} %}
-            {% assign pagetype = 'current_link' %}
+            {% assign pagetype = 'current_link' | append: "x"%}
         {% else %}
-            {% assign pagetype = 'common_link' %}
+            {% assign pagetype = 'common_link' | append: "x"%}
         {% endif %}
         Check '{{ entry.url }}' with '{{ page.url | replace: ".html", "" }}' and set {{pagetype}} {{i}}
         {% assign i = i | plus:1 %}
