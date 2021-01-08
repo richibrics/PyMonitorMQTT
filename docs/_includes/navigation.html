@@ -9,6 +9,7 @@
 <!-- Then we build the nav bar. -->
 <p class="toc_title">PyMonitorMQTT</p>
 <ul class="toc_list">
+    {% assign i = 0 %}
    {{ page.url | replace: ".html", "" }}
 {% for entry in site.data.navigation %}
     {% assign sublinks = entry.sublinks %}
@@ -19,7 +20,8 @@
         {% else %}
             {% assign pagetype = 'common_link' %}  
         {% endif %}
-        Check '{{ entry.url }}' with '{{ page.url | replace: ".html", "" }}' and set {{pagetype}}
+        Check '{{ entry.url }}' with '{{ page.url | replace: ".html", "" }}' and set {{pagetype}} {{ i }}
+        {% assign i = i | plus:1 %}
         <li>
         <a class="{{ pagetype }}" href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a>
         <ul>
@@ -29,7 +31,8 @@
                 {% else %}
                     {% assign pagetype = 'common_link' %}
                 {% endif %}
-                Check '{{ sublink.url }}' with '{{ page.url | replace: ".html", "" }}' and set {{pagetype}}
+                Check '{{ sublink.url }}' with '{{ page.url | replace: ".html", "" }}' and set {{pagetype}} {{i}}
+                {% assign i = i | plus:1 %}
                 <li><a class="{{ pagetype }}" href="{{ site.baseurl }}{{ sublink.url }}">{{ sublink.title }}</a></li>
             {% endfor %}
         </ul>
@@ -37,11 +40,11 @@
     {% else %}
         {% if sublink.url == {{ page.url | replace: ".html", "" }} %}
             {% assign pagetype = 'current_link' %}
-            provaprima
         {% else %}
             {% assign pagetype = 'common_link' %}
-            prisecococ
         {% endif %}
+        Check '{{ entry.url }}' with '{{ page.url | replace: ".html", "" }}' and set {{pagetype}} {{i}}
+        {% assign i = i | plus:1 %}
         <li><a class="{{ pagetype }}" href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a></li>
     {% endif %}
 {% endfor %}
