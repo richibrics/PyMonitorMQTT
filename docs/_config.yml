@@ -1,4 +1,4 @@
-theme: jekyll-theme-cayan
+theme: jekyll-theme-cayman
 sass:
     sass_dir: PyMonitorMQTT/
 
