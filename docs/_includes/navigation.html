@@ -10,6 +10,7 @@
 <p class="toc_title">PyMonitorMQTT</p>
 <ul class="toc_list">
 {% for entry in site.data.navigation %}
+    {{ page.url }}
     {% if entry.url == current_page %}
         <!-- uses yellow, you can change to any other hexadecimal colour code. -->
         {% assign current = ' style="background-color: #FFFFFF"' %}
