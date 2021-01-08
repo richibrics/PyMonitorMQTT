@@ -10,21 +10,25 @@
 <p class="toc_title">PyMonitorMQTT</p>
 <ul class="toc_list">
 {% for entry in site.data.navigation %}
-    {{ page.url }}
-    {% if entry.url == current_page %}
-        <!-- uses yellow, you can change to any other hexadecimal colour code. -->
-        {% assign current = ' style="background-color: #FFFFFF"' %}
-    {% else %}
-        <!-- We have to declare it 'null' to ensure it doesn't propagate. -->
-        {% assign current = null %}
-    {% endif %}
     {% assign sublinks = entry.sublinks %}
     {% if sublinks %}
-    <li{{ current }}>
+        {{ entry.url }}
+        <li class="{{ pagetype }}">
+        {% if entry.url == {{ page.url }} %}
+            {% assign pagetype = ' style="background-color: #FFFFFF"' %}
+        {% else %}
+            {% assign pagetype = null %}
+        {% endif %}
         <a href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a>
         <ul>
+            {{ sublink.url }}
             {% for sublink in sublinks %}
-            <li><a href="{{ site.baseurl }}{{ sublink.url }}">{{ sublink.title }}</a></li>
+                {% if sublink.url == {{ page.url }} %}
+                    {% assign pagetype = 'current_link' %}
+                {% else %}
+                    {% assign pagetype = 'common_link' %}
+                {% endif %}
+                <li class="{{ pagetype }}><a href="{{ site.baseurl }}{{ sublink.url }}">{{ sublink.title }}</a></li>
             {% endfor %}
         </ul>
     </li>

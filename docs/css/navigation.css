@@ -14,3 +14,11 @@
     font-weight: 700;
     text-align: center;
 }
+
+.current_link {
+    color: #1eb8a4;
+}
+
+.common_link {
+    color: #159957;
+}
