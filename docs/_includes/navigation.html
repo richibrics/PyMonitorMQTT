@@ -15,9 +15,9 @@
         {{ entry.url }}
         <li class="{{ pagetype }}">
         {% if entry.url == {{ page.url }} %}
-            {% assign pagetype = ' style="background-color: #FFFFFF"' %}
+            {% assign pagetype = 'current_link' %}
         {% else %}
-            {% assign pagetype = null %}
+            {% assign pagetype = 'common_link' %}  
         {% endif %}
         <a href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a>
         <ul>
@@ -28,7 +28,7 @@
                 {% else %}
                     {% assign pagetype = 'common_link' %}
                 {% endif %}
-                <li class="{{ pagetype }}><a href="{{ site.baseurl }}{{ sublink.url }}">{{ sublink.title }}</a></li>
+                <li class="{{ pagetype }}"><a href="{{ site.baseurl }}{{ sublink.url }}">{{ sublink.title }}</a></li>
             {% endfor %}
         </ul>
     </li>
