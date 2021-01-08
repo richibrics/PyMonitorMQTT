@@ -14,13 +14,13 @@
     {% assign sublinks = entry.sublinks %}
     {% if sublinks %}
         {{ entry.url }}
-        <li>
         {% if entry.url == {{ page.url | replace: ".html", ""  }} %}
             {% assign pagetype = 'current_link' %}
         {% else %}
             {% assign pagetype = 'common_link' %}  
         {% endif %}
         Check '{{ entry.url }}' with '{{ page.url | replace: ".html", "" }}' and set {{pagetype}}
+        <li>
         <a class="{{ pagetype }}" href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a>
         <ul>
             {% for sublink in sublinks %}
