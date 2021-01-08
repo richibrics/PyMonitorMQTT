@@ -8,4 +8,4 @@ plugins:
 page_gen:
   - data: 'sensors'
     name: 'name'
-    layout: 'default'
+    template: default
