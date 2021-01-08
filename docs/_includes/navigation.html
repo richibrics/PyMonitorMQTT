@@ -14,7 +14,7 @@
 {% for entry in site.data.navigation %}
     {% assign sublinks = entry.sublinks %}
     {% if sublinks %}
-        {{ entry.url }}
+        {{ entry.url | absolute_url}}
         {% if entry.url == {{ page.url | replace: ".html", ""  }} %}
             {% assign pagetype = 'current_link' %}
         {% else %}
