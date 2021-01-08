@@ -15,7 +15,7 @@
     {% assign sublinks = entry.sublinks %}
     {% if sublinks %}
         {{ entry.url | absolute_url}}
-        {% if entry.url == {{ page.url | replace: ".html", ""  }} %}
+        {% if {{ entry.url | | absolute_url }} == {{ page.url | absolute_url  }} %}
             {% assign pagetype = 'current_link' %}
         {% else %}
             {% assign pagetype = 'common_link' %}  
@@ -26,7 +26,7 @@
         <a class="{{ pagetype }}" href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a>
         <ul>
             {% for sublink in sublinks %}
-                {% if sublink.url == {{ page.url | replace: ".html", "" }} %}
+                {% if {{ sublink.url | absolute_url }} == {{ page.url | absolute_url }} %}
                     {% assign pagetype = 'current_link' %}
                 {% else %}
                     {% assign pagetype = 'common_link' %}
