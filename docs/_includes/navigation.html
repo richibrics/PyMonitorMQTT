@@ -36,8 +36,10 @@
     {% else %}
         {% if sublink.url == {{ page.url | replace: ".html", "" }} %}
             {% assign pagetype = 'current_link' %}
+            provaprima
         {% else %}
             {% assign pagetype = 'common_link' %}
+            prisecococ
         {% endif %}
         <li><a class="{{ pagetype }}" href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a></li>
     {% endif %}
