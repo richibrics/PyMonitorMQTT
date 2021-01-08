@@ -9,7 +9,7 @@
 <!-- Then we build the nav bar. -->
 <p class="toc_title">PyMonitorMQTT</p>
 <ul class="toc_list">
-    {{page.url}}
+   {{ {{page.url | replace: "my", "your" }} }}
 {% for entry in site.data.navigation %}
     {% assign sublinks = entry.sublinks %}
     {% if sublinks %}
