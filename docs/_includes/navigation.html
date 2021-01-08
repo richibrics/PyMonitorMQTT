@@ -10,7 +10,7 @@
 <p class="toc_title">PyMonitorMQTT</p>
 <ul class="toc_list">
     {% assign i = 0 %}
-   {{ page.url | replace: ".html", "" }}
+   {{ page.url | absolute_url}}
 {% for entry in site.data.navigation %}
     {% assign sublinks = entry.sublinks %}
     {% if sublinks %}
