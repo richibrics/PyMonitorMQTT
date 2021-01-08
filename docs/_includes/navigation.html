@@ -28,7 +28,7 @@
                 {% else %}
                     {% assign pagetype = 'common_link' %}
                 {% endif %}
-                Check {{ sublink.url }} with {{ page.url | replace: ".html", "" }} and set {{pagetype}}
+                Check '{{ sublink.url }}' with '{{ page.url | replace: ".html", "" }}' and set {{pagetype}}
                 <li><a class="{{ pagetype }}" href="{{ site.baseurl }}{{ sublink.url }}">{{ sublink.title }}</a></li>
             {% endfor %}
         </ul>
