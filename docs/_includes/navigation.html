@@ -20,6 +20,7 @@
         {% else %}
             {% assign pagetype = 'common_link' %}  
         {% endif %}
+        Check '{{ entry.url }}' with '{{ page.url | replace: ".html", "" }}' and set {{pagetype}}
         <a class="{{ pagetype }}" href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a>
         <ul>
             {% for sublink in sublinks %}
