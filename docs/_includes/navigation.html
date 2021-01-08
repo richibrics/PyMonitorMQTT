@@ -21,8 +21,8 @@
         {% endif %}
         <a href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a>
         <ul>
-            {{ sublink.url }}
             {% for sublink in sublinks %}
+                {{ sublink.url }}
                 {% if sublink.url == {{ page.url }} %}
                     {% assign pagetype = 'current_link' %}
                 {% else %}
