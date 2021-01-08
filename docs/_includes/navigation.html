@@ -15,7 +15,7 @@
     {% assign sublinks = entry.sublinks %}
     {% if sublinks %}
         {{ entry.url | absolute_url}}
-        {% if {{ entry.url | | absolute_url }} == {{ page.url | absolute_url  }} %}
+        {% if {{ entry.url | absolute_url }} == {{ page.url | absolute_url  }} %}
             {% assign pagetype = 'current_link' %}
         {% else %}
             {% assign pagetype = 'common_link' %}  
