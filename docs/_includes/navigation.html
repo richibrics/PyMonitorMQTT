@@ -9,29 +9,28 @@
 <!-- Then we build the nav bar. -->
 <p class="toc_title">PyMonitorMQTT</p>
 <ul class="toc_list">
-   {{ page.url | absolute_url}}
+{% assign curr_page_url = page.url | absolute_url %}
 {% for entry in site.data.navigation %}
     {% assign sublinks = entry.sublinks %}
     {% if sublinks %}
-        {{ entry.url | absolute_url}}
-        {% if { page.url | absolute_url } contains { entry.url | absolute_url } %}
+        {% assign check_page_url = entry.url | absolute_url %}
+        {% if curr_page_url == check_page_url %}
             {% assign pagetype = 'current_link' %}
         {% else %}
             {% assign pagetype = 'common_link' %}  
         {% endif %}
-        Check '{{ entry.url | absolute_url }}' in '{{ page.url | absolute_url }}' and set {{pagetype}} {{ i }}
-        {% assign i = i | plus:1 %}
+        Check '{{ check_page_url }}' and '{{ curr_page_url }}' and set {{pagetype}}
         <li>
         <a class="{{ pagetype }}" href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a>
         <ul>
             {% for sublink in sublinks %}
-                {% if { page.url | absolute_url } contains { sublink.url | absolute_url } %}
+                {% assign check_page_url = sublink.url | absolute_url %}
+                {% if curr_page_url == check_page_url %}
                     {% assign pagetype = 'current_link' %}
                 {% else %}
-                    {% assign pagetype = 'common_link' %}
+                    {% assign pagetype = 'common_link' %}  
                 {% endif %}
-                Check '{{ sublink.url | absolute_url }}' in '{{ page.url  | absolute_url  }}' and set {{pagetype}} {{i}}
-                {% assign i = i | plus:1 %}
+                Check '{{ check_page_url }}' and '{{ curr_page_url }}' and set {{pagetype}}
                 <li><a class="{{ pagetype }}" href="{{ site.baseurl }}{{ sublink.url }}">{{ sublink.title }}</a></li>
             {% endfor %}
         </ul>
