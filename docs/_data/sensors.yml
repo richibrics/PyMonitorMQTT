@@ -1,6 +1,8 @@
 - name: Disk
   compatibility: "mwl"
-  description: "Reports volume usage and other disk information"
+  short_description: "Reports volume usage and other disk information"
+  long_description: "Reports volume usage and other disk information"
 - name: File
   compatibility: "mwl"
-  description: "Reports the content of a specified file"
+  short_description: "Reports the content of a specified file"
+  long_description: "Reports the content of a specified file"
