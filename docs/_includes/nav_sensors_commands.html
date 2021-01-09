@@ -9,8 +9,9 @@
         {% endif %}
         <a class="{{ pagetype }}" href="{{ site.baseurl }}/configuration/sensors">Sensors</a>
         {% for entry in site.data.sensors %}
-        {{entry_url}}
-            {% assign entry_url = site.baseurl | append:  "/sensors/" | append:  entry.name | downcase %}
+            {{entry_url}}
+            {% assign sensor_name = entry.name | downcase %}
+            {% assign entry_url = site.baseurl | append:  "/sensors/" | append:  sensor_name %}
             {% assign check_page_url = entry.url | absolute_url %}
             {% if curr_page_url == check_page_url %}
                 {% assign pagetype = 'current_link' %}
