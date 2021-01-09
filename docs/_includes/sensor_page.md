@@ -23,3 +23,7 @@
 {% if sensor.compatibility contains "w" %}
 * Windows
 {% endif %}
+
+## Configuration
+
+{% include table_keys_sensor.html yaml=sensor %}
