@@ -13,7 +13,7 @@
 </thead>
 {% for entry in site.data[include.yaml] %}
 <tr>
-<td><a href="/PyMonitorMQTT/sensors/{{entry.name | downcase}}">{{entry.name}}</a></td>
+<td><a href="/PyMonitorMQTT/sensors/{{entry.name}}">{{entry.name}}</a></td>
 <td  class="os-compatiblity">
 {% if entry.compatibility contains "m" %}
 <img class="os-compatiblity" src="/PyMonitorMQTT/assets/os/macos.png">
