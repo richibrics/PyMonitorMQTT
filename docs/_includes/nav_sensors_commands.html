@@ -1,16 +1,19 @@
+{% assign curr_page_url = page.url | absolute_url | replace: '.html', '' %}
 <ul class="toc_list">
     <li>
-        {% if "/configuration/sensors" == {{ page.url | replace: ".html", "" }} %}
+        {% assign check_page_url = "/configuration/sensors" | absolute_url %}
+        {% if curr_page_url == check_page_url %}
             {% assign pagetype = 'current_link' %}
         {% else %}
-            {% assign pagetype = 'common_link' %}
+            {% assign pagetype = 'common_link' %}  
         {% endif %}
         <a class="{{ pagetype }}" href="{{ site.baseurl }}/configuration/sensors">Sensors</a>
         {% for entry in site.data.sensors %}
-            {% if entry.url == {{ page.url | replace: ".html", "" }} %}
+            {% assign check_page_url = entry.url | absolute_url %}
+            {% if curr_page_url == check_page_url %}
                 {% assign pagetype = 'current_link' %}
             {% else %}
-                {% assign pagetype = 'common_link' %}
+                {% assign pagetype = 'common_link' %}  
             {% endif %}
             <ul>
                 <li><a class="{{ pagetype }}" href="{{ site.baseurl }}/sensors/{{ entry.name | downcase}}">{{ entry.name }}</a></li>
