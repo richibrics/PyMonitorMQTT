@@ -26,4 +26,4 @@
 
 ## Configuration
 
-{% include table_keys_sensor.html yaml=sensor %}
+{% include table_keys_sensor.html sensor=sensor %}
