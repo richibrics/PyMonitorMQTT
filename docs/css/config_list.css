@@ -1,5 +1,7 @@
 table {
     border-collapse:collapse;
+    font-size: 11pt;
+    width: auto;
 }
 
 thead {

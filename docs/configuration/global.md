@@ -2,7 +2,7 @@
 
 # YAML root
 
-In the root of the configuration.yaml file you can place all these configuration keys:
+In the root of the configuration.yaml file you can place these configuration keys:
 
 {% include table_keys.html yaml='root' %}
 
