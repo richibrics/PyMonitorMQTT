@@ -10,14 +10,14 @@
         <a class="{{ pagetype }}" href="{{ site.baseurl }}/configuration/sensors">Sensors</a>
         {% for entry in site.data.sensors %}
             {% assign entry_url = "/sensors/" | append:  entry.name | downcase  %}
-            {% assign check_page_url = entry_url | absolute_url %}
-            {% if curr_page_url == check_page_url %}
+            {% assign page_url = entry_url | absolute_url %}
+            {% if curr_page_url == page_url %}
                 {% assign pagetype = 'current_link' %}
             {% else %}
                 {% assign pagetype = 'common_link' %}  
             {% endif %}
             <ul>
-                <li><a class="{{ pagetype }}" href="{{entry_url}}">{{ entry.name }}</a></li>
+                <li><a class="{{ pagetype }}" href="{{page_url}}">{{ entry.name }}</a></li>
             </ul>
         {% endfor %}
     </li>
