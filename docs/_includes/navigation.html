@@ -14,23 +14,23 @@
     {% assign sublinks = entry.sublinks %}
     {% if sublinks %}
         {{ entry.url | absolute_url}}
-        {% if  entry.url | absolute_url ==  page.url | absolute_url %}
+        {% if { page.url | absolute_url } contains { entry.url | absolute_url } %}
             {% assign pagetype = 'current_link' %}
         {% else %}
             {% assign pagetype = 'common_link' %}  
         {% endif %}
-        Check '{{ entry.url }}' with '{{ page.url | replace: ".html", "" }}' and set {{pagetype}} {{ i }}
+        Check '{{ entry.url | absolute_url }}' in '{{ page.url | absolute_url }}' and set {{pagetype}} {{ i }}
         {% assign i = i | plus:1 %}
         <li>
         <a class="{{ pagetype }}" href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a>
         <ul>
             {% for sublink in sublinks %}
-                {% if sublink.url | absolute_url  ==  page.url | absolute_url  %}
+                {% if { page.url | absolute_url } contains { sublink.url | absolute_url } %}
                     {% assign pagetype = 'current_link' %}
                 {% else %}
                     {% assign pagetype = 'common_link' %}
                 {% endif %}
-                Check '{{ sublink.url | absolute_url }}' with '{{ page.url  | absolute_url  }}' and set {{pagetype}} {{i}}
+                Check '{{ sublink.url | absolute_url }}' in '{{ page.url  | absolute_url  }}' and set {{pagetype}} {{i}}
                 {% assign i = i | plus:1 %}
                 <li><a class="{{ pagetype }}" href="{{ site.baseurl }}{{ sublink.url }}">{{ sublink.title }}</a></li>
             {% endfor %}
