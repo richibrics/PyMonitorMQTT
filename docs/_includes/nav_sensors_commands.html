@@ -12,6 +12,7 @@
             {% assign sensor_name = entry.name | downcase %}
             {% assign entry_url = site.baseurl | append:  "/sensors/" | append:  sensor_name %}
             {% assign check_page_url = entry_url | absolute_url %}
+            {{entry_url | absolute_url}}
             {% if curr_page_url == check_page_url %}
                 {% assign pagetype = 'current_link' %}
             {% else %}
