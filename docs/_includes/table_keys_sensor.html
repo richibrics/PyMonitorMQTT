@@ -1,0 +1,56 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/PyMonitorMQTT/css/config_list.css">
+</head>
+
+DA DEFINIRE contents.type, contents.description, custom_topics.type, custom_topics.description
+
+{% if include.sensor %}
+    <table class="keys">
+        <thead>
+            <th>Key</th>
+            <th>✱</th>
+            <th>Type</th>
+            <th>Description</th>
+        </thead>
+        {% for entry in include.sensor.config %}
+
+            <td>{{entry.key}}</td>
+
+            {% if entry.required == "Yes" %}
+                <tr class="required">
+            {% else %}
+                <tr class="optional">
+            {% endif %}
+            <td>{{entry.required}}</td>
+
+            {% if entry.type %}
+                <td>{{entry.type}}</td>
+            {% else %}
+                {% case entry.key %}
+                    {% when "contents" %}
+                        <td>{{contents.type}}</td>
+                    {% when "custom_topics" %}
+                        <td>{{custom_topics.type}}</td>
+                {% endcase %}
+            {% endif %}
+
+
+            {% if entry.description %}
+                <td>{{entry.description}}</td>
+            {% else %}
+                {% case entry.key %}
+                    {% when "contents" %}
+                        <td>{{contents.description}}</td>
+                    {% when "custom_topics" %}
+                        <td>{{custom_topics.description}}</td>
+                {% endcase %}
+            {% endif %}
+    
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}
+
+</html>
