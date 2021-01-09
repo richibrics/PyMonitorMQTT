@@ -19,7 +19,6 @@
         {% else %}
             {% assign pagetype = 'common_link' %}  
         {% endif %}
-        Check '{{ check_page_url }}' and '{{ curr_page_url }}' and set {{pagetype}}
         <li>
         <a class="{{ pagetype }}" href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a>
         <ul>
@@ -30,13 +29,17 @@
                 {% else %}
                     {% assign pagetype = 'common_link' %}  
                 {% endif %}
-                Check '{{ check_page_url }}' and '{{ curr_page_url }}' and set {{pagetype}}
                 <li><a class="{{ pagetype }}" href="{{ site.baseurl }}{{ sublink.url }}">{{ sublink.title }}</a></li>
             {% endfor %}
         </ul>
     </li>
     {% else %}
-        {% assign pagetype = '' %}
+        {% assign check_page_url = entry.url | absolute_url %}
+        {% if curr_page_url == check_page_url %}
+            {% assign pagetype = 'current_link' %}
+        {% else %}
+            {% assign pagetype = 'common_link' %}  
+        {% endif %}
         <li><a class="{{ pagetype }}" href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a></li>
     {% endif %}
 {% endfor %}
