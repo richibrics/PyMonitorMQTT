@@ -7,7 +7,7 @@
   short_description: "Content of a specified file"
   long_description: "This sensor reports the content of a specified file"
   config:
-    - key: custom_topic
+    - key: custom_topics
       required: "No"
     - key: contents
       required: "Yes"
