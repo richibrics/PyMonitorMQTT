@@ -6,6 +6,12 @@
 
 DA DEFINIRE contents.type, contents.description, custom_topics.type, custom_topics.description
 
+{% assign contents_type = "Dict"  %}  
+{% assign custom_topics_type = "List of String"  %} 
+{% assign contents_description = "Dictionary where you should put the data you want to pass to the sensor." %}  
+{% assign custom_topics_description = "List of topics wo which the sensor will send the data.<br>If the sensor sends to a single topic, you will have to put one topic in the list.<br>If the sensor sends to more than one topic, you can registe more topics; each custom_topic will be assigned in topic registration order (that you can see in the single sensor file."  %}  
+
+
 {% if include.sensor %}
     <table class="keys">
         <thead>
@@ -30,9 +36,9 @@ DA DEFINIRE contents.type, contents.description, custom_topics.type, custom_topi
             {% else %}
                 {% case entry.key %}
                     {% when "contents" %}
-                        <td>{{contents.type}}</td>
+                        <td>{{contents_type}}</td>
                     {% when "custom_topics" %}
-                        <td>{{custom_topics.type}}</td>
+                        <td>{{custom_topics_type}}</td>
                 {% endcase %}
             {% endif %}
 
@@ -42,9 +48,9 @@ DA DEFINIRE contents.type, contents.description, custom_topics.type, custom_topi
             {% else %}
                 {% case entry.key %}
                     {% when "contents" %}
-                        <td>{{contents.description}}</td>
+                        <td>{{contents_description}}</td>
                     {% when "custom_topics" %}
-                        <td>{{custom_topics.description}}</td>
+                        <td>{{custom_topics_description}}</td>
                 {% endcase %}
             {% endif %}
     
