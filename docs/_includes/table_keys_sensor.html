@@ -22,13 +22,14 @@ DA DEFINIRE contents.type, contents.description, custom_topics.type, custom_topi
         </thead>
         {% for entry in include.sensor.config %}
 
-            <td>{{entry.key}}</td>
-
             {% if entry.required == "Yes" %}
                 <tr class="required">
             {% else %}
                 <tr class="optional">
             {% endif %}
+
+            <td>{{entry.key}}</td>
+
             <td>{{entry.required}}</td>
 
             {% if entry.type %}
