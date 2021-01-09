@@ -21,11 +21,11 @@
 - key: port
   required: "No"
   type: "Integer"
-  description: "Port of the broker [<i>default: 1883</i>]"
+  description: "Port of the broker <i>[default: 1883]</i>"
 - key: username
   required: "No"
   type: "String"
-  description: "Username to authenticate with the broker [<i>default: no authentication</i>]"
+  description: "Username to authenticate with the broker <i>[default: no authentication]</i>"
 - key: password
   required: "No"
   type: "String"
@@ -33,9 +33,9 @@
 - key: mqtt_id
   required: "No"
   type: "String"
-  description: "If your broker wants a specific mqtt id, it can be set from here [<i>default: name options will be used</i>]"
+  description: "If your broker wants a specific mqtt id, it can be set from here <i>[default: name options will be used]</i>"
 - key: debug
   required: "No"
   type: "Boolean"
-  description: "Log more information such as topic subscription and data send events [<i>default: False</i>]"
+  description: "Log more information such as topic subscription and data send events <i>[default: False]</i>"
   
