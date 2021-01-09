@@ -12,14 +12,14 @@
 
 {{sensor.long_description}}
 
-**Compatible OS: **
+**Compatible OS:**
 
-{% if entry.compatibility contains "m" %}
+{% if sensor.compatibility contains "m" %}
 * macOS
 {% endif %}
-{% if entry.compatibility contains "l" %}
+{% if sensor.compatibility contains "l" %}
 * Linux
 {% endif %}
-{% if entry.compatibility contains "w" %}
+{% if sensor.compatibility contains "w" %}
 * Windows
 {% endif %}
