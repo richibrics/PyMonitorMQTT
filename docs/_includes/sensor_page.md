@@ -38,9 +38,8 @@
 
 #### {{topic.topic}}
 
-{{type}}
-
-{{topic.description}}
+> {{type}}
+> {{topic.description}}
     {% endfor %}
 
 {% endif %}
