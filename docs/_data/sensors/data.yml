@@ -7,11 +7,11 @@
   short_description: "Content of a specified file"
   long_description: "This sensor reports the content of a specified file"
   config:
-    - key: ↦ custom_topics
+    - key: custom_topics
       required: "No"
-    - key: ↦ contents
+    - key: contents
       required: "Yes"
-    - key: "↪ filename"
+    - key: "⏩ filename"
       required: "Yes"
       type: String
       description: "Filename of the file you want the script to read. The script must have read access to the file to work."
