@@ -12,7 +12,7 @@
 
 {{sensor.long_description}}
 
-## Conmpatibility
+## Compatibility
 
 {% if sensor.compatibility contains "m" %}
 * macOS

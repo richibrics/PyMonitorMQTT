@@ -5,7 +5,7 @@
 - name: FileRead
   compatibility: "mwl"
   short_description: "Content of a specified file"
-  long_description: "This sensor reports the content of a specified file"
+  long_description: "This sensor\n\n\n\n reports the content of a specified file"
   config:
     - key: custom_topics
       required: "No"
