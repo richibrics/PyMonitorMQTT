@@ -36,9 +36,11 @@
 {{sensor.extra}}
 {% endif %}
 
+{% if sensor.config %}
 ## Configuration
 
 {% include table_keys_sensor.html sensor=sensor %}
+{{% endif %}}
 
 
 {% assign example_data = site.data.sensors.examples[sensor_name] %}
