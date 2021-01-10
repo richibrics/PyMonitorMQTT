@@ -69,7 +69,7 @@
 ## Additional information
 
     {% for extra in additional_data %}
-### {{extra.example}}
+### {{extra.title}}
 
 {{extra.text}}
     {% endfor %}
