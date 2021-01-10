@@ -28,16 +28,26 @@
 
 {% include table_keys_sensor.html sensor=sensor %}
 
-## Example
+
 
 {% assign example_data = site.data.sensors.examples[sensor_name] %}
 {% if example_data %}
+    {% if example_data.size == 1 %}
+## Example
+    {% else %}
+## Examples
+    {% endif %}
+
     {% for example in example_data %}
 ```
 {{example}}
 ```
     {% endfor %}
 {% endif %}
+
+
+
+
 
 ## Data and Topics
 
