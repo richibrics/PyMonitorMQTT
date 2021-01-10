@@ -36,7 +36,7 @@
             {% assign type = "Basic" %}
         {% endif %}
 
-##### {{topic.topic}}
+#### {{topic.topic}}
 
 {{type}}
 
