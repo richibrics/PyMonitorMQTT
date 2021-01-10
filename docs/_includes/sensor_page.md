@@ -38,11 +38,9 @@
 
 #### {{topic.topic}}
 
-<blockquote>
-Type: {{type}}
 
+> Type: {{type}}
 {{topic.description}}
-</blockquote>
     {% endfor %}
 
 {% endif %}
