@@ -12,7 +12,7 @@
 
 {{sensor.long_description}}
 
-**Compatible OS:**
+## Conmpatibility
 
 {% if sensor.compatibility contains "m" %}
 * macOS
@@ -24,6 +24,18 @@
 * Windows
 {% endif %}
 
+
+
+## Data and Topics
+
+
+
+{% if sensor.extra %}
+## Additional information
+
+{{sensor.extra}}
+{% endif %}
+
 ## Configuration
 
 {% include table_keys_sensor.html sensor=sensor %}
@@ -31,7 +43,7 @@
 
 
 {% assign example_data = site.data.sensors.examples[sensor_name] %}
-{% if example_data %}
+{% if example_data and example_data.size > 0 %}
     {% if example_data.size == 1 %}
 ## Example
     {% else %}
@@ -47,14 +59,3 @@
 
 
 
-
-
-## Data and Topics
-
-
-
-{% if sensor.extra %}
-## Additional information
-
-{{sensor.extra}}
-{% endif %}
