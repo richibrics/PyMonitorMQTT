@@ -41,7 +41,6 @@
 {% include table_keys_sensor.html sensor=sensor %}
 
 
-
 {% assign example_data = site.data.sensors.examples[sensor_name] %}
 {% if example_data and example_data.size > 0 %}
     {% if example_data.size == 1 %}
@@ -50,10 +49,29 @@
 ## Examples
     {% endif %}
 
+{% if {{example.title}} %}
+#### {{example.title}}
+{% endif %}
+
+{% if {{example.comment}} %}
+{{example.comment}}
+{% endif %}
+
     {% for example in example_data %}
 ```
-{{example}}
+{{example.example}}
 ```
+    {% endfor %}
+{% endif %}
+
+{% assign additional_data = site.data.sensors.extra[sensor_name] %}
+{% if additional_data and additional_data.size > 0 %}
+## Additional information
+
+    {% for extra in additional_data %}
+### {{extra.example}}
+
+{{extra.text}}
     {% endfor %}
 {% endif %}
 
