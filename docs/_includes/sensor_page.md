@@ -25,10 +25,23 @@
 {% endif %}
 
 
-
+{% if sensor.topics %}
 ## Data and Topics
 
+    {% for topic in sensor.topics %}
 
+        {% if topic.type and topic.additional == "extra" %}
+            {% assign type = "Additional" %}
+        {% else %}
+            {% assign type = "Basic" %}
+
+#####{{topic.topic}}
+
+{{type}
+{topic.description}
+    {% endfor %}
+
+{% endif %}
 
 {% if sensor.extra %}
 ## Additional information
