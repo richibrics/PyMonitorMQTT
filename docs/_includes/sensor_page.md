@@ -38,7 +38,8 @@
 
 #### {{topic.topic}}
 
-> {{type}}
+> Type: {{type}}
+
 > {{topic.description}}
     {% endfor %}
 
