@@ -33,9 +33,9 @@
 {% assign example_data = site.data.sensors.examples[sensor_name] %}
 {% if example_data %}
     {% for example in example_data %}
-        ```
-        {{example}}
-        ```
+```
+{{example}}
+```
     {% endfor %}
 {% endif %}
 
