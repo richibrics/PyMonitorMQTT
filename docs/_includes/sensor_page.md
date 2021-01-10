@@ -40,7 +40,7 @@
 ## Configuration
 
 {% include table_keys_sensor.html sensor=sensor %}
-{{% endif %}}
+{% endif %}
 
 
 {% assign example_data = site.data.sensors.examples[sensor_name] %}
