@@ -8,7 +8,7 @@
             {% assign pagetype = 'common_link' %}  
         {% endif %}
         <a class="{{ pagetype }}" href="{{ site.baseurl }}/configuration/sensors">Sensors</a>
-        {% for entry in site.data.sensors %}
+        {% for entry in site.data.sensors.data %}
             {% assign entry_url = "/sensors/" | append:  entry.name %}
             {% assign page_url = entry_url | absolute_url %}
             {% if curr_page_url == page_url %}

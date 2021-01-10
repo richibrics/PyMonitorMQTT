@@ -8,4 +8,4 @@ These sensors can be enabled and customized whenever you want: to activate a sen
 
 ## Available sensors
 
-{% include table_sensors.html yaml='sensors' %}
+{% include table_sensors.html %}
