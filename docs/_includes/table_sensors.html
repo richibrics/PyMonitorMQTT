@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="/PyMonitorMQTT/css/config_list.css">
 </head>
 
-{% if site.data[include.yaml] %}
+{% if site.data.sensors.data %}
 <table>
 <thead>
 <th>Name</th>
@@ -29,5 +29,7 @@
 </tr>
 {% endfor %}
 </table>
+{% else %}
+No Sensor yaml file found
 {% endif %}
 </html>
