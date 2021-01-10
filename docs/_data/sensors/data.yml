@@ -11,7 +11,7 @@
       required: "No"
     - key: contents
       required: "Yes"
-    - key: "contents:filename"
+    - key: ":arrow_right_hook: filename"
       required: "Yes"
       type: String
       description: "Filename of the file you want the script to read. The script must have read access to the file to work."
