@@ -34,6 +34,7 @@
             {% assign type = "Additional" %}
         {% else %}
             {% assign type = "Basic" %}
+        {% endif %}
 
 #####{{topic.topic}}
 
