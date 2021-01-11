@@ -16,7 +16,7 @@ span.key {
 span.required-string {
     padding-top: 4px;
     font-size: 80%;
-    color: #159957;
+    color: orange;
     font-weight: 700;
     font-style: italic;
 }
@@ -24,7 +24,8 @@ span.required-string {
 span.optional-string {
     padding-top: 4px;
     font-size: 70%;
-    font-weight: 600;
+    font-weight: 400;
+    color: orange;
     font-style: italic;
 }
 

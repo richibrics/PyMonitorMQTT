@@ -16,11 +16,11 @@ span.topic {
 span.topic-type-string {
     padding-top: 4px;
     font-size: 80%;
-    font-weight: 600;
+    font-weight: 700;
     color: orange;
     font-style: italic;
 }
 
 span.topic-advanced {
-    font-weight: 700 !important;
+    font-weight: 400 !important;
 }
