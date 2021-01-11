@@ -54,6 +54,13 @@
 {% if sensor.config %}
 ## Configuration
 
+LIST
+
+{% include list_keys_sensor.html sensor=sensor %}
+
+
+TABLE
+
 {% include table_keys_sensor.html sensor=sensor %}
 {% endif %}
 
