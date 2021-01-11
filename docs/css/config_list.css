@@ -4,6 +4,10 @@ div.key-list-item {
     padding-bottom: 16px;
 }
 
+div.key-list-item-options {
+    display: inline;
+}
+
 span.required-string {
     padding-top: 4px;
     font-size: 80%;
@@ -17,5 +21,6 @@ span.optional-string {
 
 span.type {
     padding-top: 2px;
-    font-size: 50%;
+    font-size: 70%;
 }
+

@@ -21,22 +21,26 @@
 {% endif %}
 
 
+    <div class="key-list-item-options">
+        <span class="key">{{entry.key}}</span>
 
-<span class="key">{{entry.key}}</span>
+        {% if entry.required == true %}
+            {% assign required_class = "required-string" %}
+            {% assign required_text = "required" %}
+        {% else %}
+            {% assign required_class = "optional-string" %}
+            {% assign required_text = "optional" %}
+        {% endif %}
 
-{% if entry.required == true %}
-    {% assign required_class = "required-string" %}
-    {% assign required_text = "required" %}
-{% else %}
-    {% assign required_class = "optional-string" %}
-    {% assign required_text = "optional" %}
-    {% endif %}
+        <span class="{{required_class}}">{{required_text}}</span>
 
-<span class="{{required_class}}">{{required_text}}</span>
+        <br>
 
-<br>
+        <span class="type">{{entry.type}}</span>
 
-<span class="type">{{entry.type}}</span>
+    </div>
+
+    {{entry.description}}
 
 </div>
 
