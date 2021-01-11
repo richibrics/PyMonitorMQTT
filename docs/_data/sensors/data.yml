@@ -3,12 +3,11 @@
   short_description: "Disk usage information"
   long_description: "This sensor reports volume usage and other disk information"
   topics:
-    - topic: monitor/ClientName/disk_used_percentage
+    - topic: disk_used_percentage
       description: Percentage of used disk
   config:
     - key: custom_topics
       required: No
-
 - name: FileRead
   compatibility: "mwl"
   short_description: "Content of a specified file"
@@ -30,3 +29,14 @@
   examples:
     - default_topic
     - custom_topic  
+
+- name: Os
+  compatibility: "mwl"
+  short_description: "Operating system name"
+  long_description: " This sensor sends the current operating system name."
+  topics:
+    - topic: operating_system
+      description: Current operating system name
+  config:
+    - key: custom_topics
+      required: No
