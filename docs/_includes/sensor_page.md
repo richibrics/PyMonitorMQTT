@@ -68,7 +68,7 @@
 {% endif %}
 
 
-{% if sensor.examples %}
+{% if sensor.extra %}
 ## Additional information 
  
 {% assign extra_names = sensor.extra %}
