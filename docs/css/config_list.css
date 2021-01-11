@@ -3,3 +3,11 @@ div.key-list-item {
     padding-top: 16px;
     padding-bottom: 16px;
 }
+
+span.required-string {
+    font-size: 80%;
+}
+
+span.optional-string {
+    font-size: 70%;
+}

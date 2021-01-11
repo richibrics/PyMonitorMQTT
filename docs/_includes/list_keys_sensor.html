@@ -22,7 +22,18 @@
 
 
 
-{{entry.key}}
+<span class="key">{{entry.key}}</span>
+<span class="type">{{entry.type}}</span>
+
+
+
+{% if entry.required == "Yes" %}
+    {% assign required_class = "required-string" %}
+{% else %}
+    {% assign required_class = "optional-string" %}
+{% endif %}
+
+<span class="{{required_class}}">{{entry.required}}</span>
 
 </div>
 
