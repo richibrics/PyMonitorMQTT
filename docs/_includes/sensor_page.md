@@ -29,22 +29,8 @@
 {% if sensor.topics %}
 ## Data and Topics
 
-    {% for topic in sensor.topics %}
-
-        {% if topic.type and topic.additional == "extra" %}
-            {% assign type = "Additional" %}
-        {% else %}
-            {% assign type = "Basic" %}
-        {% endif %}
-
-#### {{topic.topic}}
-
-
-> Type: {{type}}
-{{topic.description}}
-    {% endfor %}
-
-{% endif %}
+{% include list_topics_sensor.html sensor=sensor %}
+    
 
 {% if sensor.config %}
 ## Configuration
