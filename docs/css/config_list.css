@@ -14,3 +14,7 @@ span.optional-string {
     padding-top: 4px;
     font-size: 70%;
 }
+
+span.type {
+    padding-top: 2px;
+}

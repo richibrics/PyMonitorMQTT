@@ -23,9 +23,6 @@
 
 
 <span class="key">{{entry.key}}</span>
-<span class="type">{{entry.type}}</span>
-
-
 
 {% if entry.required == true %}
     {% assign required_class = "required-string" %}
@@ -36,6 +33,10 @@
     {% endif %}
 
 <span class="{{required_class}}">{{required_text}}</span>
+
+<br>
+
+<span class="type">{{entry.type}}</span>
 
 </div>
 
