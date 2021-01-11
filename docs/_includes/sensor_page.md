@@ -52,42 +52,15 @@
 {{sensor.extra}}
 {% endif %}
 
-mine2
 {% if sensor.config %}
 ## Configuration
-
 
 {% include list_keys_sensor.html sensor=sensor %}
 
 {% endif %}
 
 
-{% assign example_data = site.data.sensors.examples[sensor_name] %}
-{% if example_data and example_data.size > 0 %}
-    {% if example_data.size == 1 %}
-## Example
-    {% else %}
-## Examples
-    {% endif %}
 
-    {% assign title_size = example.title | size %}
-    {% for example in example_data %}
-
-    {% assign title_size = example.title | size %}
-    {% if example.title and title_size > 0  %}
-### {{example.title}}
-    {% endif %}
-
-    {% assign comment_size = example.comment | size %}
-    {% if example.comment and comment_size > 0 %}
-{{example.comment}}
-    {% endif %}
-
-```
-{{example.example | join: "\n"}}
-```
-    {% endfor %}
-{% endif %}
 
 {% assign additional_data = site.data.sensors.extra[sensor_name] %}
 {% if additional_data and additional_data.size > 0 %}
