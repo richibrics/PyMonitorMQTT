@@ -9,7 +9,8 @@ div.key-list-item-header {
 }
 
 span.key {
-    font-family: 'Prata', serif;
+    font-family: 'Gentium Basic', serif;
+    font-size: 150%;
 }
 
 span.required-string {
