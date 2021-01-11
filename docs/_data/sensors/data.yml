@@ -8,7 +8,7 @@
   long_description: "This sensor reports the content of a specified file"
   topics:
     - topic: "file/file"
-      type: extra
+      type: basic
       description: "Content of the file"
   config:
     - key: custom_topics
