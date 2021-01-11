@@ -57,7 +57,7 @@ mine
 ## Configuration
 
 {% assign mine= "list_keys_sensor.html" %}
-{% include mine sensor=sensor %}
+{% include {{mine}} sensor=sensor %}
 
 {% endif %}
 
