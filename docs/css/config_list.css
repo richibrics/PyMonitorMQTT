@@ -8,6 +8,10 @@ div.key-list-item-header {
     margin: 0 0 0 0;
 }
 
+span.key {
+    font-family: 'Prata', serif;
+}
+
 span.required-string {
     padding-top: 4px;
     font-size: 80%;
