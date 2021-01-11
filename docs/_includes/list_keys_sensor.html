@@ -27,13 +27,15 @@
 
 
 
-{% if entry.required == "Yes" %}
+{% if entry.required == true %}
     {% assign required_class = "required-string" %}
+    {% assign required_text = "required" %}
 {% else %}
     {% assign required_class = "optional-string" %}
-{% endif %}
+    {% assign required_text = "optional" %}
+    {% endif %}
 
-<span class="{{required_class}}">{{entry.required}}</span>
+<span class="{{required_class}}">{{required_text}}</span>
 
 </div>
 

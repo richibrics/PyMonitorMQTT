@@ -12,11 +12,11 @@
       description: "Content of the file"
   config:
     - key: custom_topics
-      required: "No"
+      required: No
     - key: contents
-      required: "Yes"
+      required: Yes
     - key: "filename"
-      required: "Yes"
+      required: Yes
       type: String
       level: 2
       description: "Filename of the file you want the script to read. The script must have read access to the file to work."
