@@ -22,4 +22,6 @@
       description: "Filename of the file you want the script to read. The script must have read access to the file to work."
   examples:
     - default_topic
-    - custom_topic
+    - custom_topic  
+  extra:
+    - prova

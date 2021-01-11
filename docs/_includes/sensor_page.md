@@ -60,7 +60,6 @@
 {% endif %}
 
 {% if sensor.examples %}
- 
     {% if sensor.examples.size == 1 %}
 ## Example
     {% else %}
@@ -75,16 +74,13 @@
 {% endif %}
 
 
-
-
-{% assign additional_data = site.data.sensors.extra[sensor_name] %}
-{% if additional_data and additional_data.size > 0 %}
-## Additional information
-
-    {% for extra in additional_data %}
-### {{extra.title}}
-
-{{extra.text}}
+{% if sensor.examples %}
+## Additional information 
+ 
+{% assign extra_names = sensor.extra %}
+    {% for name in extra_names %}
+        {% assign extra_import = "data/sensors/" | append: sensor.name | append: "/extra/" | append: name | append: ".md" %}
+{% include {{extra_import}} %}
     {% endfor %}
 {% endif %}
 
