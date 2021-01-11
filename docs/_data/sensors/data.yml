@@ -33,10 +33,26 @@
 - name: Os
   compatibility: "mwl"
   short_description: "Operating system name"
-  long_description: " This sensor sends the current operating system name."
+  long_description: "This sensor sends the current operating system name."
   topics:
     - topic: operating_system
       description: Current operating system name
   config:
     - key: custom_topics
       required: No
+
+- name: Screenshot
+  compatibility: "mwl"
+  short_description: "Screenshot image"
+  long_description: "This sensor sends a picture of the screen.\n\n\nFor macOS users, read the paragraph below to enable screen sharing security."
+  topics:
+    - topic: screenshot
+      description: Screenshot image
+  config:
+    - key: custom_topics
+      required: No
+  example:
+    - custom
+  extra:
+    - macOS
+
