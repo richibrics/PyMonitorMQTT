@@ -23,5 +23,3 @@
   examples:
     - default_topic
     - custom_topic  
-  extra:
-    - prova
