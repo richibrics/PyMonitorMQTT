@@ -68,20 +68,21 @@
 ## Examples
     {% endif %}
 
+    {% assign title_size = example.title | size %}
     {% for example in example_data %}
 
-{% assign title_size = example.title | size %}
-{% if example.title and title_size > 0  %}
-#### {{example.title}}
-{% endif %}
+    {% assign title_size = example.title | size %}
+    {% if example.title and title_size > 0  %}
+### {{example.title}}
+    {% endif %}
 
-{% assign comment_size = example.comment | size %}
-{% if example.comment and comment_size > 0 %}
+    {% assign comment_size = example.comment | size %}
+    {% if example.comment and comment_size > 0 %}
 {{example.comment}}
-{% endif %}
+    {% endif %}
 
 ```
-{{example.example}}
+{{example.example | join: "\n"}}
 ```
     {% endfor %}
 {% endif %}
