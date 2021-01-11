@@ -25,7 +25,6 @@
     {% assign description = entry.description %}
     {% elsif defaults[entry.key] %}
     {% assign description = defaults[entry.key].description %}
-    {% endcase %}
     {% endif %}
 
     {% if entry.required == true %}
