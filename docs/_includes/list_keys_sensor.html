@@ -15,13 +15,10 @@
 
 {% for entry in include.sensor.config %}
 
-
-
     {% if entry.type %}
     {% assign type = entry.type %}
     {% elsif defaults[entry.key] %}
     {% assign type = defaults[entry.key].type %}
-    {% endcase %}
     {% endif %}
 
     {% if entry.description %}
