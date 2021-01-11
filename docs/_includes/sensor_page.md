@@ -60,7 +60,13 @@
 {% endif %}
 
 {% if sensor.examples %}
-
+ 
+    {% if sensor.examples.size == 1 %}
+## Example
+    {% else %}
+## Examples
+    {% endif %} 
+ 
 {% assign example_names = sensor.examples %}
     {% for name in example_names %}
         {% assign example_import = "data/sensors/" | append: sensor.name | append: "/examples/" | append: name | append: ".md" %}
