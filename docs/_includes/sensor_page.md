@@ -65,7 +65,7 @@
     {% for name in example_names %}
         {% assign example_import = "data/sensors/" | append: sensor.name | append: "/examples/" | append: name | append: ".md" %}
         {{example_import}}
-        
+        {% include {{example_import}} %}
     {% endfor %}
 {% endif %}
 
