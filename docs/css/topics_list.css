@@ -1,0 +1,37 @@
+div.topic-list-item {
+    border-bottom: 1px solid #d9dbde;
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+div.key-list-item-header {
+    margin: 0 0 0 0;
+}
+
+span.topic-type-string {
+    padding-top: 4px;
+    font-size: 80%;
+    color: #606060;
+    font-weight: 500;
+}
+
+span.topic-advanced {
+    font-weight: 500 !important;
+    color: orange !important
+}
+
+
+
+span.optional-string {
+    padding-top: 4px;
+    font-size: 70%;
+    font-weight: 600;
+}
+
+span.type {
+    padding-top: 2px;
+    font-size: 70%;
+    padding-right: 5px;
+    color: cornflowerblue;
+}
+

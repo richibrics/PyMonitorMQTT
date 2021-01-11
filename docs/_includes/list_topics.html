@@ -1,0 +1,29 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/PyMonitorMQTT/css/topics_list.css">
+</head>
+
+{% for entry in include.sensor.topics %}
+
+    {% if entry.type == basic %}
+    {% assign type_class = "topic-type-string" %}
+    {% assign type_text = "basic" %}
+    {% elsif entry.type == extra %}
+    {% assign type_class = "topic-type-string topic-advanced" %}
+    {% assign type_text = "advanced" %}
+    {% endif %}
+
+<div class="topic-list-item">
+
+    <div class="topic-list-item-header">
+        <span class="topic">{{entry.topic}}</span>
+        <span class="{{type_class}}">{{type_text}}</span>
+    </div>
+    {{entry.description}}
+
+</div>
+
+{% endfor %}
+
+</html>
