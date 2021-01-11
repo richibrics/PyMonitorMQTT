@@ -16,13 +16,13 @@
 
 <div style="margin: 0 0 0 0;">
 {% if sensor.compatibility contains "m" %}
-* macOS
+<li>macOS</li>
 {% endif %}
 {% if sensor.compatibility contains "l" %}
-* Linux
+<li>Linux</li>
 {% endif %}
 {% if sensor.compatibility contains "w" %}
-* Windows
+<li>Windows</li>
 {% endif %}
 </div>
 
