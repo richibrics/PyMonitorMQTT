@@ -1,28 +1,5 @@
-table.keys {
-    border-collapse:collapse;
-    font-size: 11pt;
-    width: auto;
-}
-
-thead {
-    background-color: #ffffff;
-    color: #159957;
-}
-
-.required {
-    background-color: #1599573d;
-}
-
-.optional {
-    background-color: #fefefe;
-}
-
-img.os-compatiblity {
-    border: 0;
-    width: 10%;
-    height: auto;
-}
-
-td.os-compatiblity {
-    text-align: center;
+div.key-list-item {
+    border-bottom: 1px solid #d9dbde;
+    padding-top: 16px;
+    padding-bottom: 16px;
 }
