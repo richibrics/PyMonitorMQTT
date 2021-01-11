@@ -31,6 +31,7 @@
 
 {% include list_topics_sensor.html sensor=sensor %}
     
+{% endif %}
 
 {% if sensor.config %}
 ## Configuration
