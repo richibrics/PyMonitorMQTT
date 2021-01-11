@@ -51,7 +51,7 @@
   config:
     - key: custom_topics
       required: No
-  example:
+  examples:
     - custom
   extra:
     - macOS
