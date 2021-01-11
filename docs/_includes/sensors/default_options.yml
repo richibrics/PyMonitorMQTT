@@ -1,6 +1,0 @@
-custom_topics:
-  type: List of String
-  description: "List of topics to which the sensor will send the data.<br>If the sensor sends to a single topic, you will have to put one topic in the list.<br>If the sensor sends to more than one topic, you can register more topics; each topic in the list will be assigned in the same order as topics are added from the single sensor (order that you can check in the each individual sensor file."
-contents:
-  type: Dictionary
-  description: "Dictionary where you should put the data you want to pass to the sensor."
