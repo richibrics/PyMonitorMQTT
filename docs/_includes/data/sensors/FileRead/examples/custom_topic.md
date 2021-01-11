@@ -3,7 +3,7 @@
 This configuration sends to the specified custom topic the content of the plex.txt file in the ‘C:/Users/PC’ folder
 
 ```
-- File:
+- FileRead:
     custom_topics:
       - myfile/content
     contents:
