@@ -56,7 +56,7 @@ mine
 {% if sensor.config %}
 ## Configuration
 
-{% assign mine= "list_keys_sensor.html" %}
+{% assign mine= "list/list_keys_sensor.html" %}
 {% include {{mine}} sensor=sensor %}
 
 {% endif %}
