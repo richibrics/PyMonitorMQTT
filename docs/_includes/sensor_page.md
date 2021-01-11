@@ -55,14 +55,8 @@
 {% if sensor.config %}
 ## Configuration
 
-LIST
-
 {% include list_keys_sensor.html sensor=sensor %}
 
-
-TABLE
-
-{% include table_keys_sensor.html sensor=sensor %}
 {% endif %}
 
 
@@ -74,11 +68,11 @@ TABLE
 ## Examples
     {% endif %}
 
-{% if {{example.title}} %}
+{% if example.title %}
 #### {{example.title}}
 {% endif %}
 
-{% if {{example.comment}} %}
+{% if example.comment %}
 {{example.comment}}
 {% endif %}
 
