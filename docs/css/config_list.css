@@ -18,12 +18,14 @@ span.required-string {
     font-size: 80%;
     color: #159957;
     font-weight: 700;
+    font-style: italic;
 }
 
 span.optional-string {
     padding-top: 4px;
     font-size: 70%;
     font-weight: 600;
+    font-style: italic;
 }
 
 span.type {

@@ -16,27 +16,11 @@ span.topic {
 span.topic-type-string {
     padding-top: 4px;
     font-size: 80%;
-    color: #606060;
-    font-weight: 500;
+    font-weight: 600;
+    color: orange;
+    font-style: italic;
 }
 
 span.topic-advanced {
-    font-weight: 500 !important;
-    color: orange !important
+    font-weight: 700 !important;
 }
-
-
-
-span.optional-string {
-    padding-top: 4px;
-    font-size: 70%;
-    font-weight: 600;
-}
-
-span.type {
-    padding-top: 2px;
-    font-size: 70%;
-    padding-right: 5px;
-    color: cornflowerblue;
-}
-
