@@ -46,12 +46,6 @@
 
 {% endif %}
 
-{% if sensor.extra %}
-## Additional information
-
-{{sensor.extra}}
-{% endif %}
-
 {% if sensor.config %}
 ## Configuration
 
