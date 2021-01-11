@@ -68,6 +68,8 @@
 ## Examples
     {% endif %}
 
+    {% for example in example_data %}
+    
 {% if example.title %}
 #### {{example.title}}
 {% endif %}
@@ -76,7 +78,6 @@
 {{example.comment}}
 {% endif %}
 
-    {% for example in example_data %}
 ```
 {{example.example}}
 ```
