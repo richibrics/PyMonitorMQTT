@@ -9,12 +9,19 @@
 
 {% for entry in include.sensor.topics %}
 
+    
+
+    {% if entry.type %}
     {% if entry.type == "basic" %}
     {% assign type_class = "topic-type-string" %}
     {% assign type_text = "basic" %}
     {% elsif entry.type == "extra" %}
     {% assign type_class = "topic-type-string topic-advanced" %}
     {% assign type_text = "advanced" %}
+    {% endif %}
+    {% else %}
+    {% assign type_class = "topic-type-string" %}
+    {% assign type_text = "basic" %}
     {% endif %}
 
 <div class="topic-list-item">

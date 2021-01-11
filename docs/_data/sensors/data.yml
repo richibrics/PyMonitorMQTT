@@ -2,6 +2,13 @@
   compatibility: "mwl"
   short_description: "Disk usage information"
   long_description: "This sensor reports volume usage and other disk information"
+  topics:
+    - topic: monitor/ClientName/disk_used_percentage
+      description: Percentage of used disk
+  config:
+    - key: custom_topics
+      required: No
+
 - name: FileRead
   compatibility: "mwl"
   short_description: "Content of a specified file"
