@@ -52,11 +52,11 @@
 {{sensor.extra}}
 {% endif %}
 
-mine
+mine2
 {% if sensor.config %}
 ## Configuration
 
-{% assign mine= "list/list_keys_sensor.html" %}
+{% assign mine= "_data/sensors/examples/list_keys_sensor.html" %}
 {% include {{mine}} sensor=sensor %}
 
 {% endif %}
