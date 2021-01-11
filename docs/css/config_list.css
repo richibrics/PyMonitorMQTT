@@ -12,11 +12,13 @@ span.required-string {
     padding-top: 4px;
     font-size: 80%;
     color: #159957;
+    font-weight: 700;
 }
 
 span.optional-string {
     padding-top: 4px;
     font-size: 70%;
+    font-weight: 600;
 }
 
 span.type {
