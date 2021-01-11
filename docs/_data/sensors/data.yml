@@ -55,4 +55,5 @@
     - custom
   extra:
     - macOS
+    - policy
 
