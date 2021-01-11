@@ -17,7 +17,7 @@ span.required-string {
     padding-top: 4px;
     font-size: 80%;
     color: rgb(255, 102, 0);
-    font-weight: 700;
+    font-weight: 600;
     font-style: italic;
 }
 
@@ -35,4 +35,9 @@ span.type {
     padding-right: 5px;
     color: cornflowerblue;
 }
+
+div.key-lower-div {
+    padding-left: 2%;
+}
+
 

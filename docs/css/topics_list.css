@@ -25,3 +25,7 @@ span.topic-advanced {
     font-weight: 500 !important;
     color: rgb(255, 102, 0) !important;
 }
+
+div.topic-lower-div {
+    padding-left: 2%;
+}
