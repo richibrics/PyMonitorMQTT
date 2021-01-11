@@ -14,6 +14,7 @@
 
 ## Compatibility
 
+<div style="margin: 0 0 0 0;">
 {% if sensor.compatibility contains "m" %}
 * macOS
 {% endif %}
@@ -23,7 +24,7 @@
 {% if sensor.compatibility contains "w" %}
 * Windows
 {% endif %}
-
+</div>
 
 {% if sensor.topics %}
 ## Data and Topics

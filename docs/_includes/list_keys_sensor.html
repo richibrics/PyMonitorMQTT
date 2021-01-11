@@ -21,7 +21,7 @@
 {% endif %}
 
 
-    <div class="key-list-item-options">
+    <div class="key-list-item-header">
         <span class="key">{{entry.key}}</span>
 
         {% if entry.required == true %}
@@ -34,11 +34,12 @@
 
         <span class="{{required_class}}">{{required_text}}</span>
 
+    </div>
+
         <br>
 
-        <span class="type">{{entry.type}}</span>
+    <span class="type">{{entry.type}}</span>
 
-    </div>
 
     {{entry.description}}
 

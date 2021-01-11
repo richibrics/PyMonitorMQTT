@@ -4,8 +4,8 @@ div.key-list-item {
     padding-bottom: 16px;
 }
 
-div.key-list-item-options {
-    display: inline;
+div.key-list-item-header {
+    margin: 0 0 0 0;
 }
 
 span.required-string {
