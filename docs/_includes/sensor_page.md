@@ -41,7 +41,7 @@
 {% endif %}
 
 
-{% if sensor.examples or sensor.default.example_custom_topic  %}
+{% if sensor.examples  %}
 {% if sensor.default and sensor.default.example_custom_topic %}
     {% assign example_count = 1 %}
 {% else %}
