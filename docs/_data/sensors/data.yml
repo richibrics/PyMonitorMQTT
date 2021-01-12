@@ -51,6 +51,8 @@
   config:
     - key: custom_topics
       required: No
+  default:
+    example_custom_topic: my_topic/myimage
   examples:
     - custom
   extra:
