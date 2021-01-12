@@ -44,6 +44,7 @@
     {% assign example_count = 1 %}
 {% else %}
     {% assign example_count = 0 %}
+{% endif %} 
 
 {% if sensor.examples %}
     {% assign example_count = example_count | plus: sensor.examples.size %}
