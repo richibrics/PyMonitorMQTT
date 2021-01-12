@@ -3,5 +3,5 @@
 ```
 - {{include.sensor}}:
     custom_topics: 
-        - {{include.topic}}
+        - prova
 ```
