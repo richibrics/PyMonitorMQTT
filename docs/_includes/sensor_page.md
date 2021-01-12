@@ -40,6 +40,8 @@
 
 {% endif %}
 
+
+{% if sensor.examples or sensor.default.example_custom_topic  %}
 {% if sensor.default and sensor.default.example_custom_topic %}
     {% assign example_count = 1 %}
 {% else %}
@@ -48,6 +50,8 @@
 
 {% if sensor.examples %}
     {% assign example_count = example_count | plus: sensor.examples.size %}
+{% endif %} 
+
     {% if example_count == 1 %}
 ## Example
     {% else %}
