@@ -4,7 +4,7 @@
 
 This element is a dict that will contain several options both mandatory and optional (order isn't relevant)
 
-{% include table_keys.html yaml='monitor' %}
+{% include list_keys.html config=site.data.general.monitor_keys %}
 
 ## Example
 
