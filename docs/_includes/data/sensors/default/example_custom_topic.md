@@ -1,7 +1,7 @@
 ### Custom Topic
 
 ```
-- {{include.sensor}}:
+- {{include.sensor.name}}:
     custom_topics: 
-        - prova
+        - {{include.topic}}
 ```
