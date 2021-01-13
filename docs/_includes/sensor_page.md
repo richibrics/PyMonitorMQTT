@@ -68,7 +68,6 @@
 {% include {{example_import}} %}
     {% endfor %}
 {% endif %} 
-{% endif %}
 
 
 {% if sensor.extra %}
