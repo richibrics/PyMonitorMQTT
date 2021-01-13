@@ -1,41 +1,41 @@
 - key: broker
-  required: "Yes"
+  required: Yes
   type: "String"
   description: "Address of the broker (hostname or ip)"
 - key: name
-  required: "Yes"
+  required: Yes
   type: "String"
   description: "Name of the computer to monitor, you can choose it as you want (there isn't a correct value)"
 - key: sensors
-  required: "Yes"
+  required: Yes
   type: "List of String"
   description: "List of sensor names to enable"
 - key: commands
-  required: "Yes"
+  required: Yes
   type: "List of String"
   description: "List of command names to enable"
 - key: send_interval
-  required: "Yes"
+  required: Yes
   type: "Integer"
   description: "Interval of seconds between sending two sensors' data"
 - key: port
-  required: "No"
+  required: No
   type: "Integer"
   description: "Port of the broker <i>[default: 1883]</i>"
 - key: username
-  required: "No"
+  required: No
   type: "String"
   description: "Username to authenticate with the broker <i>[default: no authentication]</i>"
 - key: password
-  required: "No"
+  required: No
   type: "String"
   description: "Password of the set username to authenticate with the broker. <b>Required if you added an username</b>"
 - key: mqtt_id
-  required: "No"
+  required: No
   type: "String"
   description: "If your broker wants a specific mqtt id, it can be set from here <i>[default: name options will be used]</i>"
 - key: debug
-  required: "No"
+  required: No
   type: "Boolean"
   description: "Log more information such as topic subscription and data send events <i>[default: False]</i>"
   
