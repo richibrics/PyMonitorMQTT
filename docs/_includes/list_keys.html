@@ -11,7 +11,7 @@
 
 {% assign defaults = site.data.sensors.default_options %}
 
-{% for entry in include.sensor.config %}
+{% for entry in include.config %}
 
     {% if entry.type %}
     {% assign type = entry.type %}

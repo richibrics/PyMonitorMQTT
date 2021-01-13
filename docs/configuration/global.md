@@ -4,7 +4,7 @@
 
 In the root of the configuration.yaml file you can place these configuration keys:
 
-{% include table_keys.html yaml='root' %}
+{% include list_keys.html config=site.data.general.root_keys %}
 
 ## Schema
 

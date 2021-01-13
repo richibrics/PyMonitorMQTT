@@ -36,7 +36,7 @@
 {% if sensor.config %}
 ## Configuration
 
-{% include list_keys_sensor.html sensor=sensor %}
+{% include list_keys.html config=sensor.config %}
 
 {% endif %}
 
