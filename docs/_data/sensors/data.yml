@@ -25,8 +25,6 @@
       required: No
     - key: formatted_values
       required: No
-  default:
-    example_custom_topic: my_topic/light_level
     
 - name: Cpu
   compatibility: "mwl"
@@ -89,8 +87,6 @@
   config:
     - key: custom_topics
       required: No
-  default:
-    example_custom_topic: my_topic/mydiskusage
 
 - name: FileRead
   compatibility: "mwl"
@@ -124,8 +120,6 @@
   config:
     - key: custom_topics
       required: No
-  default:
-    example_custom_topic: my_topic/oper_sys
 
 - name: Screenshot
   compatibility: "mwl"
@@ -137,8 +131,6 @@
   config:
     - key: custom_topics
       required: No
-  default:
-    example_custom_topic: my_topic/myimage
   extra:
     - macOS
     - policy
