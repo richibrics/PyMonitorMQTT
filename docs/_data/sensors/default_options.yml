@@ -4,3 +4,9 @@ custom_topics:
 contents:
   type: Dictionary
   description: "Dictionary where you should put the data you want to pass to the sensor."
+advanced_information:
+  type: Boolean
+  description: "If set to True, extra information will be sent. You can check in the upper paragaraph if this sensor has 'advanced' topics.\n\n\nDefault value: False."
+formatted_values:
+  type: Boolean
+  description: "If set to True, data will be sent in a more readable way, with the unit of measure and with K, M, G and T sizes.\n\n\nDefault value: False"
