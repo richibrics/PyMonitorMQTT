@@ -31,9 +31,17 @@ span.optional-string {
 
 span.type {
     padding-top: 2px;
-    font-size: 70%;
-    padding-right: 5px;
-    color: cornflowerblue;
+    font-size: 90%;
+    padding-right: 10px;
+    color: steelblue;
+}
+
+span.default-string {
+    padding-top: 4px;
+    font-size: 80%;
+    font-weight: 500;
+    color: lightcoral;
+    font-style: italic;
 }
 
 div.key-lower-div {

@@ -12,9 +12,6 @@
 {% assign defaults = site.data.sensors.default_options %}
 
 {% for entry in include.config %}
-    {% if entry.default %}
-    {{entry.default}}
-    {% endif %}
 
     {% if entry.type %}
     {% assign type = entry.type %}
@@ -36,17 +33,25 @@
     {% assign required_text = "optional" %}
     {% endif %}
 
+
+    {% if entry.default %}
+    {% assign default = "<span class=\"default-string\">{{entry.default}}</span>" %}
+    {% else %}
+    {% assign default = "" %}
+    {% endif %}
+
     {% if entry.level %}
     {% assign level-margin = entry.level | minus: 1 | times: nested_left_margin %}
     <div class="key-list-item" style="margin-left: {{level-margin}}px;">
     {% else %}
     <div class="key-list-item">
     {% endif %}
-
+    
 
     <div class="key-list-item-header">
         <span class="key">{{entry.key}}</span>
         <span class="{{required_class}}">{{required_text}}</span>
+        {{default}}
     </div>
     <div class="key-lower-div">
         
