@@ -36,7 +36,7 @@
 
     {% if entry.default %}
     {% assign default = '<span class="default-string">default: ' | append: entry.default | append: '</span>' %}
-    {% elsif defaults[entry.key] %}
+    {% elsif defaults[entry.key] and defaults[entry.key].default %}
     {% assign default = '<span class="default-string">default: ' | append: defaults[entry.key].default | append: '</span>' %}
     {% else %}
     {% assign default = "" %}
