@@ -79,9 +79,6 @@
     - key: advanced_information
       required: No
 
-  default:
-    example_custom_topic: my_topic/light_level
-
 - name: Disk
   compatibility: "mwl"
   short_description: "Disk usage information"
