@@ -12,6 +12,9 @@
 {% assign defaults = site.data.sensors.default_options %}
 
 {% for entry in include.config %}
+    {% if entry.default %}
+    {{entry.default}}
+    {% endif %}
 
     {% if entry.type %}
     {% assign type = entry.type %}
