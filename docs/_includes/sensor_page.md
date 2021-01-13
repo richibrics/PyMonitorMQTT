@@ -59,7 +59,7 @@
     {% endif %} 
  
 {% if sensor.default and sensor.default.example_custom_topic %}
-{% include "data/sensors/default/example_custom_topic.md" sensor=sensor %}
+{% include data/sensors/default/example_custom_topic.md sensor=sensor %}
 {% endif %}
 
 {% assign example_names = sensor.examples %}
