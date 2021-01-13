@@ -41,7 +41,6 @@
 {% endif %}
 
 
-{% if sensor.examples  %}
 {% if sensor.default and sensor.default.example_custom_topic %}
     {% assign example_count = 1 %}
 {% else %}
@@ -52,6 +51,7 @@
     {% assign example_count = example_count | plus: sensor.examples.size %}
 {% endif %} 
 
+{% if example_count >0 %}
     {% if example_count == 1 %}
 ## Example
     {% else %}
@@ -67,6 +67,7 @@
         {% assign example_import = "data/sensors/" | append: sensor.name | append: "/examples/" | append: name | append: ".md" %}
 {% include {{example_import}} %}
     {% endfor %}
+{% endif %} 
 {% endif %}
 
 
