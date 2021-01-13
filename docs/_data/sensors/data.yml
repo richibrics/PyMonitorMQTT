@@ -1,3 +1,87 @@
+- name: Battery
+  compatibility: "mwl"
+  short_description: "Battery status"
+  long_description: "This sensor reports the battery level and if it's charging.\n\n\nIt should only be used on laptop computers."
+  topics:
+    - topic: battery/battery_level_percentage
+      description: Battery level (0-100) [%]
+    - topic: battery/battery_charging
+      description: "Battery charging status: True if the battery is charging, else False"
+  config:
+    - key: custom_topics
+      required: No
+    - key: formatted_values
+      required: No
+
+- name: Brightness
+  compatibility: "mw"
+  short_description: "Brightness level"
+  long_description: "This sensor reports the percentage of brightness of the screen."
+  topics:
+    - topic: brightness/get 
+      description: Brightness percentage (0-100) [%]
+  config:
+    - key: custom_topics
+      required: No
+    - key: formatted_values
+      required: No
+  default:
+    example_custom_topic: my_topic/light_level
+    
+- name: Cpu
+  compatibility: "mwl"
+  short_description: "CPU statistics"
+  long_description: "This sensor reports information about CPU."
+  topics:
+    - topic: cpu/cpu_used_percentage
+      description: Send the current system-wide CPU utilization (0-100) [%]
+    - topic: cpu/cpu_count
+      description: Send the number of logical CPUs in the system
+    - topic: cpu/cpu_times/user
+      description: Send time spent by normal processes executing in user mode; on Linux this also includes guest time
+      type: extra
+    - topic: cpu/cpu_times/system
+      description: Send time spent by processes executing in kernel mode
+      type: extra
+    - topic: cpu/cpu_times/idle
+      description: Send time spent doing nothing
+      type: extra
+    - topic: cpu/cpu_stats/ctx_switches
+      description: Send number of context switches (voluntary + involuntary) since boot
+      type: extra
+    - topic: cpu/cpu_stats/interrupts
+      description: Send number of interrupts since boo
+      type: extra
+    - topic: cpu/cpu_freq/min
+      description: Send minimum CPU frequency
+      type: extra
+    - topic: cpu/cpu_freq/max 
+      description: Send maximum CPU frequency
+      type: extra
+    - topic: cpu/cpu_freq/current 
+      description: Send current CPU frequency
+      type: extra
+    - topic: cpu/cpu_avg_load/1minute
+      description: Send the average system load over the last minute
+      type: extra
+    - topic: cpu/cpu_avg_load/5minute
+      description: Send the average system load over the last 5 minutes
+      type: extra
+    - topic: cpu/cpu_avg_load/15minute
+      description: Send the average system load over the last 15 minutes
+      type: extra
+
+  config:
+    - key: custom_topics
+      required: No
+    - key: formatted_values
+      required: No
+    - key: advanced_information
+      required: No
+
+  default:
+    example_custom_topic: my_topic/light_level
+
 - name: Disk
   compatibility: "mwl"
   short_description: "Disk usage information"
