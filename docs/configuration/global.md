@@ -45,5 +45,5 @@ monitors:
           custom_topics:
             - notify_system/leave
           contents:
-            message: 'It's time to leave !'
+            message: "It's time to leave !"
 ```
