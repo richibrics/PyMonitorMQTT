@@ -1,8 +1,8 @@
 - key: monitors
-  required: "Yes"
+  required: Yes
   type: List of <a href="https://richibrics.github.io/PyMonitorMQTT/configuration/monitor"><b>monitor</b></a>
   description: "PyMonitorMQTT supports more than one broker connection simultaneously. Each monitor configuration must be placed here"
 - key: logger_message_width
-  required: "No"
+  required: No
   type: Integer
   description: "Number of characters to be displayed in a single line of terminal and file editor before a new line"
