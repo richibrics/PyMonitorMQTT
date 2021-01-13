@@ -41,6 +41,32 @@
 {% endif %}
 
 
+{% if sensor.examples  %}
+{% if sensor.default and sensor.default.example_custom_topic %}
+    {% assign example_count = 1 %}
+{% else %}
+    {% assign example_count = 0 %}
+{% endif %} 
+
+{% if sensor.examples %}
+    {% assign example_count = example_count | plus: sensor.examples.size %}
+{% endif %} 
+
+    {% if example_count == 1 %}
+## Example
+    {% else %}
+## Examples
+    {% endif %} 
+ 
+
+{% assign example_names = sensor.examples %}
+    {% for name in example_names %}
+        {% assign example_import = "data/sensors/" | append: sensor.name | append: "/examples/" | append: name | append: ".md" %}
+{% include {{example_import}} %}
+    {% endfor %}
+{% endif %}
+
+
 {% if sensor.extra %}
 ## Additional information 
  
