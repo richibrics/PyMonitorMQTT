@@ -173,6 +173,46 @@
     - key: formatted_values
       required: No
 
+- name: Ram
+  compatibility: "mwl"
+  short_description: "RAM statistics"
+  long_description: "This sensor reports informatin about RAM/Swap usage"
+  topics:
+    - topic: ram/physical_memory/percentage
+      description: Send percentage of used memory [%]
+    - topic: ram/swap_memory/percentage
+      description: Send percentage of used swap memory [%]
+    - topic: ram/physical_memory/total
+      type: extra
+      description: Send total physical memory  [Bytes]
+    - topic: ram/physical_memory/available
+      type: extra
+      description: Send the memory that can be given instantly to processes without the system going into swap [Bytes]
+    - topic: ram/physical_memory/free
+      type: extra
+      description: Send the memory that isn't being used at all (zeroed) that is readily available [Bytes]
+    - topic: ram/physical_memory/used
+      type: extra
+      description: Send used memory [Bytes]
+    - topic: ram/swap_memory/total
+      type: extra
+      description: Send total swap memory [Bytes]
+    - topic: ram/swap_memory/used
+      type: extra
+      description: Send used swap memory [Bytes]
+    - topic: ram/swap_memory/free
+      type: extra
+      description: Send free swap memory [Bytes]
+  config:
+    - key: custom_topics
+      required: No
+    - key: formatted_values
+      required: No
+    - key: advanced_information
+      required: No
+
+
+
 - name: Screenshot
   compatibility: "mwl"
   short_description: "Screenshot image"
