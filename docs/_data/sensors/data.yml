@@ -164,9 +164,9 @@
   long_description: "This sensor reports the amount of network bytes transmitted both up and down"
   topics:
     - topic: network/bytes_recv
-      description: Received bytes amount [B,KB,MB,GB,TB]
+      description: Received bytes amount [Bytes]
     - topic: network/bytes_sent
-      description: Sent bytes amount [B,KB,MB,GB,TB]
+      description: Sent bytes amount [Bytes]
   config:
     - key: custom_topics
       required: No
@@ -184,7 +184,7 @@
       description: Send percentage of used swap memory [%]
     - topic: ram/physical_memory/total
       type: extra
-      description: Send total physical memory  [Bytes]
+      description: Send total physical memory [Bytes]
     - topic: ram/physical_memory/available
       type: extra
       description: Send the memory that can be given instantly to processes without the system going into swap [Bytes]
