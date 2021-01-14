@@ -23,8 +23,8 @@ span.required-string {
 
 span.optional-string {
     padding-top: 4px;
-    font-size: 80%;
-    font-weight: 500;
+    font-size: 90%;
+    font-weight: 600;
     color: orange;
     font-style: italic;
 }
@@ -38,8 +38,8 @@ span.type {
 
 span.default-string {
     padding-top: 4px;
-    font-size: 80%;
-    font-weight: 500;
+    font-size: 90%;
+    font-weight: 600;
     color: lightcoral;
     font-style: italic;
 }
