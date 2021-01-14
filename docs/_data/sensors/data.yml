@@ -60,13 +60,13 @@
       description: Send current CPU frequency
       type: extra
     - topic: cpu/cpu_avg_load/1minute
-      description: Send the average system load over the last minute
+      description: Send the average system load over the last minute (not available on macOS)
       type: extra
     - topic: cpu/cpu_avg_load/5minute
-      description: Send the average system load over the last 5 minutes
+      description: Send the average system load over the last 5 minutes (not available on macOS)
       type: extra
     - topic: cpu/cpu_avg_load/15minute
-      description: Send the average system load over the last 15 minutes
+      description: Send the average system load over the last 15 minutes (not available on macOS)
       type: extra
 
   config:
@@ -76,6 +76,21 @@
       required: No
     - key: advanced_information
       required: No
+
+- name: CpuTemperatures
+  compatibility: "wl"
+  short_description: "CPU temperature"
+  long_description: "This sensor sends the CPU temperature to Windows and Linux system. Formatted values are available only on Windows; to setup the temperature on Windows, check the 'Windows setup' paragraph."
+  topics:
+    - topic: monitor/ClientName/cpu/temperatures
+      description: <li>On Windows it sends a single temperature value [°C]</li><li>On Linux it sends a list of temperatures (one for core)</li>
+  config:
+    - key: custom_topics
+      required: No
+    - key: formatted_values
+      required: No
+  extra:
+    - windows
 
 - name: Disk
   compatibility: "mwl"
