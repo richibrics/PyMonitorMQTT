@@ -92,6 +92,25 @@
   extra:
     - windows
 
+
+- name: DesktopEnvironment
+  compatibility: "mwl"
+  short_description: "Current Desktop Environment"
+  long_description: "This sensor sends the name of the desktop environment running; will return 'base' on Windows and macOS. Must be used if there are specific commands running to permit them to run the proper action on your system (check them in Commands page)."
+  topics:
+    - topic: desktop_environment
+      description: Current Desktop Environment
+  config:
+    - key: custom_topics
+      required: No
+    - key: contents
+      required: No
+    - key: value
+      required: No
+      level: 2
+      description: "Use this field to avoid Desktop Environment detection sending a fixed value"
+
+
 - name: Disk
   compatibility: "mwl"
   short_description: "Disk usage information"
