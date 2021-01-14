@@ -110,7 +110,6 @@
       level: 2
       description: "Use this field to avoid Desktop Environment detection sending a fixed value"
 
-
 - name: Disk
   compatibility: "mwl"
   short_description: "Disk usage information"
