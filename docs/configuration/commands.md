@@ -1,11 +1,11 @@
 {% include navigation.html %}
 
-# Sensors
+# Commands
 
-This monitor uses sensors, created ad-hoc for each operating system, that take data from the system it's working on and sends them to the broker.
+This monitor uses commands, created ad-hoc for each operating system, to perform specific actions when are triggered via specific topics.
 
-These sensors can be enabled and customized whenever you want: to activate a sensor you only have to place it's name (the part of the name before 'Sensor') in the 'sensors' key list.
+These commands can be enabled and customized whenever you want: to activate a command you only have to place it's name (the part of the name before 'Command') in the 'commands' key list in the configuration file.
 
-## Available sensors
+## Available commands
 
 {% include table_commands.html %}
