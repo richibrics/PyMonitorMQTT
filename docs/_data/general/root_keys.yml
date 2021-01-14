@@ -6,3 +6,4 @@
   required: No
   type: Integer
   description: "Number of characters to be displayed in a single line of terminal and file editor before a new line"
+  default: "40"
