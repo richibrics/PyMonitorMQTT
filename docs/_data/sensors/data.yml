@@ -173,18 +173,6 @@
     - key: formatted_values
       required: No
 
-
-- name: Os
-  compatibility: "mwl"
-  short_description: "Operating system name"
-  long_description: "This sensor sends the current operating system name."
-  topics:
-    - topic: operating_system
-      description: Current operating system name
-  config:
-    - key: custom_topics
-      required: No
-
 - name: Screenshot
   compatibility: "mwl"
   short_description: "Screenshot image"
