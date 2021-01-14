@@ -121,6 +121,23 @@
     - key: custom_topics
       required: No
 
+
+- name: Network
+  compatibility: "mwl"
+  short_description: "Network byte traffic"
+  long_description: "This sensor reports the amount of network bytes transmitted both up and down"
+  topics:
+    - topic: network/bytes_recv
+      description: Received bytes amount [B,KB,MB,GB,TB]
+    - topic: network/bytes_sent
+      description: Sent bytes amount [B,KB,MB,GB,TB]
+  config:
+    - key: custom_topics
+      required: No
+    - key: formatted_values
+      required: No
+
+
 - name: FileRead
   compatibility: "mwl"
   short_description: "Content of a specified file"
