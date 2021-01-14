@@ -108,7 +108,7 @@
     - key: value
       required: No
       level: 2
-      description: "Use this field to avoid Desktop Environment detection sending a fixed value"
+      description: "Use this field to skip Desktop Environment detection sending a fixed value"
 
 - name: Disk
   compatibility: "mwl"
