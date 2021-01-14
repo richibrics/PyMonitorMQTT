@@ -82,7 +82,7 @@
   short_description: "CPU temperature"
   long_description: "This sensor sends the CPU temperature to Windows and Linux system. Formatted values are available only on Windows; to setup the temperature on Windows, check the 'Windows setup' paragraph."
   topics:
-    - topic: monitor/ClientName/cpu/temperatures
+    - topic: cpu/temperatures
       description: <li>On Windows it sends a single temperature value [°C]</li><li>On Linux it sends a list of temperatures (one for core)</li>
   config:
     - key: custom_topics
