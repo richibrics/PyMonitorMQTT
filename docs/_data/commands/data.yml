@@ -1,0 +1,10 @@
+- name: Shutdown
+  compatibility: "mwl"
+  short_description: "System shutdown"
+  long_description: "This commands is used to shutdown immeditaly the system."
+  topics:
+    - topic: shutdown
+      description: Shutdown now
+  config:
+    - key: custom_topics
+      required: No

@@ -21,4 +21,25 @@
             </ul>
         {% endfor %}
     </li>
+    <li>
+        {% assign check_page_url = "/configuration/commands" | absolute_url %}
+        {% if curr_page_url == check_page_url %}
+            {% assign pagetype = 'current_link' %}
+        {% else %}
+            {% assign pagetype = 'common_link' %}  
+        {% endif %}
+        <a class="{{ pagetype }}" href="{{ site.baseurl }}/configuration/commands">Commands</a>
+        {% for entry in site.data.commands.data %}
+            {% assign entry_url = "/commands/" | append:  entry.name %}
+            {% assign page_url = entry_url | absolute_url %}
+            {% if curr_page_url == page_url %}
+                {% assign pagetype = 'current_link' %}
+            {% else %}
+                {% assign pagetype = 'common_link' %}  
+            {% endif %}
+            <ul>
+                <li><a class="{{ pagetype }}" href="{{page_url}}">{{ entry.name }}</a></li>
+            </ul>
+        {% endfor %}
+    </li>
 </ul>

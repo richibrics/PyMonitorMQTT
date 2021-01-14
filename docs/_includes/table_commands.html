@@ -1,0 +1,35 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/PyMonitorMQTT/css/config_table.css">
+</head>
+
+{% if site.data.sensors.data %}
+<table>
+<thead>
+<th>Name</th>
+<th>Compatibility</th>
+<th>What does it send ?</th>
+</thead>
+{% for entry in site.data.sensors.data %}
+<tr>
+<td><a href="/PyMonitorMQTT/sensors/{{entry.name}}">{{entry.name}}</a></td>
+<td  class="os-compatiblity">
+{% if entry.compatibility contains "m" %}
+<img class="os-compatiblity" src="/PyMonitorMQTT/assets/os/macos.png">
+{% endif %}
+{% if entry.compatibility contains "l" %}
+<img class="os-compatiblity" src="/PyMonitorMQTT/assets/os/linux.png">
+{% endif %}
+{% if entry.compatibility contains "w" %}
+<img class="os-compatiblity" src="/PyMonitorMQTT/assets/os/windows.png">
+{% endif %}
+</td>
+<td>{{entry.short_description}}</td>
+</tr>
+{% endfor %}
+</table>
+{% else %}
+No Sensor yaml file found
+{% endif %}
+</html>
