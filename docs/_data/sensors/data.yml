@@ -96,7 +96,7 @@
 - name: DesktopEnvironment
   compatibility: "mwl"
   short_description: "Current Desktop Environment"
-  long_description: "This sensor sends the name of the desktop environment running; will return 'base' on Windows and macOS. Must be used if there are specific commands running to permit them to run the proper action on your system (check them in Commands page)."
+  long_description: "This sensor sends the name of the desktop environment running; will return 'base' on Windows and macOS."
   topics:
     - topic: desktop_environment
       description: Current Desktop Environment
