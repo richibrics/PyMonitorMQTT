@@ -40,7 +40,7 @@
         {% if defaults[entry.key].default %}
         {% assign default = '<span class="default-string">default: ' | append: defaults[entry.key].default | append: '</span>' %}
         {% else %}
-        {% assign default = 'Bohemian' %}
+        {% assign default = defaults[entry.key] %}
         {% endif %}
     {% else %}
     {% assign default = "Ahia!" %}
