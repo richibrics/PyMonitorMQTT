@@ -152,7 +152,7 @@
   topics:
     - topic: "operating_system"
       type: basic
-      description: "Running Operating System name. Available values: 'Windows', 'Linux', 'macOS'"
+      description: "Running Operating System name. <br>Available values: 'Windows', 'Linux', 'macOS'"
   config:
     - key: custom_topics
       required: No
