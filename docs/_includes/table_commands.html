@@ -4,16 +4,16 @@
     <link rel="stylesheet" href="/PyMonitorMQTT/css/config_table.css">
 </head>
 
-{% if site.data.sensors.data %}
+{% if site.data.commands.data %}
 <table>
 <thead>
 <th>Name</th>
 <th>Compatibility</th>
-<th>What does it send ?</th>
+<th>What does it do ?</th>
 </thead>
-{% for entry in site.data.sensors.data %}
+{% for entry in site.data.commands.data %}
 <tr>
-<td><a href="/PyMonitorMQTT/sensors/{{entry.name}}">{{entry.name}}</a></td>
+<td><a href="/PyMonitorMQTT/commands/{{entry.name}}">{{entry.name}}</a></td>
 <td  class="os-compatiblity">
 {% if entry.compatibility contains "m" %}
 <img class="os-compatiblity" src="/PyMonitorMQTT/assets/os/macos.png">
@@ -30,6 +30,6 @@
 {% endfor %}
 </table>
 {% else %}
-No Sensor yaml file found
+No Commands yaml file found
 {% endif %}
 </html>
