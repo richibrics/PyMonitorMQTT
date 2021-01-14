@@ -145,6 +145,19 @@
     - custom_topic  
 
 
+- name: Os
+  compatibility: "mwl"
+  short_description: "Running Operating System name"
+  long_description: "This sensor reports the name of the running operating system"
+  topics:
+    - topic: "operating_system"
+      type: basic
+      description: "Running Operating System name. Available values: 'Windows', 'Linux', 'macOS'"
+  config:
+    - key: custom_topics
+      required: No
+
+
 - name: Network
   compatibility: "mwl"
   short_description: "Network byte traffic"
@@ -186,3 +199,14 @@
     - macOS
     - policy
 
+
+- name: Time
+  compatibility: "mwl"
+  short_description: "Monitor's local time"
+  long_description: "This sensor sends the local monitor time at send time"
+  topics:
+    - topic: message_time
+      description: "Monitor's local time"
+  config:
+    - key: custom_topics
+      required: No
