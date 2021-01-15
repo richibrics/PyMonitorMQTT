@@ -1,9 +1,9 @@
 {% include navigation.html %}
 
-{% assign name = page.url | split: "/" | last | split: "." | first %}  
+{% assign element_name = page.url | split: "/" | last | split: "." | first %}  
 
 {% for entry in site.data.sensors.data %}
-    {% if entry.name == name %}
+    {% if entry.name == element_name %}
         {% assign element = entry %}
         {% assign type = "sensor" %}
     {% endif %}
@@ -90,7 +90,7 @@
     {% for name in extra_names %}
         {% if type == "sensor" %}    
         {% assign extra_import = "data/sensors/" | append: element.name | append: "/extra/" | append: name | append: ".md" %}
-    {% else %}
+        {% else %}
         {% assign extra_import = "data/commands/" | append: element.name | append: "/extra/" | append: name | append: ".md" %}
     {% endif %}
 {% include {{extra_import}} %}
