@@ -81,21 +81,3 @@
 {% include {{example_import}} %}
     {% endfor %}
 {% endif %} 
-
-
-{% if element.extra %}
-## Additional information 
- 
-{% assign extra_names = element.extra %}
-    {% for name in extra_names %}
-        {% if type == "sensor" %}    
-        {% assign extra_import = "data/sensors/" | append: element.name | append: "/extra/" | append: name | append: ".md" %}
-        {% else %}
-        {% assign extra_import = "data/commands/" | append: element.name | append: "/extra/" | append: name | append: ".md" %}
-    {% endif %}
-{% include {{extra_import}} %}
-    {% endfor %}
-{% endif %}
-
-
-
