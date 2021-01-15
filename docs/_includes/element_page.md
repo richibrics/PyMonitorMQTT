@@ -45,3 +45,57 @@
 
 {% endif %}
 
+
+{% if element.default and element.default.example_custom_topic %}
+    {% assign example_count = 1 %}
+{% else %}
+    {% assign example_count = 0 %}
+{% endif %} 
+
+{% if element.examples %}
+    {% assign example_count = example_count | plus: element.examples.size %}
+{% endif %} 
+
+{% if example_count >0 %}
+    {% if example_count == 1 %}
+## Example
+    {% else %}
+## Examples
+    {% endif %} 
+ 
+{% if element.default and element.default.example_custom_topic %}
+{% if type == "sensor" %}
+{% include data/sensors/default/example_custom_topic.md sensor=element topic=element.default.example_custom_topic %}
+{% else %}
+{% include data/commands/default/example_custom_topic.md command=element topic=element.default.example_custom_topic %}
+{% endif %}
+{% endif %}
+
+{% assign example_names = element.examples %}
+    {% for name in example_names %}
+    {% if type == "sensor" %}
+        {% assign example_import = "data/sensors/" | append: element.name | append: "/examples/" | append: name | append: ".md" %}
+    {% else %}
+        {% assign example_import = "data/commands/" | append: element.name | append: "/examples/" | append: name | append: ".md" %}
+    {% endif %}
+{{example_import}}
+    {% endfor %}
+{% endif %} 
+
+
+{% if element.extra %}
+## Additional information 
+ 
+{% assign extra_names = element.extra %}
+    {% for name in extra_names %}
+        {% if type == "sensor" %}    
+        {% assign extra_import = "data/sensors/" | append: element.name | append: "/extra/" | append: name | append: ".md" %}
+        {% else %}
+        {% assign extra_import = "data/commands/" | append: element.name | append: "/extra/" | append: name | append: ".md" %}
+    {% endif %}
+{{extra_import}}
+    {% endfor %}
+{% endif %}
+
+
+
