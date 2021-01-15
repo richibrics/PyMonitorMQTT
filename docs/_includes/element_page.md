@@ -4,51 +4,56 @@
 
 {% for entry in site.data.sensors.data %}
     {% if entry.name == name %}
-        {% assign sensor = entry %}
+        {% assign element = entry %}
+        {% assign type = "sensor" %}
     {% endif %}
 {% endfor %}
 
-# {{ sensor.name }} Sensor
+{% if type == "sensor" %}
+# {{ element.name }} Sensor
+{% else %}
+# {{ element.name }} Commands
+{% endif %}
 
-{{sensor.long_description}}
+{{element.long_description}}
 
 ## Compatibility
 
 <div style="margin: 0 0 0 0;">
-{% if sensor.compatibility contains "m" %}
+{% if element.compatibility contains "m" %}
 <li>macOS</li>
 {% endif %}
-{% if sensor.compatibility contains "l" %}
+{% if element.compatibility contains "l" %}
 <li>Linux</li>
 {% endif %}
-{% if sensor.compatibility contains "w" %}
+{% if element.compatibility contains "w" %}
 <li>Windows</li>
 {% endif %}
 </div>
 
-{% if sensor.topics %}
+{% if element.topics %}
 ## Data and Topics
 
-{% include list_topics_sensor.html sensor=sensor %}
+{% include list_topics.html element=element %}
     
 {% endif %}
 
-{% if sensor.config %}
+{% if element.config %}
 ## Configuration
 
-{% include list_keys.html config=sensor.config %}
+{% include list_keys.html config=element.config %}
 
 {% endif %}
 
 
-{% if sensor.default and sensor.default.example_custom_topic %}
+{% if element.default and element.default.example_custom_topic %}
     {% assign example_count = 1 %}
 {% else %}
     {% assign example_count = 0 %}
 {% endif %} 
 
-{% if sensor.examples %}
-    {% assign example_count = example_count | plus: sensor.examples.size %}
+{% if element.examples %}
+    {% assign example_count = example_count | plus: element.examples.size %}
 {% endif %} 
 
 {% if example_count >0 %}
@@ -58,24 +63,36 @@
 ## Examples
     {% endif %} 
  
-{% if sensor.default and sensor.default.example_custom_topic %}
-{% include data/sensors/default/example_custom_topic.md sensor=sensor topic=sensor.default.example_custom_topic %}
+{% if element.default and element.default.example_custom_topic %}
+{% if type == "sensor" %}
+{% include data/sensors/default/example_custom_topic.md sensor=element topic=element.default.example_custom_topic %}
+{% else %}
+{% include data/commands/default/example_custom_topic.md command=element topic=element.default.example_custom_topic %}
+{% endif %}
 {% endif %}
 
-{% assign example_names = sensor.examples %}
+{% assign example_names = element.examples %}
     {% for name in example_names %}
-        {% assign example_import = "data/sensors/" | append: sensor.name | append: "/examples/" | append: name | append: ".md" %}
+    {% if type == "sensor" %}
+        {% assign example_import = "data/sensors/" | append: element.name | append: "/examples/" | append: name | append: ".md" %}
+    {% else %}
+        {% assign example_import = "data/commands/" | append: element.name | append: "/examples/" | append: name | append: ".md" %}
+    {% endif %}
 {% include {{example_import}} %}
     {% endfor %}
 {% endif %} 
 
 
-{% if sensor.extra %}
+{% if element.extra %}
 ## Additional information 
  
-{% assign extra_names = sensor.extra %}
+{% assign extra_names = element.extra %}
     {% for name in extra_names %}
-        {% assign extra_import = "data/sensors/" | append: sensor.name | append: "/extra/" | append: name | append: ".md" %}
+        {% if type == "sensor" %}    
+        {% assign extra_import = "data/sensors/" | append: element.name | append: "/extra/" | append: name | append: ".md" %}
+    {% else %}
+        {% assign extra_import = "data/commands/" | append: element.name | append: "/extra/" | append: name | append: ".md" %}
+    {% endif %}
 {% include {{extra_import}} %}
     {% endfor %}
 {% endif %}

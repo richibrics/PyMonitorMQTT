@@ -7,10 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Gentium+Basic&display=swap" rel="stylesheet">
 </head>
 
-{% for entry in include.sensor.topics %}
-
-    
-
+{% for entry in include.element.topics %}
     {% if entry.type %}
     {% if entry.type == "basic" %}
     {% assign type_class = "topic-type-string" %}
