@@ -1,9 +1,9 @@
 {% include navigation.html %}
 
-{% assign sensor_name = page.url | split: "/" | last | split: "." | first %}  
+{% assign name = page.url | split: "/" | last | split: "." | first %}  
 
 {% for entry in site.data.sensors.data %}
-    {% if entry.name == sensor_name %}
+    {% if entry.name == name %}
         {% assign sensor = entry %}
     {% endif %}
 {% endfor %}

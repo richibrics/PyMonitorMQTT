@@ -1,1 +1,1 @@
-{% include sensor_page.md %}
+{% include element_page.md %}
