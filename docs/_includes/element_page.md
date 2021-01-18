@@ -90,7 +90,7 @@
     {% else %}
         {% assign example_import = "data/commands/" | append: element.name | append: "/examples/" | append: name | append: ".md" %}
     {% endif %}
-{{example_import}}
+{% include {{example_import}} %}
     {% endfor %}
 {% endif %} 
 
@@ -105,7 +105,7 @@
         {% else %}
         {% assign extra_import = "data/commands/" | append: element.name | append: "/extra/" | append: name | append: ".md" %}
     {% endif %}
-{{extra_import}}
+{% include {{extra_import}} %}
     {% endfor %}
 {% endif %}
 
