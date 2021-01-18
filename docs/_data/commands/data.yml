@@ -1,10 +1,32 @@
 - name: Shutdown
   compatibility: "mwl"
-  short_description: "System shutdown"
-  long_description: "This commands is used to shutdown immeditaly the system."
+  short_description: "Shutdown the system"
+  long_description: "This commands is used to shutdown immediatly the system."
   topics:
-    - topic: shutdown
+    - topic: shutdown_command
       description: Shutdown now
+      need_payload: False
+  config:
+    - key: custom_topics
+      required: No
+- name: Reboot
+  compatibility: "mwl"
+  short_description: "Reboot the system"
+  long_description: "This commands is used to reboot immediatly the system."
+  topics:
+    - topic: reboot_command
+      description: Reboot now
+      need_payload: False
+  config:
+    - key: custom_topics
+      required: No
+- name: Lock
+  compatibility: "mwl"
+  short_description: "Lock the user session"
+  long_description: "This commands is used to lock the user session. When you're back you need the user password to access the computer."
+  topics:
+    - topic: lock_command
+      description: Lock the session
       need_payload: False
   config:
     - key: custom_topics
