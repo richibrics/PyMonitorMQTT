@@ -45,5 +45,6 @@ span.needed-payload {
 }
 
 .payload-header {
-    
+    padding-top: 6px;
+    color: rgb(0 115 217);
 }
