@@ -57,7 +57,7 @@
 <h3 class="payload-header">Payload</h3>
 <span class="payload-type">Type: {{entry.payload.type}}</span>
 {% if entry.payload.type == "json" %}
-<div class="config">
+<div class="payload-config">
 {% include list_keys.html config=entry.payload.config %}
 </div>
 {% endif %} 
