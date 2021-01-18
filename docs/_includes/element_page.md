@@ -1,11 +1,11 @@
 {% include navigation.html %}
 
-{% assign url_data = page.url | split: "/" %}
+{% assign url_data = page.url | split: "/" | reverse %}
 {% assign element_name = url_data | first | split: "." | first %}  
 {% assign element_type = url_data %}  
 
 {{element_name}}
-{{element_type}}
+{{url_data[2]}}
 
 {% for entry in site.data.sensors.data %}
     {% if entry.name == element_name %}
