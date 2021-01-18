@@ -5,7 +5,7 @@ div.topic-list-item {
 }
 
 .payload-config .topic-list-item {
-    border-bottom: 0px solid;
+    border-bottom: 0px solid !important;
 }
 
 
