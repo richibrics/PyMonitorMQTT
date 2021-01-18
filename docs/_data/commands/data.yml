@@ -1,5 +1,5 @@
 - name: Brightness
-  compatibility: "mw"
+  compatibility: "mwl"
   short_description: "Change monitor's brightness"
   long_description: "This commands is used to change the screen brightness to a specified value."
   topics:
