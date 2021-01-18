@@ -4,7 +4,7 @@ div.topic-list-item {
     padding-bottom: 16px;
 }
 
-div.payload-config.topic-list-item {
+.payload-config .topic-list-item {
     border-bottom: 0px solid;
 }
 
