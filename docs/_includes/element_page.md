@@ -2,20 +2,26 @@
 
 {% assign url_data = page.url | split: "/" | reverse %}
 {% assign element_name = url_data | first | split: "." | first %}  
-{% assign element_type = url_data[1] | split: "" | reverse | remove_first: {{{{url_data[1] | split: "" | reverse}}[0]}} | reverse | join: "" %}  
+{% assign element_type = url_data[1] %}  
 
 {{element_name}}
-{{ url_data[1]}}
 {{element_type}}
 
+{% if element_type == "sensors" %}
 {% for entry in site.data.sensors.data %}
     {% if entry.name == element_name %}
         {% assign element = entry %}
-        {% assign type = "sensor" %}
     {% endif %}
 {% endfor %}
+{% else %}
+{% for entry in site.data.commands.data %}
+    {% if entry.name == element_name %}
+        {% assign element = entry %}
+    {% endif %}
+{% endfor %}
+{% endif %}
 
-{% if type == "sensor" %}
+{% if element_type == "sensors" %}
 # {{ element.name }} Sensor
 {% else %}
 # {{ element.name }} Command
@@ -70,7 +76,7 @@
     {% endif %} 
  
 {% if element.default and element.default.example_custom_topic %}
-{% if type == "sensor" %}
+{% if element_type == "sensors" %}
 {% include data/sensors/default/example_custom_topic.md sensor=element topic=element.default.example_custom_topic %}
 {% else %}
 {% include data/commands/default/example_custom_topic.md command=element topic=element.default.example_custom_topic %}
@@ -79,7 +85,7 @@
 
 {% assign example_names = element.examples %}
     {% for name in example_names %}
-    {% if type == "sensor" %}
+    {% if element_type == "sensors" %}
         {% assign example_import = "data/sensors/" | append: element.name | append: "/examples/" | append: name | append: ".md" %}
     {% else %}
         {% assign example_import = "data/commands/" | append: element.name | append: "/examples/" | append: name | append: ".md" %}
@@ -94,7 +100,7 @@
  
 {% assign extra_names = element.extra %}
     {% for name in extra_names %}
-        {% if type == "sensor" %}    
+        {% if element_type == "sensors" %}    
         {% assign extra_import = "data/sensors/" | append: element.name | append: "/extra/" | append: name | append: ".md" %}
         {% else %}
         {% assign extra_import = "data/commands/" | append: element.name | append: "/extra/" | append: name | append: ".md" %}
