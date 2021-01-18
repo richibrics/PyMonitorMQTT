@@ -22,6 +22,9 @@
     {% assign type_class = "topic-type-string" %}
     {% assign type_text = "basic" %}
     {% endif %}
+    {% else %}
+    {% assign type_class = "" %}
+    {% assign type_text = "" %}
     {% endif %}
 
     {% if include.type=="commands" %}
@@ -32,6 +35,9 @@
     {% assign need_payload_class = "payload-need-string" %}
     {% assign need_payload_text = "payload not needed" %}
     {% endif %} 
+    {% else %}
+    {% assign need_payload_class = "" %}
+    {% assign need_payload_text = "" %}
     {% endif %} 
     
 <div class="topic-list-item">
