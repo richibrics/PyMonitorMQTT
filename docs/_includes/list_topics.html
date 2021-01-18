@@ -8,6 +8,8 @@
 </head>
 
 {% for entry in include.element.topics %}
+
+    {% if include.type=="sensors" %}
     {% if entry.type %}
     {% if entry.type == "basic" %}
     {% assign type_class = "topic-type-string" %}
@@ -19,6 +21,7 @@
     {% else %}
     {% assign type_class = "topic-type-string" %}
     {% assign type_text = "basic" %}
+    {% endif %}
     {% endif %}
 
     {% if include.type=="commands" %}
