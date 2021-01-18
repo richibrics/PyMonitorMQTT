@@ -54,7 +54,7 @@
 
 {% if element_type == "commands" and entry.need_payload %}
 <div class="topic-payload">
-<span class="type">Type: {{entry.payload.type}}</span>
+<span class="payload-type">Type: {{entry.payload.type}}</span>
 {% if entry.payload.type == "json" %}
 <div class="config">
 {% include list_keys.html config=entry.payload.config %}
