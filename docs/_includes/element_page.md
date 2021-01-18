@@ -1,6 +1,6 @@
 {% include navigation.html %}
 
-{% assign url_data = page.url | split: "/" | reverse %}
+{% assign url_data = page.url | split: "/" %}
 {% assign element_name = url_data | first | split: "." | first %}  
 {% assign element_type = url_data %}  
 
