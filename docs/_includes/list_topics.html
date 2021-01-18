@@ -21,11 +21,22 @@
     {% assign type_text = "basic" %}
     {% endif %}
 
+    {% if include.type=="commands" %}
+    {% if entry.need_payload %}
+    {% assign need_payload_class = "needed-payload payload-need-string" %}
+    {% assign need_payload_text = "payload: needed" %}
+    {% else %}
+    {% assign need_payload_class = "payload-need-string" %}
+    {% assign need_payload_text = "payload: not needed" %}
+    {% endif %} 
+    {% endif %} 
+    
 <div class="topic-list-item">
 
     <div class="topic-list-item-header">
         <span class="topic">.../{{entry.topic}}</span>
         <span class="{{type_class}}">{{type_text}}</span>
+        <span class="{{need_payload_class}}">{{need_payload_text}}</span>
     </div>    
     
     <div class="topic-lower-div">

@@ -4,8 +4,6 @@
 {% assign element_name = url_data | first | split: "." | first %}  
 {% assign element_type = url_data[1] %}  
 
-{{element_name}}
-{{element_type}}
 
 {% if element_type == "sensors" %}
 {% for entry in site.data.sensors.data %}
@@ -46,7 +44,7 @@
 {% if element.topics %}
 ## Data and Topics
 
-{% include list_topics.html element=element %}
+{% include list_topics.html element=element type=element_type %}
     
 {% endif %}
 

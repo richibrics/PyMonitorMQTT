@@ -5,6 +5,7 @@
   topics:
     - topic: shutdown
       description: Shutdown now
+      need_payload: False
   config:
     - key: custom_topics
       required: No

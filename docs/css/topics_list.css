@@ -29,3 +29,16 @@ span.topic-advanced {
 div.topic-lower-div {
     padding-left: 1%;
 }
+
+span.payload-need-string {
+    padding-top: 4px;
+    font-size: 80%;
+    font-weight: 400;
+    color: rgb(78, 161, 92);
+    font-style: italic;
+}
+
+span.needed-payload {
+    font-weight: 700 !important;
+    color: rgb(65, 207, 89);
+}
