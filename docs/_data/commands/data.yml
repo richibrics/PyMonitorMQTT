@@ -4,7 +4,7 @@
   long_description: "This commands is used to change the screen brightness to a specified value."
   topics:
     - topic: brightness/set
-      description: "Change monitor's brightness. You have to pass the brightness level to set with the payload (integer 0-100)."
+      description: "Change monitor's brightness"
       payload_example:
         - level
       need_payload: True
