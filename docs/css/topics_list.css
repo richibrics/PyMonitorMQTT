@@ -4,11 +4,6 @@ div.topic-list-item {
     padding-bottom: 16px;
 }
 
-.payload-config .key-list-item {
-    border-bottom: 0px solid !important;
-}
-
-
 div.key-list-item-header {
     margin: 0 0 0 0;
 }
@@ -56,4 +51,18 @@ div.topic-payload {
 
 .payload-header {
     color: rgb(0 115 217) !important;
+
 }
+
+.payload-config {
+    padding-right: 20px;
+}
+
+.payload-config .key-list-item {
+    border-bottom: 0px solid !important;
+}
+
+.payload-config .key {
+    font-size: 130% !important;
+}
+
