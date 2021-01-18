@@ -34,11 +34,11 @@ span.payload-need-string {
     padding-top: 4px;
     font-size: 80%;
     font-weight: 400;
-    color: rgb(78, 161, 92);
+    color: rgb(63 97 127);
     font-style: italic;
 }
 
 span.needed-payload {
     font-weight: 700 !important;
-    color: rgb(65, 207, 89);
+    color: rgb(0 115 217)  !important;
 }
