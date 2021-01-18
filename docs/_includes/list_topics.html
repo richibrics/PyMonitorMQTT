@@ -52,6 +52,19 @@
 {{entry.description}}
     </div>
 
+<div class=topic-payload>
+
+{% if element_type == "commands" and entry.need_payload %}
+<span class="type">{{entry.payload.type}}</span>
+{% if entry.payload.type == "json" %}
+<div class="config">
+{% include list_keys.html config=entry.payload.config %}
+</div>
+{% endif %} 
+
+
+</div>
+
 </div>
 
 {% endfor %}

@@ -1,14 +1,36 @@
-- name: Shutdown
-  compatibility: "mwl"
-  short_description: "Shutdown the system"
-  long_description: "This commands is used to shutdown immediatly the system."
+- name: Brightness
+  compatibility: "mw"
+  short_description: "Change monitor's brightness"
+  long_description: "This commands is used to change the screen brightness to a specified value."
   topics:
-    - topic: shutdown_command
-      description: Shutdown now
+    - topic: brightness/set
+      description: Change monitor's brightness. You have to pass the brightness level to set with the payload (integer 0-100).
+      payload_example:
+        - level
+      need_payload: True
+      payload:
+        type: json
+        config: 
+          - key: value
+            required: Yes
+            type: "Integer"
+            description: "Value from 0' to 100 of brightness to set"
+  config:
+    - key: custom_topics
+      required: No
+
+- name: Lock
+  compatibility: "mwl"
+  short_description: "Lock the user session"
+  long_description: "This commands is used to lock the user session. When you're back you need the user password to access the computer."
+  topics:
+    - topic: lock_command
+      description: Lock the session
       need_payload: False
   config:
     - key: custom_topics
       required: No
+
 - name: Reboot
   compatibility: "mwl"
   short_description: "Reboot the system"
@@ -20,13 +42,14 @@
   config:
     - key: custom_topics
       required: No
-- name: Lock
+
+- name: Shutdown
   compatibility: "mwl"
-  short_description: "Lock the user session"
-  long_description: "This commands is used to lock the user session. When you're back you need the user password to access the computer."
+  short_description: "Shutdown the system"
+  long_description: "This commands is used to shutdown immediatly the system."
   topics:
-    - topic: lock_command
-      description: Lock the session
+    - topic: shutdown_command
+      description: Shutdown now
       need_payload: False
   config:
     - key: custom_topics
