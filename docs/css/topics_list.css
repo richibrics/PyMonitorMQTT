@@ -50,6 +50,7 @@ span.needed-payload {
 }
 
 .payload-header {
-    padding-top: 6px;
-    color: rgb(0 115 217);
+    padding-top: 6px !important;
+    padding-bottom: 2px !important;
+    color: rgb(0 115 217) !important;
 }
