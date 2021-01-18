@@ -2,7 +2,7 @@
 
 {% assign url_data = page.url | split: "/" | reverse %}
 {% assign element_name = url_data | first | split: "." | first %}  
-{% assign element_type = url_data[2] %}  
+{% assign element_type = url_data %}  
 
 {{element_name}}
 {{element_type}}
