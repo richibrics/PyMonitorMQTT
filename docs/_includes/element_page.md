@@ -5,7 +5,7 @@
 {% assign element_type = url_data %}  
 
 {{element_name}}
-{{url_data[2]}}
+{{ page.url | split: "/"}}
 
 {% for entry in site.data.sensors.data %}
     {% if entry.name == element_name %}
