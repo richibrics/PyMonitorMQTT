@@ -14,7 +14,7 @@
           - key: value
             required: Yes
             type: "Integer"
-            description: "Value from 0' to 100 of brightness to set"
+            description: "Value from 0 to 100 of brightness to set"
   config:
     - key: custom_topics
       required: No
