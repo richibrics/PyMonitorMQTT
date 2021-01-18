@@ -15,6 +15,7 @@ span.key {
 
 span.required-string {
     padding-top: 4px;
+    padding-left: 6px;
     font-size: 80%;
     color: rgb(255, 102, 0);
     font-weight: 600;
@@ -23,6 +24,7 @@ span.required-string {
 
 span.optional-string {
     padding-top: 4px;
+    padding-left: 6px;
     font-size: 80%;
     font-weight: 600;
     color: orange;

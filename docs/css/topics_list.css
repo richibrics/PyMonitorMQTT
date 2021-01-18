@@ -32,6 +32,7 @@ div.topic-lower-div {
 
 span.payload-need-string {
     padding-top: 4px;
+    padding-left: 6px;
     font-size: 80%;
     font-weight: 400;
     color: rgb(63 97 127);
