@@ -4,7 +4,7 @@ div.topic-list-item {
     padding-bottom: 16px;
 }
 
-.payload-config .topic-list-item {
+.payload-config .key-list-item {
     border-bottom: 0px solid !important;
 }
 
@@ -49,8 +49,11 @@ span.needed-payload {
     color: rgb(0 115 217)  !important;
 }
 
+div.topic-payload {
+    padding-top: 10px !important;
+    
+}
+
 .payload-header {
-    padding-top: 6px !important;
-    padding-bottom: 2px !important;
     color: rgb(0 115 217) !important;
 }
