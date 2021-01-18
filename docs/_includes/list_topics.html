@@ -50,11 +50,10 @@
     
 <div class="topic-lower-div">
 {{entry.description}}
-</div>
 
 {% if element_type == "commands" and entry.need_payload %}
 <div class="topic-payload">
-<h3 class="payload-header">Payload</h3>
+<span class="payload-header">Payload</span>
 <span class="payload-type">Type: {{entry.payload.type}}</span>
 {% if entry.payload.type == "json" %}
 <div class="payload-config">
@@ -64,6 +63,7 @@
 </div>
 {% endif %} 
 
+</div>
 </div>
 
 {% endfor %}
