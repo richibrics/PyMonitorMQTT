@@ -46,12 +46,18 @@ span.needed-payload {
 
 div.topic-payload {
     padding-top: 10px !important;
-    
+    padding-left: 10px;
+    border-left: 3px solid rgb(0 115 217);
 }
 
 .payload-header {
     color: rgb(0 115 217) !important;
+    font-size: 120%;
+}
 
+span.payload-type {
+    padding-top: 10px !important;
+    display: block;
 }
 
 .payload-config {
