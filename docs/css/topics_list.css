@@ -47,7 +47,7 @@ span.needed-payload {
 div.topic-payload {
     padding-top: 10px !important;
     padding-left: 10px;
-    border-left: 3px solid rgb(0 115 217 / 51%);
+    border-left: 2px solid rgb(0 115 217 / 51%);
 }
 
 .payload-header {
