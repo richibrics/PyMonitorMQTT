@@ -55,10 +55,6 @@ div.topic-payload {
     font-size: 120%;
 }
 
-span.payload-type {
-    padding-top: 10px !important;
-    display: block;
-}
 
 .payload-config {
     padding-right: 20px;
