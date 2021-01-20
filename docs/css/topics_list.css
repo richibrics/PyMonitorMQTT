@@ -53,8 +53,9 @@ div.topic-payload {
 .payload-header {
     color: rgb(0 115 217) !important;
     font-size: 120%;
+    padding-bottom: 15px;
+    display: inline-block;
 }
-
 
 .payload-config {
     padding-right: 20px;
