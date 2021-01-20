@@ -69,7 +69,15 @@ span.payload-type {
     border-bottom: 0px solid !important;
 }
 
+
+.payload-config .topic-payload {
+    padding-top: 2px !important;
+}
+
 .payload-config .key {
     font-size: 130% !important;
 }
 
+.payload-configuration-text {
+    padding-bottom: 10px;
+}
