@@ -45,7 +45,11 @@ span.needed-payload {
 }
 
 p.topic-text {
-    
+    margin-bottom: 0px;
+}
+
+p.topic-text .has-payload {
+    margin-bottom: 10px;
 }
 
 div.topic-payload {

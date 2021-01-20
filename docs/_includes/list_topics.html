@@ -35,6 +35,11 @@
     {% assign need_payload_class = "payload-need-string" %}
     {% assign need_payload_text = "payload not needed" %}
     {% endif %} 
+    {% if entry.payload %}
+    {% assign class_has_payload = " has-payload" %}
+    {% else %}
+    {% assign class_has_payload = "" %}
+    {% endif %}
     {% else %}
     {% assign need_payload_class = "" %}
     {% assign need_payload_text = "" %}
@@ -49,7 +54,7 @@
     </div>    
     
 <div class="topic-lower-div">
-<p class="topic-text">{{entry.description}}</p>
+<p class="topic-text{{class_has_payload}}">{{entry.description}}</p>
 
 {% if element_type == "commands" and entry.need_payload %}
 <div class="topic-payload">
