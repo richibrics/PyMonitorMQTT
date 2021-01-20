@@ -62,7 +62,6 @@ div.topic-payload {
 }
 
 .payload-config .key-list-item {
-    border-top: 2px dotted rgb(0 115 217 / 51%)  !important;
     border-bottom: 2px dotted rgb(0 115 217 / 51%)  !important;
     padding-top: 2px !important;
 }
