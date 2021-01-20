@@ -44,6 +44,10 @@ span.needed-payload {
     color: rgb(0 115 217)  !important;
 }
 
+p.topic-text {
+    
+}
+
 div.topic-payload {
     padding-top: 10px !important;
     padding-left: 10px;
