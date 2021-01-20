@@ -65,6 +65,7 @@ span.payload-type {
 }
 
 .payload-config .key-list-item {
+    border-top: 1px solid #d9dbde  !important;
     border-bottom: 0px solid !important;
 }
 
