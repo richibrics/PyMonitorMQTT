@@ -65,8 +65,9 @@ span.payload-type {
 }
 
 .payload-config .key-list-item {
-    border-top: 1px solid #d9dbde  !important;
-    border-bottom: 0px solid !important;
+    border-top: 1px solid rgb(0 115 217 / 51%)  !important;
+    border-bottom: 1px solid rgb(0 115 217 / 51%)  !important;
+    width: 50%;
     padding-top: 2px !important;
 }
 
@@ -77,4 +78,5 @@ span.payload-type {
 
 .payload-configuration-text {
     padding-bottom: 10px;
+    display: block;
 }
