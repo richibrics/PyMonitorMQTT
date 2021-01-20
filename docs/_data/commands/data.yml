@@ -9,12 +9,16 @@
         - level
       need_payload: True
       payload:
-        type: json
+        type: JSON
         config: 
           - key: value
             required: Yes
             type: "Integer"
             description: "Value from 0 to 100 of brightness to set"
+          - key: otherfield
+            required: No
+            type: "String"
+            description: "Value from 0 to 100 of brightness to setValue from 0 to 100 of brightness to setValue from 0 to 100 of brightness to setValue from 0 to 100 of brightness to set"
     - topic: brightness/provq
   config:
     - key: custom_topics
