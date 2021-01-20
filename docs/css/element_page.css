@@ -1,0 +1,8 @@
+div.compatibility {
+    margin: 0 0 0 0;
+} 
+
+div.compatibility ul li::before  {
+    content: "\2022";
+    color: #159957;
+}

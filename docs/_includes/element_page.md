@@ -1,4 +1,5 @@
 {% include navigation.html %}
+{% include element_page_css.html %}
 
 {% assign url_data = page.url | split: "/" | reverse %}
 {% assign element_name = url_data | first | split: "." | first %}  
@@ -29,7 +30,8 @@
 
 ## Compatibility
 
-<div style="margin: 0 0 0 0;">
+<div class="compatibility">
+<ul>
 {% if element.compatibility contains "m" %}
 <li>macOS</li>
 {% endif %}
@@ -39,6 +41,7 @@
 {% if element.compatibility contains "w" %}
 <li>Windows</li>
 {% endif %}
+</ul>
 </div>
 
 {% if element.topics %}
