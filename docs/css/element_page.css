@@ -8,6 +8,6 @@ div.compatibility ul {
   
 
 div.compatibility ul li::before  {
-    content: "\2022";
+    content: "➼";
     color: #159957;
 }
