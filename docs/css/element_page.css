@@ -1,13 +1,10 @@
-div.compatibility {
-    margin: 0 0 0 0;
-} 
-
 div.compatibility ul {
     list-style: none;
+    padding-left: 20px;
 }
-  
 
 div.compatibility ul li::before  {
     content: "➼";
+    font-size: 130%;
     color: #159957;
 }
