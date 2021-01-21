@@ -54,3 +54,77 @@
   config:
     - key: custom_topics
       required: No
+
+- name: TurnOnMonitors
+  compatibility: "wl"
+  short_description: "Turn on all the monitors"
+  long_description: "Turn <b>on</b> all the monitors. Opposite command is <b>TurnOffMonitors</b>"
+  topics:
+    - topic: turn_on_monitors_command
+      description: Turn on all the monitors 
+      need_payload: False
+  config:
+    - key: custom_topics
+      required: No
+
+- name: TurnOffMonitors
+  compatibility: "wl"
+  short_description: "Turn off all the monitors"
+  long_description: "Turn <b>off</b> all the monitors. Opposite command is <b>TurnOnMonitors</b>"
+  topics:
+    - topic: turn_off_monitors_command
+      description: Turn off all the monitors 
+      need_payload: False
+  config:
+    - key: custom_topics
+      required: No
+      
+- name: Inbox
+  compatibility: "mwl"
+  short_description: "Print topic messages"
+  long_description: "Listen for messages on a specific topic or using a topic prefix with #"
+  topics:
+    - topic: inbox_command
+      description: Topic you want to receive messages from. Should be changed to use this command at its best
+      need_payload: False
+  config:
+    - key: custom_topics
+      required: No
+      description: Topic you want to subscribe to, all the messages from this topic will be printed to the console
+      
+- name: Notify
+  compatibility: "mwl"
+  short_description: "Send system notification"
+  long_description: "Use this command to send a notication to the system.<br>You can send title and message via payload or set them directly from the config and trigger it with a trigger on the topic. Read the paragraph below"
+  topics:
+    - topic: notify
+      description: Topic used to trigger the notification. You can set notify attributes viathe payload or from the notification. Read the paragraph below for more.
+      need_payload: False
+      payload:
+        - key: custom_topics
+          required: No
+        - key: title
+          required: No
+          description: Use this field to send a notification with the given <i>title</i>
+        - key: message
+          required: No
+          description: Use this field to send a notification with the given <i>message </i>
+  config:
+    - key: custom_topics
+      required: No
+      description: Topic used to trigger the notification and set values 
+    - key: contents
+      required: No
+    - key: title
+      required: No
+      level: 2
+      description: Set title for all notifications triggered that don't have a <i>title</i> in the payload
+    - key: message
+      required: No
+      level: 2
+      description: Set message for all notifications triggered that don't have a <i>message</i> in the payload
+  extra:
+    - values
+      
+# Sleep
+# Terminal
