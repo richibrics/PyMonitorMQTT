@@ -101,14 +101,16 @@
       description: Topic used to trigger the notification. You can set notify attributes using the payload or from the notification. Read the paragraph below for more.
       need_payload: False
       payload:
-        - key: custom_topics
-          required: No
-        - key: title
-          required: No
-          description: Use this field to send a notification with the given <i>title</i>
-        - key: message
-          required: No
-          description: Use this field to send a notification with the given <i>message </i>
+        type: JSON
+        config:
+          - key: custom_topics
+            required: No
+          - key: title
+            required: No
+            description: Use this field to send a notification with the given <i>title</i>
+          - key: message
+            required: No
+            description: Use this field to send a notification with the given <i>message </i>
   config:
     - key: custom_topics
       required: No
