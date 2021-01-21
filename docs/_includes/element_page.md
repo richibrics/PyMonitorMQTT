@@ -54,7 +54,7 @@
 {% if element.config %}
 ## Configuration
 
-{% include list_keys.html config=element.config %}
+{% include list_keys.html config=element.config type=element_type %}
 
 {% endif %}
 

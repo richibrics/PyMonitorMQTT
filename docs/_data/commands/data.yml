@@ -98,7 +98,7 @@
   long_description: "Use this command to send a notication to the system.<br>You can send title and message via payload or set them directly from the config and trigger it with a trigger on the topic. Read the paragraph below"
   topics:
     - topic: notify
-      description: Topic used to trigger the notification. You can set notify attributes viathe payload or from the notification. Read the paragraph below for more.
+      description: Topic used to trigger the notification. You can set notify attributes using the payload or from the notification. Read the paragraph below for more.
       need_payload: False
       payload:
         - key: custom_topics

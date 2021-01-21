@@ -1,0 +1,6 @@
+custom_topics:
+  type: List of String
+  description: "List of topics to which the command will subscribe.<br>If the command subscribes to a single topic, you will have to put one topic in the list.<br>If the command subscribes to more than one topic, you can register more topics; each topic in the list will be assigned in the same order as topics are added from the single commands (order that you can check in the each individual command file)."
+contents:
+  type: Dictionary
+  description: "Dictionary where you should put the data you want to pass to the command."

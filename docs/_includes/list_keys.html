@@ -9,7 +9,11 @@
 
 {% assign nested_left_margin = "40" %}
 
+{% if include.type=="sensors" %}
 {% assign defaults = site.data.sensors.default_options %}
+{% elsif include.type=="commands" %}
+{% assign defaults = site.data.commands.default_options %}
+{% endif %}
 
 {% for entry in include.config %}
 
