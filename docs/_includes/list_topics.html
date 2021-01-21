@@ -56,7 +56,7 @@
 <div class="topic-lower-div">
 <p class="topic-text{{class_has_payload}}">{{entry.description}}</p>
 
-{% if element_type == "commands" and not entry.payload == false %}
+{% if element_type == "commands" and entry.payload != false %}
 <div class="topic-payload">
 <span class="payload-header">Payload</span>
 <span class="type">{{entry.payload.type}}</span>
