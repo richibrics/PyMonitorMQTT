@@ -44,9 +44,9 @@ To use this feature:
   - String: 'allow': run every command you receive (you should only use this for debugging)
   - List of String: here you can put a list of rules (specified via filename wildcards) to allow only commands that verify at least one condition from this list
 
-##### Examples
+#### Examples
 
-###### Whitelist 
+#### Whitelist 
 
 Allow commands that start with "google-chrome" and with "vlc"
 
@@ -89,7 +89,7 @@ This message asks to run `shutdown now` and this command won't be run
 ```
 
 
-###### Allow 
+#### Allow 
 Allow every command you receive
 
 *extract of configuration.yaml*
@@ -103,7 +103,7 @@ Allow every command you receive
 
 ```
 
-###### Deny 
+#### Deny 
 Deny every command you receive
 
 *extract of configuration.yaml*
