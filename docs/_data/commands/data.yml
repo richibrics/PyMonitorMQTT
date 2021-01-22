@@ -105,7 +105,7 @@
       required: No
 
 - name: Sleep
-  compatibility: "mwl"
+  compatibility: "wl"
   short_description: "Put system to sleep"
   long_description: "This commands is used to put immediately the system to sleep."
   topics:
@@ -118,11 +118,11 @@
 
 - name: Terminal
   compatibility: "mwl"
-  short_description: "Run termianl command"
-  long_description: "This commands is used to run the command (specified in the message or in the configuration file). <b>Command under maintenance to support Regex rules for command deny and allow</b>"
+  short_description: "Run terminal command"
+  long_description: "This commands is used to run the command (specified in the message or in the configuration file). To configure, read the paragraph below."
   topics:
     - topic: terminal_command
-      description: Run termianl command
+      description: Run terminal command
       need_payload: False
       payload:
         type: JSON
@@ -133,9 +133,20 @@
   config:
     - key: custom_topics
       required: No
+    - key: contents
+      required: Yes
+    - key: command
+      required: No
+      type: String
+      level: 2
+      description: "Here you can place the command you want to run every time tht you send a message to the Command topic: if you specify here the command, you don't have to add whitelist options"
+    - key: whitelist
+      required: No
+      level: 2
+      type: Dictionary/List
+      description: "Here you can specify the rules for the command the received messge wants to execute: normally a network command is not secure to run so here you can setup here your security policy"
+      
 
-
-# Terminal
 
 - name: TurnOnMonitors
   compatibility: "wl"
