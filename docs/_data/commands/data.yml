@@ -103,12 +103,12 @@
       payload:
         type: JSON
         config:
-          - key: custom_topics
-            required: No
           - key: title
+            type: String
             required: No
             description: Use this field to send a notification with the given <i>title</i>
           - key: message
+            type: String
             required: No
             description: Use this field to send a notification with the given <i>message </i>
   config:
