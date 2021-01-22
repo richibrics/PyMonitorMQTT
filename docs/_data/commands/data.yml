@@ -18,67 +18,7 @@
   config:
     - key: custom_topics
       required: No
-
-- name: Lock
-  compatibility: "mwl"
-  short_description: "Lock the user session"
-  long_description: "This commands is used to lock the user session. When you're back you need the user password to access the computer."
-  topics:
-    - topic: lock_command
-      description: Lock the session
-      need_payload: False
-  config:
-    - key: custom_topics
-      required: No
-
-- name: Reboot
-  compatibility: "mwl"
-  short_description: "Reboot the system"
-  long_description: "This commands is used to reboot immediatly the system."
-  topics:
-    - topic: reboot_command
-      description: Reboot now
-      need_payload: False
-  config:
-    - key: custom_topics
-      required: No
-
-- name: Shutdown
-  compatibility: "mwl"
-  short_description: "Shutdown the system"
-  long_description: "This commands is used to shutdown immediatly the system."
-  topics:
-    - topic: shutdown_command
-      description: Shutdown now
-      need_payload: False
-  config:
-    - key: custom_topics
-      required: No
-
-- name: TurnOnMonitors
-  compatibility: "wl"
-  short_description: "Turn on all the monitors"
-  long_description: "Turn <b>on</b> all the monitors. Opposite command is <b>TurnOffMonitors</b>"
-  topics:
-    - topic: turn_on_monitors_command
-      description: Turn on all the monitors 
-      need_payload: False
-  config:
-    - key: custom_topics
-      required: No
-
-- name: TurnOffMonitors
-  compatibility: "wl"
-  short_description: "Turn off all the monitors"
-  long_description: "Turn <b>off</b> all the monitors. Opposite command is <b>TurnOnMonitors</b>"
-  topics:
-    - topic: turn_off_monitors_command
-      description: Turn off all the monitors 
-      need_payload: False
-  config:
-    - key: custom_topics
-      required: No
-      
+  
 - name: Inbox
   compatibility: "mwl"
   short_description: "Print topic messages"
@@ -91,6 +31,18 @@
     - key: custom_topics
       required: No
       description: Topic you want to subscribe to, all the messages from this topic will be printed to the console
+
+- name: Lock
+  compatibility: "mwl"
+  short_description: "Lock the user session"
+  long_description: "This commands is used to lock the user session. When you're back you need the user password to access the computer."
+  topics:
+    - topic: lock_command
+      description: Lock the session
+      need_payload: False
+  config:
+    - key: custom_topics
+      required: No
       
 - name: Notify
   compatibility: "mwl"
@@ -128,5 +80,78 @@
   extra:
     - values
       
-# Sleep
+- name: Reboot
+  compatibility: "mwl"
+  short_description: "Reboot the system"
+  long_description: "This commands is used to reboot immediatly the system."
+  topics:
+    - topic: reboot_command
+      description: Reboot now
+      need_payload: False
+  config:
+    - key: custom_topics
+      required: No
+
+- name: Shutdown
+  compatibility: "mwl"
+  short_description: "Shutdown the system"
+  long_description: "This commands is used to shutdown immediatly the system."
+  topics:
+    - topic: shutdown_command
+      description: Shutdown now
+      need_payload: False
+  config:
+    - key: custom_topics
+      required: No
+
+- name: Sleep
+  compatibility: "mwl"
+  short_description: "Put system to sleep"
+  long_description: "This commands is used to put immediately the system to sleep."
+  topics:
+    - topic: sleep_command
+      description: Put system to sleep
+      need_payload: False
+  config:
+    - key: custom_topics
+      required: No
+
+- name: Terminal
+  compatibility: "mwl"
+  short_description: "Run termianl command"
+  long_description: "This commands is used to run the command (specified in the message or in the configuration file). <b>Command under maintenance to support Regex rules for command deny and allow</b>"
+  topics:
+    - topic: sleep_command
+      description: Put system to sleep
+      need_payload: False
+  config:
+    - key: custom_topics
+      required: No
+
+
 # Terminal
+
+- name: TurnOnMonitors
+  compatibility: "wl"
+  short_description: "Turn on all the monitors"
+  long_description: "Turn <b>on</b> all the monitors. Opposite command is <b>TurnOffMonitors</b>"
+  topics:
+    - topic: turn_on_monitors_command
+      description: Turn on all the monitors 
+      need_payload: False
+  config:
+    - key: custom_topics
+      required: No
+
+- name: TurnOffMonitors
+  compatibility: "wl"
+  short_description: "Turn off all the monitors"
+  long_description: "Turn <b>off</b> all the monitors. Opposite command is <b>TurnOnMonitors</b>"
+  topics:
+    - topic: turn_off_monitors_command
+      description: Turn off all the monitors 
+      need_payload: False
+  config:
+    - key: custom_topics
+      required: No
+    
