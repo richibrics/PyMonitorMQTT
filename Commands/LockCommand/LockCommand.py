@@ -1,5 +1,6 @@
 import subprocess
 from Commands.Command import Command
+import Logger
 
 TOPIC = 'lock_command'
 
@@ -23,12 +24,21 @@ class LockCommand(Command):
         self.SubscribeToTopic(self.GetTopic(TOPIC))
 
     def Callback(self, message):
-        try:
-            command = commands[self.GetOS()][self.GetDE()]
-            subprocess.Popen(command.split(), stdout=subprocess.PIPE)
-        except:
+        os = self.GetOS()
+        de=self.GetDE()
+        if os in commands:
+            if de in commands[os]:
+                try:
+                    command = commands[os][de]
+                    process = subprocess.Popen(command.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                except Exception as e:
+                    raise Exception('Error during system lock: ' + str(e))
+            else:
+                raise Exception(
+                    'No lock command for this Desktop Environment: ' + de)
+        else:
             raise Exception(
-                'No lock command for this Desktop Environment/Operating System')
+                'No lock command for this Operating System: ' + os)
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os
