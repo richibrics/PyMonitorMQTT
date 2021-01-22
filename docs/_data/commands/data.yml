@@ -121,9 +121,15 @@
   short_description: "Run termianl command"
   long_description: "This commands is used to run the command (specified in the message or in the configuration file). <b>Command under maintenance to support Regex rules for command deny and allow</b>"
   topics:
-    - topic: sleep_command
-      description: Put system to sleep
+    - topic: terminal_command
+      description: Run termianl command
       need_payload: False
+      payload:
+        type: JSON
+        config: 
+          - key: command
+            type: String
+            description: Command to run, must be allowed using special configurations that you can find in the paragraph below.
   config:
     - key: custom_topics
       required: No
