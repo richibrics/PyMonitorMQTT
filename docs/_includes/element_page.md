@@ -97,7 +97,6 @@
 
 
 {% if element.extra %}
-## Additional information 
  
 {% assign extra_names = element.extra %}
     {% for name in extra_names %}
