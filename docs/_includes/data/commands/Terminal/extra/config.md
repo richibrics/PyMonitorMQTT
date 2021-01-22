@@ -1,15 +1,15 @@
-### Configure your command
+## Configure your command
 
 There are two ways to select the command to run
 
-#### Set command in the configuration file
+### Set command in the configuration file
 
 If you set the command in the configuration file, you don't have to specify any whitelist because the command can't be edited from the network.
 The message you send to the topic to trigger the command won't be read and if you specify a command there won't be considered.
 
 To run multiple commands, each one specified in the configuration file, you have to consider using a custom_topic.
 
-##### Example
+#### Example
 
 Here you have 2 commands:
 - the first will be triggered with a message to "mycommand/topic/number1" and will run "echo Ready > file.txt"
@@ -33,7 +33,7 @@ Here you have 2 commands:
 
 If you don't set a command in the configuration file, the Monitor will look for the command in the message payload:
 
-#### Run command specified via message
+### Run command specified via message
 
 Maybe you prefer sending the command with the message. For security reason, you have to specify in the configuration file which command can be run.
 
@@ -46,7 +46,7 @@ To use this feature:
 
 #### Examples
 
-#### Whitelist 
+##### Whitelist 
 
 Allow commands that start with "google-chrome" and with "vlc"
 
@@ -89,7 +89,8 @@ This message asks to run `shutdown now` and this command won't be run
 ```
 
 
-#### Allow 
+##### Allow 
+
 Allow every command you receive
 
 *extract of configuration.yaml*
@@ -103,7 +104,8 @@ Allow every command you receive
 
 ```
 
-#### Deny 
+##### Deny 
+
 Deny every command you receive
 
 *extract of configuration.yaml*
