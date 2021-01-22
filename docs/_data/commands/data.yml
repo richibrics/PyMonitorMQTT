@@ -145,8 +145,8 @@
       level: 2
       type: Dictionary/List
       description: "Here you can specify the rules for the command the received messge wants to execute: normally a network command is not secure to run so here you can setup here your security policy"
-      
-
+  extra:
+    - config
 
 - name: TurnOnMonitors
   compatibility: "wl"
