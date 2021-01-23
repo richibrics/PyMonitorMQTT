@@ -2,13 +2,13 @@
 {% assign page_parent_path = page.url | split: "/"%}
 
 <li>
-    {% assign check_page_url = "/sensors/" | absolute_url %}
+    {% assign check_page_url = "/configuration/sensors" | absolute_url %}
     {% if curr_page_url == check_page_url %}
         {% assign pagetype = 'current_link' %}
     {% else %}
         {% assign pagetype = 'common_link' %}  
     {% endif %}
-    <a class="{{ pagetype }}" href="{{ site.baseurl }}/configuration/sensors">Sensors</a>
+    <a class="{{ pagetype }}" href="{{ site.baseurl }}/sensors">Sensors</a>
     {% if page_parent_path == "sensors" %}
     {% for entry in site.data.sensors.data %}
         {% assign entry_url = "/sensors/" | append:  entry.name %}
@@ -25,13 +25,13 @@
     {% endif %}
 </li>
 <li>
-    {% assign check_page_url = "/commands/" | absolute_url %}
+    {% assign check_page_url = "/configuration/commands" | absolute_url %}
     {% if curr_page_url == check_page_url %}
         {% assign pagetype = 'current_link' %}
     {% else %}
         {% assign pagetype = 'common_link' %}  
     {% endif %}
-    <a class="{{ pagetype }}" href="{{ site.baseurl }}/configuration/commands">Commands</a>
+    <a class="{{ pagetype }}" href="{{ site.baseurl }}/commands">Commands</a>
     {% if page_parent_path == "commands" %}
     {% for entry in site.data.commands.data %}
         {% assign entry_url = "/commands/" | append:  entry.name %}
@@ -45,5 +45,4 @@
             <li><a class="{{ pagetype }}" href="{{page_url}}">{{ entry.name }}</a></li>
         </ul>
     {% endfor %}
-    {% endif %}
 </li>
