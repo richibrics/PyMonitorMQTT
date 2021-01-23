@@ -9,7 +9,7 @@
         {% assign pagetype = 'common_link' %}  
     {% endif %}
     <a class="{{ pagetype }}" href="{{ site.baseurl }}/sensors">Sensors</a>
-    {% if page_parent_path == "sensors" %}
+    {% if page_parent_path[1] == "sensors" %}
     {% for entry in site.data.sensors.data %}
         {% assign entry_url = "/sensors/" | append:  entry.name %}
         {% assign page_url = entry_url | absolute_url %}
@@ -32,7 +32,7 @@
         {% assign pagetype = 'common_link' %}  
     {% endif %}
     <a class="{{ pagetype }}" href="{{ site.baseurl }}/commands">Commands</a>
-    {% if page_parent_path == "commands" %}
+    {% if page_parent_path[1] == "commands" %}
     {% for entry in site.data.commands.data %}
         {% assign entry_url = "/commands/" | append:  entry.name %}
         {% assign page_url = entry_url | absolute_url %}
