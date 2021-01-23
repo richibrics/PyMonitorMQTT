@@ -1,5 +1,3 @@
-{% include navigation.html %}
-
 # YAML root
 
 In the root of the configuration.yaml file you can place these configuration keys:
