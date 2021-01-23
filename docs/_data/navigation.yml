@@ -3,9 +3,11 @@
 
 - title: Install
   url: /install/
+  children_prepath: install
 
 - title: Configuration
   url: /configuration/
+  children_prepath: configuration
   sublinks:
     - title: Root
       url: /configuration/global

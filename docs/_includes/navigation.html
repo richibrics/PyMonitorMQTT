@@ -9,15 +9,13 @@
 {% assign curr_page_url = page.url | absolute_url | replace: '.html', '' %}
 {% assign page_parent_folder = page.url | split: "/" %}
 
-{{page_parent_folder}}
-
 <div id="toc_container">
 <!-- Then we build the nav bar. -->
 <p class="toc_title">PyMonitorMQTT</p>
 <ul class="toc_list">
 {% for entry in site.data.navigation %}
     {% assign sublinks = entry.sublinks %}
-    {% if sublinks %}
+    {% if sublinks and entry.children_prepath == page_parent_folder[0]%}
         {% assign check_page_url = entry.url | absolute_url %}
         {% if curr_page_url == check_page_url %}
             {% assign pagetype = 'current_link' %}
