@@ -1,6 +1,9 @@
 - title: About
   url: /
 
+- title: Install
+  url: /install/
+
 - title: Configuration
   url: /configuration/
   sublinks:
