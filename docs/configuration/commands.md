@@ -1,5 +1,3 @@
-{% include navigation.html %}
-
 # Commands
 
 This monitor uses commands, created ad-hoc for each operating system, to perform specific actions when are triggered via specific topics.

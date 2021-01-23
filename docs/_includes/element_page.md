@@ -1,4 +1,3 @@
-{% include navigation.html %}
 {% include element_page_css.html %}
 
 {% assign url_data = page.url | split: "/" | reverse %}

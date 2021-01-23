@@ -1,5 +1,3 @@
-{% include navigation.html %}
-
 # Configure your monitor
 
 To configure the monitor client, you need to create a text file in the monitor folder named "configuration.yaml"

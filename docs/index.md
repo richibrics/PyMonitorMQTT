@@ -1,5 +1,3 @@
-{% include navigation.html %}
-
 # PyMonitorMQTT
 
 ## About the application

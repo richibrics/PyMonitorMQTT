@@ -1,5 +1,3 @@
-{% include navigation.html %}
-
 # Monitor element 
 
 This element is a dict that will contain several options both mandatory and optional (order isn't relevant)
