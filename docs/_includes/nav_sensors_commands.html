@@ -2,7 +2,7 @@
 {% assign page_parent_path = page.url | split: "/"%}
 
 <li>
-    {% assign check_page_url = "/configuration/sensors" | absolute_url %}
+    {% assign check_page_url = "/sensors/" | absolute_url %}
     {% if curr_page_url == check_page_url %}
         {% assign pagetype = 'current_link' %}
     {% else %}
@@ -25,7 +25,7 @@
     {% endif %}
 </li>
 <li>
-    {% assign check_page_url = "/configuration/commands" | absolute_url %}
+    {% assign check_page_url = "/commands/" | absolute_url %}
     {% if curr_page_url == check_page_url %}
         {% assign pagetype = 'current_link' %}
     {% else %}
