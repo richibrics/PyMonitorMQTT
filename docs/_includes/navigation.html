@@ -9,6 +9,8 @@
 {% assign curr_page_url = page.url | absolute_url | replace: '.html', '' %}
 {% assign page_parent_path = page.url | split: "/" %}
 
+THERE: {{page.url}}
+THERE: {{page_parent_path | join: " and "}}
 THERE: {{page_parent_path | first}}
 
 <div id="toc_container">
