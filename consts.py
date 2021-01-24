@@ -3,8 +3,6 @@ TOPIC_FORMAT = 'monitor/{}/{}'
 CONFIG_COMMANDS_KEY = 'commands'
 CONFIG_SENSORS_KEY = 'sensors'
 
-# Split in more lines if message's too long
-DEFAULT_LOGGER_MESSAGE_WIDTH = 40
 
 # To format value (1200000B -> 1,2GB)
 FORMATTED_VALUE_DECIMALS = 2
@@ -30,3 +28,12 @@ FIXED_VALUE_OS_LINUX = "Linux"
 OBJECT_REQUIREMENTS_FILENAME = "requirements.yaml"
 
 FILE_READ_SENSOR_FILENAME_CONTENTS_OPTION ="filename"
+
+# LOGGER CONSTS
+LOGGER_CONFIG_KEY = "logger"
+# Split in more lines if message's too long
+LOGGER_MESSAGE_WIDTH_KEY = "logger_message_width"
+LOGGER_MESSAGE_WIDTH_DEFAULT = 40
+LOGGER_FILE_LEVEL_KEY = "file_level"
+LOGGER_CONSOLE_LEVEL_KEY = "console_level"
+LOGGER_DEFAULT_LEVEL = 3

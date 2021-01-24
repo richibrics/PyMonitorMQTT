@@ -90,6 +90,9 @@ class Sensor():
 
         self.topics.append({'topic': topic, 'value': ""})
 
+        self.Log(Logger.LOG_DEVELOPMENT,"Adding topic: " + topic)
+        self.Log(Logger.LOG_DEVELOPMENT,"Discovery topic normalizer: " + topic.replace("/","_"))
+
     def GetFirstTopic(self):
         return self.topics[0]['topic'] if len(self.topics) else None
 
