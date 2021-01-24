@@ -1,6 +1,6 @@
 # PyMonitorMQTT
 
-Please refer to the [new website](https://richibrics.github.io/PyMonitorMQTT/)!
+**Please refer to the [new website](https://richibrics.github.io/PyMonitorMQTT/)!**
 
 
 PyMonitorMQTT is a **cross-platform system monitor** (works both on Windows, Linux and macOS) that sends real time information via **MQTT**.
