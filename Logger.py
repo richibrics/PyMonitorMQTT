@@ -67,6 +67,7 @@ class Logger():
                 string = string+'-'  # Print new line indicator if I will go down in the next iteration
             self.PrintAndSave(string,messageLevel)
             # -1 + space cause if the char in the prestring isn't a space, it will be directly attached to my message without a space
+
             prestring = (len(prestring)-PRESTRING_MESSAGE_SEPARATOR_LEN) * \
                 LONG_MESSAGE_PRESTRING_CHAR+PRESTRING_MESSAGE_SEPARATOR_LEN*' '
 

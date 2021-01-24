@@ -1,5 +1,6 @@
 from consts import *
 import Logger
+from Configurator import Configurator
 import sys
 import yaml
 from os import path
@@ -59,25 +60,10 @@ class Command():
             if self.commandConfigs and optionToSearch in self.commandConfigs:
                 self.options[optionToSearch] = self.commandConfigs[optionToSearch]
 
-    def GetOption(self, option):
-        # if in options I have a value for that option rerturn that else return False
-        if type(option) == str:
-            if option in self.options:
-                return self.options[option]
-            else:
-                return False
-        elif type(option) == list:  # It's a list with the option Path like contents -> values -> first
-            currentDict = self.options
-            while (len(option)):
-                current_option = option.pop(0)
-                if type(currentDict) == dict and current_option in currentDict:
-                    currentDict = currentDict[current_option]
-                else:
-                    return False  # Not found
-            return currentDict  # All ok, found
-        else:
-            raise Exception(
-                "Error during GetOption: option type not valid " + str(type(option)))
+
+    def GetOption(self, path,defaultReturnValue=None):
+        return Configurator.GetOption(self.options,path,defaultReturnValue)
+        
 
     def FindCommand(self, name):  # Find active commands for some specific action
         if(self.commandManager):

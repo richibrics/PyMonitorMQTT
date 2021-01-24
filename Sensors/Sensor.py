@@ -1,6 +1,7 @@
 import datetime
 from consts import *
 import Logger
+from Configurator import Configurator
 import sys
 import yaml
 from ValueFormatter import ValueFormatter
@@ -54,26 +55,9 @@ class Sensor():
             if self.sensorConfigs and optionToSearch in self.sensorConfigs:
                 self.options[optionToSearch] = self.sensorConfigs[optionToSearch]
 
-    def GetOption(self, option):
-        # if in options I have a value for that option rerturn that else return False
-        if type(option) == str:
-            if option in self.options:
-                return self.options[option]
-            else:
-                return False
-        elif type(option) == list:  # It's a list with the option Path like contents -> values -> first
-            currentDict = self.options
-            while (len(option)):
-                current_option = option.pop(0)
-                if type(currentDict) == dict and current_option in currentDict:
-                    currentDict = currentDict[current_option]
-                else:
-                    return False  # Not found
-            return currentDict  # All ok, found
-        else:
-            raise Exception(
-                "Error during GetOption: option type not valid " + str(type(option)))
-
+    def GetOption(self, path,defaultReturnValue=None):
+        return Configurator.GetOption(self.options,path,defaultReturnValue)
+        
     def ListTopics(self):
         return self.topics
 
@@ -82,7 +66,7 @@ class Sensor():
 
         # If user in options defined custom topics, store original and custom topic and replace it in the send function
         replaced = False
-        if self.GetOption('custom_topics') is not False and len(self.GetOption('custom_topics')) >= self.addedTopics:
+        if self.GetOption('custom_topics') is not None and len(self.GetOption('custom_topics')) >= self.addedTopics:
             self.replacedTopics.append(
                 {'original': topic, 'custom': self.GetOption('custom_topics')[self.addedTopics-1]})
             self.Log(Logger.LOG_INFO, 'Using custom topic defined in options')
