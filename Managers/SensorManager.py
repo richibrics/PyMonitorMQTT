@@ -114,6 +114,7 @@ class SensorManager():
         # Only SENSORCLASS (without Sensor suffix)
         return self.GetClassName(sensor_class).split('.')[-1].split('Sensor')[0]
 
+    # Also discovery data every X second
     def SendAllData(self):
         while self.continue_sending:
             for sensor in self.ActiveSensors():
