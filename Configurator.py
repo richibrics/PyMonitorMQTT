@@ -1,19 +1,10 @@
 from consts import *
 
 class Configurator():
-    def __init__(self,config):
-        self.configuration = config
-
-    # Returns the value of the option I find using the path from full configuration or from 
-    # a sub config ('startConfig').
+    # Returns the value of the option I find using the path from a passed config
     # Can also return a value (that you can pass to the fucntion) if it can't find the path 
-    def GetOption(self, path, startConfig=None, defaultReturnValue=None):
-        # If i have a subconfig dict where I have to start the options search I use it
-        if startConfig is not None:
-            searchConfigTree = startConfig
-        else: # else I use the full configuration to search
-            searchConfigTree=self.configuration
-
+    def GetOption(config, path, defaultReturnValue=None):
+        searchConfigTree=config
 
         # if in options I have a value for that option rerturn that else return False
         if type(path) == str:

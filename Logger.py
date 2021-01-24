@@ -2,6 +2,7 @@ import datetime
 import os
 import sys
 from consts import *
+from Configurator import Configurator
 
 LOG_MESSAGE = 0
 LOG_ERROR = 1
@@ -85,27 +86,13 @@ class Logger():
                 logFile.write(string+' \n')
 
     def GetConfiguration(self):
-        if self.globalConfig:
-            if LOGGER_CONFIG_KEY in self.globalConfig:
-
-                # Message width
-                if LOGGER_MESSAGE_WIDTH_KEY in self.globalConfig[LOGGER_CONFIG_KEY]:
-                    self.logger_message_width = self.globalConfig[LOGGER_CONFIG_KEY][LOGGER_MESSAGE_WIDTH_KEY]
-                else:
-                    self.logger_message_width = LOGGER_MESSAGE_WIDTH_DEFAULT
-
-                # File level
-                if LOGGER_FILE_LEVEL_KEY in self.globalConfig[LOGGER_CONFIG_KEY]:
-                    self.file_log_level = self.globalConfig[LOGGER_CONFIG_KEY][LOGGER_FILE_LEVEL_KEY]
-                else:
-                    self.file_log_level = LOGGER_DEFAULT_LEVEL
-
-                # Console level
-                if LOGGER_CONSOLE_LEVEL_KEY in self.globalConfig[LOGGER_CONFIG_KEY]:
-                    self.console_log_level = self.globalConfig[LOGGER_CONFIG_KEY][LOGGER_CONSOLE_LEVEL_KEY]
-                else:
-                    self.console_log_level = LOGGER_DEFAULT_LEVEL
-                
+        # Message width
+        self.logger_message_width = Configurator.GetOption(self.globalConfig,[LOGGER_CONFIG_KEY,LOGGER_MESSAGE_WIDTH_KEY],LOGGER_MESSAGE_WIDTH_DEFAULT)
+        # File level
+        self.file_log_level = Configurator.GetOption(self.globalConfig,[LOGGER_CONFIG_KEY,LOGGER_FILE_LEVEL_KEY],LOGGER_DEFAULT_LEVEL)
+        # Console level
+        self.console_log_level = Configurator.GetOption(self.globalConfig,[LOGGER_CONFIG_KEY,LOGGER_CONSOLE_LEVEL_KEY],LOGGER_DEFAULT_LEVEL)
+        
 
 class ExceptionTracker():
 
