@@ -1,6 +1,7 @@
 # PyMonitorMQTT
 
-**PS**: [New website](https://richibrics.github.io/PyMonitorMQTT/) (work in progress). Currently you should refer to the Repository Wiki.
+Please refer to the [new website](https://richibrics.github.io/PyMonitorMQTT/)!
+
 
 PyMonitorMQTT is a **cross-platform system monitor** (works both on Windows, Linux and macOS) that sends real time information via **MQTT**.
 The information is sent every 10 seconds and the broker can perform certain actions on the monitor's computer.
