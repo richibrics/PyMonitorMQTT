@@ -43,10 +43,10 @@ class CommandManager():
                 objAlive = obj(monitor_id, config, mqtt_client,
                                options, logger, self)
                 self.commands.append(objAlive)
-                req = objAlive.LoadRequirements()
+                req = objAlive.LoadSettings()
                 self.Log(Logger.LOG_INFO, name +
                          ' command loaded', logger=logger)
-                return req  # Return the requirements
+                return req  # Return the settings with requirements
             except Exception as exc:
                 self.Log(Logger.LOG_ERROR, name +
                          ' command occured an error during loading', logger=logger)

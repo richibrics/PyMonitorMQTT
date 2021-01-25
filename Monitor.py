@@ -1,5 +1,6 @@
 import Sensors
 import Commands
+from Configurator import Configurator as cf
 import Managers
 from MqttClient import MqttClient
 import Logger
@@ -51,10 +52,11 @@ class Monitor():
                 # I load the sensor and if I need some requirements, I save them to the list
                 # Additional check to not load double if I am loading requirements
                 if not (loadingRequirements and sensor in self.loadedSensors):
-                    requirement = self.sensorManager.LoadSensor(
+                    settings = self.sensorManager.LoadSensor(
                         sensor, self.monitor_id, self.config, self.mqttClient, self.config['send_interval'], self.logger)
-                    if requirement is not None:
-                        self.requirements.append(requirement)
+                    requirements = cf.GetOption(settings,SETTINGS_REQUIREMENTS_KEY)
+                    if requirements:
+                        self.requirements.append(requirements)
                     self.loadedSensors.append(sensor)
 
     def LoadCommands(self, commandsToAdd, loadingRequirements=False):
@@ -65,26 +67,28 @@ class Monitor():
                 # I load the command and if I need some requirements, I save them to the list
                 # Additional check to not load double if I am loading requirements
                 if not (loadingRequirements and command in self.loadedCommands):
-                    requirement = self.commandManager.LoadCommand(
+                    settings = self.commandManager.LoadCommand(
                         command, self.monitor_id, self.config, self.mqttClient, self.logger)
-                    if requirement is not None:
-                        self.requirements.append(requirement)
+                    requirements = cf.GetOption(settings,SETTINGS_REQUIREMENTS_KEY)
+                    if requirements:
+                        self.requirements.append(requirements)
                     self.loadedCommands.append(command)
 
     def LoadRequirements(self):
         # Here I load sensors and commands
-        # I have a dict with {'requirements':'sensors':[SENSORS],'commands':[COMMANDS]}
+        # I have a dict with {'sensors':[SENSORS],'commands':[COMMANDS]}
         # SENSORS and COMMANDS have the same format as the configutaration.yaml so I
         # tell to LoadSensor and LoadCommands what to load with the usual method
-        for requirement in self.requirements:
-            if 'requirements' in requirement and requirement['requirements']:
-                if 'sensors' in requirement['requirements']:
-                    self.LoadSensors(
-                        requirement['requirements']['sensors'], loadingRequirements=True)
-                if 'commands' in requirement['requirements']:
-                    self.LoadCommands(
-                        requirement['requirements']['commands'], loadingRequirements=True)
-            self.requirements.remove(requirement)
+        for requirements in self.requirements:
+            sensors = cf.GetOption(requirements,SETTINGS_REQUIREMENTS_SENSOR_KEY)
+            commands = cf.GetOption(requirements,SETTINGS_REQUIREMENTS_COMMAND_KEY)
+            if sensors:
+                self.LoadSensors(
+                    sensors, loadingRequirements=True)
+            if commands:
+                self.LoadCommands(
+                    commands, loadingRequirements=True)
+            self.requirements.remove(requirements)
 
     def Log(self, messageType, message):
         self.logger.Log(messageType, 'Main', message)

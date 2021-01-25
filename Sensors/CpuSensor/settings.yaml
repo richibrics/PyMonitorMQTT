@@ -2,3 +2,12 @@ requirements:
   sensors:
     - Os:
         dont_send: True
+
+discovery:
+  homeassistant: # Must match discovery preset name
+    - topic: "cpu/cpu_used_percentage"
+      payload:
+        name: "Cpu Usage"
+        unit_of_measurement: "%"
+
+

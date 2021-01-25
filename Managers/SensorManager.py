@@ -52,10 +52,10 @@ class SensorManager():
                 objAlive = obj(monitor_id, config, mqtt_client,
                                send_interval, options, logger, self)
                 self.sensors.append(objAlive)
-                req = objAlive.LoadRequirements()
+                req = objAlive.LoadSettings()
                 self.Log(Logger.LOG_INFO, name +
                          ' sensor loaded', logger=logger)
-                return req  # Return the requirements
+                return req  # Return the settings with equirements
             except Exception as exc:
                 self.Log(Logger.LOG_ERROR, name +
                          ' sensor occured an error during loading: ' + str(exc), logger=logger)
@@ -125,7 +125,9 @@ class SensorManager():
                         # Save this time as time when last message is sent
                         sensor.SaveTimeMessageSent()            
                     if sensor.ShouldSendDiscoveryConfig():
-                        sensor.PublishDiscoveryData()
+                        discovery_data = sensor.PrepareDiscoveryPayloads()
+                        discovery_data = sensor.ManageDiscoveryData(discovery_data)
+                        sensor.PublishDiscoveryData(discovery_data)
                         sensor.SaveTimeDiscoverySent()
             time.sleep(1)  # Wait a second and recheck if someone has to send
             

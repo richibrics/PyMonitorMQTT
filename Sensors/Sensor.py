@@ -43,6 +43,9 @@ class Sensor():
     def PostInitialize(self):  # Implemented in sub-classes
         pass
 
+    def ManageDiscoveryData(self, discovery_data): # Can be edited from sub sensors to edit different options of the discovery data
+        return discovery_data
+
     def ParseOptions(self):
         # I can have options both in broker configs and single sensor configs
         # At first I search in broker config. Then I check the per-sensor option and if I find
@@ -130,12 +133,17 @@ class Sensor():
     def SelectTopic(self,topic):
         # for a topic look for its customized topic and return it if there's. Else return the default one but completed with GetTopic 
         
+        if(type(topic)==dict):
+            checkTopic = topic['topic']
+        else:
+            checkTopic=topic
+
         for customs in self.replacedTopics:
             # If it's in the list of topics to replace
-            if topic['topic'] == customs['original']:
+            if checkTopic== customs['original']:
                 return customs['custom']
         
-        return self.GetTopic(topic['topic'])
+        return self.GetTopic(checkTopic)
 
 
     def SendData(self):
@@ -199,19 +207,23 @@ class Sensor():
 
     # Calculate if a send_interval spent since the last sending time
     def ShouldSendDiscoveryConfig(self):
-        if self.GetLastDiscoveryTime() is None:  # Never sent anything
-            return True  # Definitely yes, you should send
-        else:
-            # Calculate time elapsed
-            # Get current time
-            now = datetime.datetime.now()
-            # Calculate
-            seconds_elapsed = (now-self.GetLastDiscoveryTime()).total_seconds()
-            # Check if now I have to send
-            if seconds_elapsed >= self.GetSendDiscoveryConfigInterval():
-                return True
+        # Check if Discovery is enabled
+        if cf.GetOption(self.brokerConfigs,[DISCOVERY_KEY,DISCOVERY_ENABLE_KEY],False) is not False:
+            if self.GetLastDiscoveryTime() is None:  # Never sent anything
+                return True  # Definitely yes, you should send
             else:
-                return False
+                # Calculate time elapsed
+                # Get current time
+                now = datetime.datetime.now()
+                # Calculate
+                seconds_elapsed = (now-self.GetLastDiscoveryTime()).total_seconds()
+                # Check if now I have to send
+                if seconds_elapsed >= self.GetSendDiscoveryConfigInterval():
+                    return True
+                else:
+                    return False
+        else:
+            return False
 
     # Save the time when last message is sent. If no time passed, will be used current time
     def SaveTimeMessageSent(self, time=None):
@@ -256,25 +268,27 @@ class Sensor():
     def GetLastDiscoveryTime(self):
         return self.lastDiscoveryTime
 
-    def LoadRequirements(self):
+    def LoadSettings(self):
         # 1: Get path of the single object
         # 2: If I dont find the yaml in that folder, I return None
         # 3: If I find it, I parse the yaml and I return the dict
         # Start:
         # 1
-        requirements_path = path.join(
+        settings_path = path.join(
             self.sensorPath, OBJECT_SETTINGS_FILENAME)
         # try 3 except 2
         try:
-            with open(requirements_path) as f:
-                return yaml.load(f, Loader=yaml.FullLoader)
+            with open(settings_path) as f:
+                self.settings = yaml.load(f, Loader=yaml.FullLoader)
         except:
-            return None
+            self.settings = None
+        
+        return self.settings
 
 
-
-    def PublishDiscoveryData(self):
+    def PrepareDiscoveryPayloads(self):
         payload = None
+        discovery_data = []
 
         # Check if Discovery is enabled
         if cf.GetOption(self.brokerConfigs,[DISCOVERY_KEY,DISCOVERY_ENABLE_KEY],False) is not False:
@@ -285,32 +299,59 @@ class Sensor():
                 return  # Don't send if disabled in config
             
             prefix = cf.GetOption(self.brokerConfigs,[DISCOVERY_KEY,DISCOVERY_DISCOVER_PREFIX_KEY],DISCOVERY_DISCOVER_PREFIX_DEFAULT) 
+            preset = cf.GetOption(self.brokerConfigs,[DISCOVERY_KEY,DISCOVERY_PRESET_KEY])
+            sensor_preset_data = None
+            topic_data = None
+
+
+            if preset:
+                # Check here if I have an entry in the discovery file for this topic and use that data (PLACE IN 'sensor_data')
+                sensor_preset_data = cf.GetOption(self.settings,[SETTINGS_DISCOVERY_KEY,preset]) # THIS
+
 
             for topic in self.topics:
                 payload = {}
-                # Check here if I have an entry in the discovery file for this topic and use that data (PLACE IN 'sensor_data')
-                sensor_data = None # THIS
+                topicSettings=None
 
-                # Do I have the type in the config or do I set it to 'sensor' ?
-                if not sensor_data or not 'type' in sensor_data:
-                    sensor_type="sensor"
+                # Look for custom discovery settings for this sensor, topic and preset:
+                if sensor_preset_data:
+                    for discoveryTopic in sensor_preset_data:
+                        topicSettings=discoveryTopic
+                        dtTopic = cf.GetOption(discoveryTopic,"topic")
+                        if (dtTopic == topic['topic'] or dtTopic == "*") and cf.GetOption(discoveryTopic,SETTINGS_DISCOVERY_PRESET_PAYLOAD_KEY):
+                            # Found dict for this topic in this sensor for this preset: Place in the payload
+                            payload = cf.GetOption(discoveryTopic,SETTINGS_DISCOVERY_PRESET_PAYLOAD_KEY).copy()
 
-                # Do I have the name in the config or do I set it using the default topic ?
-                if not sensor_data or not 'name' in sensor_data:
+                # Do I have the type in the sensor preset settings or do I set it to 'sensor' ?
+                sensor_type = cf.GetOption(topicSettings,SETTINGS_DISCOVERY_PRESET_TYPE_KEY,"sensor")
+
+                # Do I have the name in the sensor preset settings or do I set it using the default topic ?
+                if not 'name' in payload:
                     payload['name'] = topic['topic'].replace("/","_")
 
                 # Check and add this only if has option true
                 if cf.GetOption(self.brokerConfigs,[DISCOVERY_KEY,DISCOVERY_NAME_PREFIX_KEY],DISCOVERY_NAME_PREFIX_DEFAULT):
                     payload['name'] = "Monitor " + self.brokerConfigs['name'] + " - " + payload['name']
 
-
+                # Send the topic where the Sensor will send his state
                 payload['state_topic']=self.SelectTopic(topic)
 
+                # Prepare the part of the config topic where you place the component id
                 topic_component=self.TopicRemoveBadCharacters(self.brokerConfigs['name']+"_"+topic['topic'])
+
+                # Compose the topic that will be used to send the disoovery configuration
                 config_send_topic = AUTODISCOVERY_TOPIC_CONFIG_FORMAT.format(prefix,sensor_type,topic_component)
-                
-                self.mqtt_client.SendTopicData(
-                        config_send_topic, json.dumps(payload))
+
+                # discoveryData: {name, config_topic, payload}
+                discovery_data.append({"name":topic['topic'], "config_topic": config_send_topic, "payload":dict(payload)})
+
+        return discovery_data
+
+    # discoveryData: {name, config_topic, payload}
+    def PublishDiscoveryData(self,discovery_data):
+        for discovery_entry in discovery_data:
+            self.mqtt_client.SendTopicData(
+                    discovery_entry['config_topic'], json.dumps(discovery_entry['payload']))
 
             '''
         # Check if I have to reset Discovery (send blank payload)

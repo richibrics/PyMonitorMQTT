@@ -26,3 +26,14 @@ class ScreenshotSensor(Sensor):
         f.close()
         os.remove(filename)
         return image
+
+    def ManageDiscoveryData(self, discovery_data):
+        discovery_data[0]['payload'].pop('state_topic', None)
+        discovery_data[0]['payload']['topic']=self.SelectTopic({"topic":TOPIC})
+        '''
+        discovery_data[0]['payload']['availability']={}
+        discovery_data[0]['payload']['availability']['topic']=self.SelectTopic("status")
+        discovery_data[0]['payload']['availability']['payload_available']=ONLINE_STATUS
+        discovery_data[0]['payload']['availability']['payload_not_available']=OFFLINE_STATUS
+        '''
+        return discovery_data
