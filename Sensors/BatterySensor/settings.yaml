@@ -2,3 +2,16 @@ requirements:
   sensors:
     - Os:
         dont_send: True
+
+discovery:
+  homeassistant: # Must match discovery preset name
+    - topic: "battery/battery_level_percentage"
+      payload:
+        name: "Battery level"
+        unit_of_measurement: "%"
+
+    - topic: "battery/battery_charging"
+      payload:
+        name: "Battery status"
+        unit_of_measurement: ""
+

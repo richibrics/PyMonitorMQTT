@@ -2,3 +2,10 @@ requirements:
   sensors:
     - Os:
         dont_send: True
+
+discovery:
+  homeassistant: # Must match discovery preset name
+    - topic: "brightness/get"
+      payload:
+        name: "Brightness"
+        unit_of_measurement: "%"

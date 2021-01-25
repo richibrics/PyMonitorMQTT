@@ -24,11 +24,11 @@ class CpuTemperaturesSensor(Sensor):
     def GetCpuTemperatures(self):
         os = self.GetOS()
         if(os == 'Windows'):
-            return self.GetCpuTemperatures_Win()
+            return self.GetCpuTemperature_Win()
         # elif(Get_Operating_System() == 'macOS'):
         #    return Get_Temperatures_macOS() NOT SUPPORTED
         elif(os == 'Linux'):
-            return self.GetCpuTemperatures_Unix()
+            return self.GetCpuTemperature_Unix()
         else:
             raise Exception(
                 'No temperature sensor available for this operating system')
@@ -40,36 +40,31 @@ class CpuTemperaturesSensor(Sensor):
             os.Update()
             return os.GetTopicValue()
 
-    def GetCpuTemperatures_Unix(self):
-        cpu_temps = []
+    def GetCpuTemperature_Unix(self):
         temps = psutil.sensors_temperatures()
         if 'coretemp' in temps:
             for temp in temps['coretemp']:
                 if 'Core' in temp.label:
-                    cpu_temps.append(temp.current)
+                    return temp.current
         elif 'cpu_thermal' in temps:
             for temp in temps['cpu_thermal']:
-                    cpu_temps.append(temp.current)
+                    return temp.current
         else:
             self.Log(Logger.LOG_ERROR,"Can't get temperature for your system.")
             self.Log(Logger.LOG_ERROR,"Open a Git Issue and show this: " + str(temps))
             self.Log(Logger.LOG_ERROR,"Thank you")
             raise Exception("No dict data")
         # Send the list as json
-        return str(json.dumps(cpu_temps))
+        raise Exception("No temperature data found")
 
-    def GetCpuTemperatures_Win(self):
+    def GetCpuTemperature_Win(self):
         if supports_win_temperature:
             # Needs OpenHardwareMonitor interface for WMI
             sensors = openhardwaremonitor.Sensor()
-            cpu_temps = []
             for sensor in sensors:
                 if sensor.SensorType == u'Temperature' and not 'GPU' in sensor.Name:
-                    cpu_temps += [float(sensor.Value)]
-            cpu_temps.pop()  # Cause last temp is the highest value (summary)
-            # Send the list as json
-            return str(json.dumps(cpu_temps))
-        return 'None'
+                    return float(sensor.Value)
+        raise Exception("No temperature data found")
 
     # def GetCpuTemperatures_macOS():
         #command = commands['macOS']['temperature'] + ' | grep \'temperature\''

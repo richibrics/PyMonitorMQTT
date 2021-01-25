@@ -1,1 +1,12 @@
 requirements:
+
+discovery:
+  homeassistant: # Must match discovery preset name
+    - topic: "network/bytes_recv"
+      payload:
+        name: "Network received data"
+        unit_of_measurement: "B"
+    - topic: "network/bytes_sent"
+      payload:
+        name: "Network sent data"
+        unit_of_measurement: "B"

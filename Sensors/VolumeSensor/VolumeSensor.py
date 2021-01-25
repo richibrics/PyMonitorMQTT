@@ -2,8 +2,8 @@ from Sensors.Sensor import *
 from os import path
 from ctypes import *
 
-TOPIC_LEVEL = 'volume_level_get'
-TOPIC_MUTE = 'volume_mute_get'
+TOPIC_LEVEL = 'volume/level_get'
+TOPIC_MUTE = 'volume/mute_get'
 
 scriptFolder = str(path.dirname(path.realpath(__file__)))
 #EXTERNAL_SOFTWARE_FILENAME = path.join(scriptFolder,'..','..','ExternalUtilities','FILE')

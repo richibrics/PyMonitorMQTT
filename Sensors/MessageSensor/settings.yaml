@@ -4,5 +4,5 @@ discovery:
   homeassistant: # Must match discovery preset name
     - topic: "*"
       payload:
-        name: "Operating system"
+        name: "Message"
         unit_of_measurement: ""
