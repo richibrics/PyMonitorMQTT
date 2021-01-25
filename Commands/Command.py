@@ -131,12 +131,12 @@ class Command():
 
     def LoadRequirements(self):
         # 1: Get path of the single object
-        # 2: If I dont find a requirements.yaml in that folder, I return None
+        # 2: If I dont find the yaml in that folder, I return None
         # 3: If I find it, I parse the yaml and I return the dict
         # Start:
         # 1
         requirements_path = path.join(
-            self.commandPath, OBJECT_REQUIREMENTS_FILENAME)
+            self.commandPath, OBJECT_SETTINGS_FILENAME)
         # try 3 except 2
         try:
             with open(requirements_path) as f:
