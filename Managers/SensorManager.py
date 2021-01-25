@@ -118,12 +118,17 @@ class SensorManager():
     def SendAllData(self):
         while self.continue_sending:
             for sensor in self.ActiveSensors():
-                if sensor.GetMqttClient().connected and sensor.ShouldSend():
-                    sensor.CallUpdate()
-                    sensor.SendData()
-                    # Save this time as time when last message is sent
-                    sensor.SaveTimeMessageSent()
+                if sensor.GetMqttClient().connected:
+                    if sensor.ShouldSendMessage():
+                        sensor.CallUpdate()
+                        sensor.SendData()
+                        # Save this time as time when last message is sent
+                        sensor.SaveTimeMessageSent()            
+                    if sensor.ShouldSendDiscoveryConfig():
+                        sensor.PublishDiscoveryData()
+                        sensor.SaveTimeDiscoverySent()
             time.sleep(1)  # Wait a second and recheck if someone has to send
+            
 
     def SetCommandManager(self, commandManager):
         self.commandManager = commandManager

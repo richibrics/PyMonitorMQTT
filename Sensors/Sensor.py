@@ -1,7 +1,8 @@
 import datetime
 from consts import *
 import Logger
-from Configurator import Configurator
+import json
+from Configurator import Configurator as cf
 import sys
 import yaml
 from ValueFormatter import ValueFormatter
@@ -14,6 +15,7 @@ class Sensor():
     # then when I send the data I don't use the topic defined in the function but I replaced that
     # with the user's one that I store in this list of dict
     lastSendingTime = None
+    lastDiscoveryTime = None
     replacedTopics = []
 
     def __init__(self, monitor_id, brokerConfigs, mqtt_client, send_interval, sensorConfigs, logger, sensorManager):  # Config is args
@@ -56,7 +58,7 @@ class Sensor():
                 self.options[optionToSearch] = self.sensorConfigs[optionToSearch]
 
     def GetOption(self, path,defaultReturnValue=None):
-        return Configurator.GetOption(self.options,path,defaultReturnValue)
+        return cf.GetOption(self.options,path,defaultReturnValue)
         
     def ListTopics(self):
         return self.topics
@@ -112,6 +114,7 @@ class Sensor():
             self.Log(Logger.LOG_ERROR, 'Topic ' +
                      topic_name + ' does not exist !')
 
+
     def CallUpdate(self):  # Call the Update method safely
         try:
             self.Update()
@@ -124,6 +127,17 @@ class Sensor():
         self.Log(Logger.LOG_WARNING, 'Update method not implemented')
         pass  # Must not be called directly, cause stops everything in exception, call only using CallUpdate
 
+    def SelectTopic(self,topic):
+        # for a topic look for its customized topic and return it if there's. Else return the default one but completed with GetTopic 
+        
+        for customs in self.replacedTopics:
+            # If it's in the list of topics to replace
+            if topic['topic'] == customs['original']:
+                return customs['custom']
+        
+        return self.GetTopic(topic['topic'])
+
+
     def SendData(self):
         if self.GetOption('dont_send') is True:
             return  # Don't send if disabled in config
@@ -132,12 +146,7 @@ class Sensor():
             for topic in self.topics:  # Send data for all topic
 
                 # For each topic I check if I send to that or if it has to be replaced with a custom topic defined in options
-                topicToUse = self.GetTopic(topic['topic'])
-
-                for customs in self.replacedTopics:
-                    # If it's in the list of topics to replaced
-                    if topic['topic'] == customs['original']:
-                        topicToUse = customs['custom']
+                topicToUse = self.SelectTopic(topic)
 
                 # Log the topic as debug if it's on
                 if 'debug' in self.brokerConfigs and self.brokerConfigs['debug'] is True:
@@ -173,7 +182,7 @@ class Sensor():
         return model.format(self.brokerConfigs['name'], last_part_of_topic)
 
     # Calculate if a send_interval spent since the last sending time
-    def ShouldSend(self):
+    def ShouldSendMessage(self):
         if self.GetLastSendingTime() is None:  # Never sent anything
             return True  # Definitely yes, you should send
         else:
@@ -183,7 +192,23 @@ class Sensor():
             # Calculate
             seconds_elapsed = (now-self.GetLastSendingTime()).total_seconds()
             # Check if now I have to send
-            if seconds_elapsed >= self.GetSendInterval():
+            if seconds_elapsed >= self.GetSendMessageInterval():
+                return True
+            else:
+                return False
+
+    # Calculate if a send_interval spent since the last sending time
+    def ShouldSendDiscoveryConfig(self):
+        if self.GetLastDiscoveryTime() is None:  # Never sent anything
+            return True  # Definitely yes, you should send
+        else:
+            # Calculate time elapsed
+            # Get current time
+            now = datetime.datetime.now()
+            # Calculate
+            seconds_elapsed = (now-self.GetLastDiscoveryTime()).total_seconds()
+            # Check if now I have to send
+            if seconds_elapsed >= self.GetSendDiscoveryConfigInterval():
                 return True
             else:
                 return False
@@ -195,6 +220,12 @@ class Sensor():
         else:
             self.lastSendingTime = datetime.datetime.now()
 
+    def SaveTimeDiscoverySent(self, time=None):
+        if time is not None:
+            self.lastDiscoveryTime = time
+        else:
+            self.lastDiscoveryTime = datetime.datetime.now()
+
     def GetClassName(self):
         # Sensor.SENSORFOLDER.SENSORCLASS
         return self.__class__.__name__
@@ -203,8 +234,12 @@ class Sensor():
         # Only SENSORCLASS (without Sensor suffix)
         return self.GetClassName().split('.')[-1].split('Sensor')[0]
 
-    def GetSendInterval(self):
+    def GetSendMessageInterval(self):
         return self.send_interval
+
+    def GetSendDiscoveryConfigInterval(self):
+        # Search in config or use default
+        return cf.GetOption(self.brokerConfigs,[DISCOVERY_KEY,DISCOVERY_PUBLISH_INTERVAL_KEY],DISCOVERY_PUBLISH_INTERVAL_DEFAULT)
 
     def GetMqttClient(self):
         return self.mqtt_client
@@ -217,6 +252,9 @@ class Sensor():
 
     def GetLastSendingTime(self):
         return self.lastSendingTime
+
+    def GetLastDiscoveryTime(self):
+        return self.lastDiscoveryTime
 
     def LoadRequirements(self):
         # 1: Get path of the single object
@@ -232,6 +270,62 @@ class Sensor():
                 return yaml.load(f, Loader=yaml.FullLoader)
         except:
             return None
+
+
+
+    def PublishDiscoveryData(self):
+        payload = None
+
+        # Check if Discovery is enabled
+        if cf.GetOption(self.brokerConfigs,[DISCOVERY_KEY,DISCOVERY_ENABLE_KEY],False) is not False:
+            # Okay need auto discovery
+            
+            # Not for don't send sensors
+            if self.GetOption('dont_send') is True:
+                return  # Don't send if disabled in config
+            
+            prefix = cf.GetOption(self.brokerConfigs,[DISCOVERY_KEY,DISCOVERY_DISCOVER_PREFIX_KEY],DISCOVERY_DISCOVER_PREFIX_DEFAULT) 
+
+            for topic in self.topics:
+                payload = {}
+                # Check here if I have an entry in the discovery file for this topic and use that data (PLACE IN 'sensor_data')
+                sensor_data = None # THIS
+
+                # Do I have the type in the config or do I set it to 'sensor' ?
+                if not sensor_data or not 'type' in sensor_data:
+                    sensor_type="sensor"
+
+                # Do I have the name in the config or do I set it using the default topic ?
+                if not sensor_data or not 'name' in sensor_data:
+                    payload['name'] = topic['topic'].replace("/","_")
+
+                # Check and add this only if has option true
+                if cf.GetOption(self.brokerConfigs,[DISCOVERY_KEY,DISCOVERY_NAME_PREFIX_KEY],DISCOVERY_NAME_PREFIX_DEFAULT):
+                    payload['name'] = "Monitor " + self.brokerConfigs['name'] + " - " + payload['name']
+
+
+                payload['state_topic']=self.SelectTopic(topic)
+
+                topic_component=self.TopicRemoveBadCharacters(self.brokerConfigs['name']+"_"+topic['topic'])
+                config_send_topic = AUTODISCOVERY_TOPIC_CONFIG_FORMAT.format(prefix,sensor_type,topic_component)
+                
+                self.mqtt_client.SendTopicData(
+                        config_send_topic, json.dumps(payload))
+
+            '''
+        # Check if I have to reset Discovery (send blank payload)
+        if cf.GetOption(self.brokerConfigs,[DISCOVERY_KEY,DISCOVERY_RESET_KEY],False) is not False:
+                topic_component=self.TopicRemoveBadCharacters(self.brokerConfigs['name']+"_"+topic['topic'])
+                config_send_topic = AUTODISCOVERY_TOPIC_CONFIG_FORMAT.format(prefix,sensor_type,topic_component)
+                
+                self.mqtt_client.SendTopicData(
+                        config_send_topic, json.dumps(payload))
+            '''
+
+
+    def TopicRemoveBadCharacters(self, string):
+        return string.replace("/","_").replace(" ","_").replace("-","_").lower()
+
 
     def Log(self, messageType, message):
         self.logger.Log(messageType, self.name+' Sensor', message)

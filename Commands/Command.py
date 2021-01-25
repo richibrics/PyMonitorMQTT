@@ -46,6 +46,9 @@ class Command():
     def Callback(self, message):  # Run by the OnMessageEvent
         pass
 
+    def PublishDiscoveryData(self):
+        pass
+
     def ParseOptions(self):
         # I can have options both in broker configs and single command configs
         # At first I search in broker config. Then I check the per-command option and if I find
