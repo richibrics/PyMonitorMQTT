@@ -1,10 +1,11 @@
 # Topic format
 TOPIC_FORMAT = 'monitor/{}/{}'
-AUTODISCOVERY_TOPIC_CONFIG_FORMAT="{}/{}/{}/config"
+AUTODISCOVERY_TOPIC_CONFIG_FORMAT="{}/{}/monitormqtt/{}/config"
 
 CONFIG_COMMANDS_KEY = 'commands'
 CONFIG_SENSORS_KEY = 'sensors'
 
+INFORMATION_FILENAME = "information.json"
 
 # To format value (1200000B -> 1,2GB)
 FORMATTED_VALUE_DECIMALS = 2
@@ -49,7 +50,6 @@ DISCOVERY_ENABLE_KEY = "enable"
 DISCOVERY_DISCOVER_PREFIX_KEY = "discover_prefix"
 DISCOVERY_NAME_PREFIX_KEY = "name_prefix"
 DISCOVERY_PUBLISH_INTERVAL_KEY = "publish_interval"
-DISCOVERY_RESET_KEY = "reset"
 DISCOVERY_PRESET_KEY = "preset"
 # Defaults
 DISCOVERY_DISCOVER_PREFIX_DEFAULT = "monitor"

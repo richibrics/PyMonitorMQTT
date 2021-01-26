@@ -1,15 +1,17 @@
 import datetime
-from consts import *
 import Logger
 import json
 from Configurator import Configurator as cf
 import sys
 import yaml
+import hashlib
 from ValueFormatter import ValueFormatter
 from os import path
-
+from consts import *
 
 class Sensor():
+    import consts
+    from Settings import Settings
     # To replace an original topic with a personalized one from configuration (may not be used).
     # When a sensor send the data with a topic, if the user choose a fixed topic in config,
     # then when I send the data I don't use the topic defined in the function but I replaced that
@@ -342,6 +344,17 @@ class Sensor():
                 # Compose the topic that will be used to send the disoovery configuration
                 config_send_topic = AUTODISCOVERY_TOPIC_CONFIG_FORMAT.format(prefix,sensor_type,topic_component)
 
+                # Add device information
+                sw_info = self.Settings.GetInformation()
+                payload['device']={}
+                payload['device']['name']="Monitor "+ self.brokerConfigs['name']
+                payload['device']['manufacturer']=sw_info['name']
+                payload['device']['model']=sw_info['name']  
+                payload['device']['identifiers']=sw_info['name']  
+                payload['device']['sw_version']=sw_info['version'] 
+
+                payload['unique_id']=hashlib.md5(topic['topic'].encode('utf-8')).hexdigest()
+
                 # discoveryData: {name, config_topic, payload}
                 discovery_data.append({"name":topic['topic'], "config_topic": config_send_topic, "payload":dict(payload)})
 
@@ -353,15 +366,6 @@ class Sensor():
             self.mqtt_client.SendTopicData(
                     discovery_entry['config_topic'], json.dumps(discovery_entry['payload']))
 
-            '''
-        # Check if I have to reset Discovery (send blank payload)
-        if cf.GetOption(self.brokerConfigs,[DISCOVERY_KEY,DISCOVERY_RESET_KEY],False) is not False:
-                topic_component=self.TopicRemoveBadCharacters(self.brokerConfigs['name']+"_"+topic['topic'])
-                config_send_topic = AUTODISCOVERY_TOPIC_CONFIG_FORMAT.format(prefix,sensor_type,topic_component)
-                
-                self.mqtt_client.SendTopicData(
-                        config_send_topic, json.dumps(payload))
-            '''
 
 
     def TopicRemoveBadCharacters(self, string):
