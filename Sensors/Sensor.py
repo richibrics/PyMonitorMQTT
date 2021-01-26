@@ -333,7 +333,7 @@ class Sensor():
 
                 # Check and add this only if has option true
                 if cf.GetOption(self.brokerConfigs,[DISCOVERY_KEY,DISCOVERY_NAME_PREFIX_KEY],DISCOVERY_NAME_PREFIX_DEFAULT):
-                    payload['name'] = "Monitor " + self.brokerConfigs['name'] + " - " + payload['name']
+                    payload['name'] = self.brokerConfigs['name'] + " - " + payload['name']
 
                 # Send the topic where the Sensor will send his state
                 payload['state_topic']=self.SelectTopic(topic)
