@@ -1,7 +1,6 @@
 import Sensors
 import Commands
 from Configurator import Configurator as cf
-import Managers
 from MqttClient import MqttClient
 import Logger
 import multiprocessing
@@ -10,18 +9,18 @@ from consts import *
 
 class Monitor():
 
-    def __init__(self, config, globalConfig, sensorManager, monitor_id=1):
+    def __init__(self, config, globalConfig, valueFormatter, monitor_id=1):
         self.config = config
         self.globalConfig = globalConfig
         self.monitor_id = monitor_id
-        self.sensorManager = sensorManager
+        self.ValueFormatter = valueFormatter
         # Some Sensors and Commands, after load, will return which sensor or command they need to run
         self.requirements = []
         self.loadedEntities = []  # To avoid reload for requirements, something is working
         self.Setup()
 
     def Setup(self):
-        # Setip logger
+        # Setup logger
         self.logger = Logger.Logger(self.globalConfig, self.monitor_id)
         self.Log(Logger.LOG_INFO, 'Starting')
         # Setup MQTT client
@@ -37,20 +36,20 @@ class Monitor():
             self.LoadRequirements()
 
         # Some need post-initialize configuration
-        self.sensorManager.PostInitializeSensors()
+        self.ValueFormatter.PostInitializeSensors()
         # Some need post-initialize configuration
         #self.commandManager.PostInitializeCommands()
 
     def LoadEntities(self, entitiesToAdd,name_suffix,module_name, loadingRequirements=False):
         # From configs I read sensors list and I give the names to the sensors manager which will initialize them
         # and will keep trace of who is the mqtt_client and the logger of the sensor
-        # self.sensorManager.PostInitializeSensors()
+        # self.ValueFormatter.PostInitializeSensors()
         if entitiesToAdd:
             for entity in entitiesToAdd:
                 # I load the sensor and if I need some requirements, I save them to the list
                 # Additional check to not load double if I am loading requirements
                 if not (loadingRequirements and entity in self.loadedEntities):
-                    settings = self.sensorManager.LoadEntity(name_suffix,module_name,
+                    settings = self.ValueFormatter.LoadEntity(name_suffix,module_name,
                         entity, self.monitor_id, self.config, self.mqttClient, self.config['send_interval'], self.logger)
                     requirements = cf.GetOption(settings,SETTINGS_REQUIREMENTS_KEY)
                     if requirements:

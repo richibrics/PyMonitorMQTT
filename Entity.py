@@ -20,7 +20,7 @@ class Entity():
     lastDiscoveryTime = None
     replacedTopics = []
 
-    def __init__(self, monitor_id, brokerConfigs, mqtt_client, send_interval, entityConfigs, logger, sensorManager, entityType=SENSOR_NAME_SUFFIX):  # Config is args
+    def __init__(self, monitor_id, brokerConfigs, mqtt_client, send_interval, entityConfigs, logger, entityManager, entityType=SENSOR_NAME_SUFFIX):  # Config is args
         self.name = self.GetEntityName(entityType)
         self.monitor_id = monitor_id
 
@@ -36,7 +36,7 @@ class Entity():
         self.mqtt_client = mqtt_client
         self.send_interval = send_interval
         self.logger = logger
-        self.sensorManager = sensorManager
+        self.entityManager = entityManager
 
         # Get for some features the pathof the folder cutting the py filename (abs path to avoid windows problems)
         self.individualPath = path.dirname(path.abspath(
@@ -136,7 +136,7 @@ class Entity():
         except Exception as exc:
             self.Log(Logger.LOG_ERROR, 'Error occured during update')
             self.Log(Logger.LOG_ERROR, Logger.ExceptionTracker.TrackString(exc))
-            self.sensorManager.UnloadEntity(self.name, self.monitor_id)
+            self.entityManager.UnloadEntity(self.name, self.monitor_id)
 
     def Update(self):  # Implemented in sub-classes - Here values are taken
         self.Log(Logger.LOG_WARNING, 'Update method not implemented')
@@ -208,11 +208,11 @@ class Entity():
 
 
     def FindEntity(self, name):  # Find active entities for some specific action
-        if(self.sensorManager):
-            return self.sensorManager.FindEntity(name, self.monitor_id)
+        if(self.entityManager):
+            return self.entityManager.FindEntity(name, self.monitor_id)
         else:
             self.Log(Logger.LOG_ERROR,
-                     'SensorManager not set!')
+                     'EntityManager not set!')
         return None
 
     def FormatTopic(self, last_part_of_topic):

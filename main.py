@@ -2,7 +2,7 @@ import os
 import yaml
 import time
 import Logger
-import Managers
+from EntityManager import EntityManager
 import sys
 from Monitor import Monitor
 
@@ -20,22 +20,22 @@ def LoadYAML():
 
 def SetupMonitors():
     # Setup manager
-    sensorManager = Managers.SensorManager(
+    entityManager = EntityManager(
         config)
 
     # If I have not a list of monitors, I setup only a monitor
     if ('monitors' not in config):
-        monitor = Monitor(config, config, sensorManager)
+        monitor = Monitor(config, config, entityManager)
     else:  # More Monitors
         # Now setup monitors
         monitor_id = 0
         for monitor_config in config['monitors']:
             monitor_id += 1
             monitor = Monitor(monitor_config, config,
-                              sensorManager, monitor_id)
+                              entityManager, monitor_id)
 
     # Start sensors loop
-    sensorManager.Start()
+    entityManager.Start()
 
 
 def output_available_modules():

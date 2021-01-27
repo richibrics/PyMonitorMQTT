@@ -1,4 +1,3 @@
-from Entity import Entity
 from Commands.LockCommand.LockCommand import LockCommand
 from Commands.RebootCommand.RebootCommand import RebootCommand
 from Commands.ShutdownCommand.ShutdownCommand import ShutdownCommand
