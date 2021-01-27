@@ -19,24 +19,19 @@ def LoadYAML():
 
 
 def SetupMonitors():
-    # Setup managers
-    commandManager = Managers.CommandManager(
-        config)
+    # Setup manager
     sensorManager = Managers.SensorManager(
         config)
-    # Link them
-    commandManager.SetSensorManager(sensorManager)
-    sensorManager.SetCommandManager(commandManager)
 
     # If I have not a list of monitors, I setup only a monitor
     if ('monitors' not in config):
-        monitor = Monitor(config, config, commandManager, sensorManager)
+        monitor = Monitor(config, config, sensorManager)
     else:  # More Monitors
         # Now setup monitors
         monitor_id = 0
         for monitor_config in config['monitors']:
             monitor_id += 1
-            monitor = Monitor(monitor_config, config, commandManager,
+            monitor = Monitor(monitor_config, config,
                               sensorManager, monitor_id)
 
     # Start sensors loop

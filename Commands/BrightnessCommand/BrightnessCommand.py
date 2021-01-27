@@ -1,4 +1,4 @@
-from Commands.Command import Command
+from Sensors.Sensor import Sensor
 import subprocess
 
 supports_win_brightness = True
@@ -12,9 +12,9 @@ except:
 TOPIC = 'brightness/set'
 
 
-class BrightnessCommand(Command):
+class BrightnessCommand(Sensor):
     def Initialize(self):
-        self.SubscribeToTopic(self.GetTopic(TOPIC))
+        self.SubscribeToTopic(self.FormatTopic(TOPIC))
 
     def Callback(self, message):
         self.SetBrightness(int(message.payload))
@@ -51,7 +51,7 @@ class BrightnessCommand(Command):
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os
-        os = self.FindSensor('Os')
+        os = self.FindEntity('Os')
         if os:
             os.Update()
             return os.GetTopicValue()

@@ -1,6 +1,6 @@
 import subprocess
 import os as sys_os
-from Commands.Command import Command
+from Sensors.Sensor import Sensor
 
 TOPIC = 'sleep_command'
 
@@ -10,9 +10,9 @@ commands = {
 }
 
 
-class SleepCommand(Command):
+class SleepCommand(Sensor):
     def Initialize(self):
-        self.SubscribeToTopic(self.GetTopic(TOPIC))
+        self.SubscribeToTopic(self.FormatTopic(TOPIC))
 
     def Callback(self, message):
         try:
@@ -36,7 +36,7 @@ class SleepCommand(Command):
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os
-        os = self.FindSensor('Os')
+        os = self.FindEntity('Os')
         if os:
             os.Update()
             return os.GetTopicValue()

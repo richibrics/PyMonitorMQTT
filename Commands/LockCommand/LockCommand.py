@@ -1,5 +1,5 @@
 import subprocess
-from Commands.Command import Command
+from Sensors.Sensor import Sensor
 import Logger
 
 TOPIC = 'lock_command'
@@ -19,9 +19,9 @@ commands = {
 }
 
 
-class LockCommand(Command):
+class LockCommand(Sensor):
     def Initialize(self):
-        self.SubscribeToTopic(self.GetTopic(TOPIC))
+        self.SubscribeToTopic(self.FormatTopic(TOPIC))
 
     def Callback(self, message):
         os = self.GetOS()
@@ -42,14 +42,14 @@ class LockCommand(Command):
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os
-        os = self.FindSensor('Os')
+        os = self.FindEntity('Os')
         if os:
             os.Update()
             return os.GetTopicValue()
 
     def GetDE(self):
         # Get OS from OsSensor and get temperature based on the os
-        de = self.FindSensor(
+        de = self.FindEntity(
             'DesktopEnvironment')
         if de:
             de.Update()

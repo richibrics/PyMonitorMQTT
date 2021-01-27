@@ -1,5 +1,5 @@
 import os
-from Commands.Command import *
+from Sensors.Sensor import Sensor
 import Logger
 
 supports_win = True
@@ -25,9 +25,9 @@ DEFAULT_TITLE = 'PyMonitorMQTT'
 DEFAULT_DURATION = 10  # Seconds
 
 
-class NotifyCommand(Command):
+class NotifyCommand(Sensor):
     def Initialize(self):
-        self.SubscribeToTopic(self.GetTopic(TOPIC))
+        self.SubscribeToTopic(self.FormatTopic(TOPIC))
 
     # I need it here cause I have to check the right import for my OS (and I may not know the OS in Init function)
     def PostInitialize(self):
@@ -89,7 +89,7 @@ class NotifyCommand(Command):
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os
-        os = self.FindSensor('Os')
+        os = self.FindEntity('Os')
         if os:
             os.Update()
             return os.GetTopicValue()

@@ -52,7 +52,7 @@ class BrightnessSensor(Sensor):
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os
-        os = self.FindSensor('Os')
+        os = self.FindEntity('Os')
         if os:
             os.Update()
             return os.GetTopicValue()

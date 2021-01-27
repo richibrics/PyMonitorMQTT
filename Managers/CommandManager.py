@@ -9,9 +9,11 @@ class CommandManager():
     commands = []
     sensorManager = None
 
+    '''
     def __init__(self, config):
         self.config = config
         self.logger = Logger.Logger(config)
+
 
     def PostInitializeCommands(self):
         for command in self.commands:
@@ -23,6 +25,7 @@ class CommandManager():
                 self.Log(Logger.LOG_ERROR,
                          Logger.ExceptionTracker.TrackString(exc))
                 self.UnloadCommand(command.name, command.GetMonitorID())
+
 
     # Here I receive the name of the command (or maybe also the options) and pass it to a function to get the object
     # which will be initialized and appended in the list of commands
@@ -71,6 +74,7 @@ class CommandManager():
     def ActiveCommands(self):
         return self.commands
 
+    
     def GetCommandObjectByName(self, name):
         commandList = self.GetCommandObjectsList()
         for command in commandList:
@@ -78,6 +82,7 @@ class CommandManager():
                 return command
         self.Log(Logger.LOG_ERROR, str(name) + ' command not found - check the module import line is added to Commands/__init__.py')
 
+    
     def GetCommandObjectsList(self):
         classes = []
         for name, obj in inspect.getmembers(sys.modules['Commands']):
@@ -87,6 +92,7 @@ class CommandManager():
                     classes.append(obj)
         return classes
 
+    
     def GetClassName(self, command_class):
         # Commands.COMMANDFOLDER.COMMANDCLASS
         return command_class.__dict__['__module__']
@@ -102,3 +108,5 @@ class CommandManager():
         if logger is None:
             logger = self.logger
         logger.Log(messageType, 'Command Manager', message)
+
+    '''

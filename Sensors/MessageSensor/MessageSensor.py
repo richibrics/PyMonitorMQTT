@@ -13,5 +13,5 @@ class MessageSensor(Sensor):
         self.AddTopic(TOPIC)
 
     def Update(self):
-        message = cf.GetOption(self.sensorConfigs,[CONTENTS_OPTION_KEY,config_content_message_key],default_message)
+        message = cf.GetOption(self.entityConfigs,[CONTENTS_OPTION_KEY,config_content_message_key],default_message)
         self.SetTopicValue(TOPIC, message)

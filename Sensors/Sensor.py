@@ -20,26 +20,35 @@ class Sensor():
     lastDiscoveryTime = None
     replacedTopics = []
 
-    def __init__(self, monitor_id, brokerConfigs, mqtt_client, send_interval, sensorConfigs, logger, sensorManager):  # Config is args
-        self.topics = []  # List of {topic, value}
-        self.options = {}
+    def __init__(self, monitor_id, brokerConfigs, mqtt_client, send_interval, entityConfigs, logger, sensorManager, entityType=SENSOR_NAME_SUFFIX):  # Config is args
+        self.name = self.GetEntityName(entityType)
         self.monitor_id = monitor_id
+
+        self.outTopics = []  # List of {topic, value}
+        self.outTopicsAddedNumber = 0
+        self.inTopicsAddedNumber = 0 # was subscribedTopics 
+
         self.brokerConfigs = brokerConfigs
+        self.entityConfigs = entityConfigs
+        self.options = {}
+
         self.mqtt_client = mqtt_client
         self.send_interval = send_interval
-        self.sensorConfigs = sensorConfigs
         self.logger = logger
         self.sensorManager = sensorManager
-        self.name = self.GetSensorName()
-        self.addedTopics = 0
+
         # Get for some features the pathof the folder cutting the py filename (abs path to avoid windows problems)
-        self.sensorPath = path.dirname(path.abspath(
+        self.individualPath = path.dirname(path.abspath(
             sys.modules[self.__class__.__module__].__file__))
         # Do per sensor operations
         self.ParseOptions()
         self.Initialize()
 
     def Initialize(self):  # Implemented in sub-classes
+        pass
+
+    # Implemented in sub-classes
+    def Callback(self, message):  # Run by the OnMessageEvent
         pass
 
     def PostInitialize(self):  # Implemented in sub-classes
@@ -59,37 +68,37 @@ class Sensor():
                 self.options[optionToSearch] = self.brokerConfigs[optionToSearch]
 
             # 2: Set from sensor's configs
-            if self.sensorConfigs and optionToSearch in self.sensorConfigs:
-                self.options[optionToSearch] = self.sensorConfigs[optionToSearch]
+            if self.entityConfigs and optionToSearch in self.entityConfigs:
+                self.options[optionToSearch] = self.entityConfigs[optionToSearch]
 
     def GetOption(self, path,defaultReturnValue=None):
         return cf.GetOption(self.options,path,defaultReturnValue)
         
     def ListTopics(self):
-        return self.topics
+        return self.outTopics
 
     def AddTopic(self, topic):
-        self.addedTopics += 1
+        self.outTopicsAddedNumber += 1
 
         # If user in options defined custom topics, store original and custom topic and replace it in the send function
         replaced = False
-        if self.GetOption('custom_topics') is not None and len(self.GetOption('custom_topics')) >= self.addedTopics:
+        if self.GetOption('custom_topics') is not None and len(self.GetOption('custom_topics')) >= self.outTopicsAddedNumber:
             self.replacedTopics.append(
-                {'original': topic, 'custom': self.GetOption('custom_topics')[self.addedTopics-1]})
+                {'original': topic, 'custom': self.GetOption('custom_topics')[self.outTopicsAddedNumber-1]})
             self.Log(Logger.LOG_INFO, 'Using custom topic defined in options')
             replaced = True
 
-        self.topics.append({'topic': topic, 'value': ""})
+        self.outTopics.append({'topic': topic, 'value': ""})
 
         self.Log(Logger.LOG_DEVELOPMENT,"Adding topic: " + topic)
         self.Log(Logger.LOG_DEVELOPMENT,"Discovery topic normalizer: " + topic.replace("/","_"))
 
     def GetFirstTopic(self):
-        return self.topics[0]['topic'] if len(self.topics) else None
+        return self.outTopics[0]['topic'] if len(self.outTopics) else None
 
     def GetTopicByName(self, name):
         # Using topic string, I get his dict from topics list
-        for topic in self.topics:
+        for topic in self.outTopics:
             if topic['topic'] == name:
                 return topic
         return None
@@ -126,14 +135,24 @@ class Sensor():
         except Exception as exc:
             self.Log(Logger.LOG_ERROR, 'Error occured during update')
             self.Log(Logger.LOG_ERROR, Logger.ExceptionTracker.TrackString(exc))
-            self.sensorManager.UnloadSensor(self.name, self.monitor_id)
+            self.sensorManager.UnloadEntity(self.name, self.monitor_id)
 
     def Update(self):  # Implemented in sub-classes - Here values are taken
         self.Log(Logger.LOG_WARNING, 'Update method not implemented')
         pass  # Must not be called directly, cause stops everything in exception, call only using CallUpdate
 
+    def CallCallback(self, message):  # Safe method to run the Callback
+        try:
+            self.Log(Logger.LOG_INFO, 'Command actioned')
+            self.Callback(message)
+        except Exception as exc:
+            self.Log(Logger.LOG_ERROR, 'Error occured in callback: '+str(exc))
+            self.Log(Logger.LOG_ERROR, Logger.ExceptionTracker.TrackString(exc))
+            self.commandManager.UnloadCommand(self.name, self.monitor_id)
+
+
     def SelectTopic(self,topic):
-        # for a topic look for its customized topic and return it if there's. Else return the default one but completed with GetTopic 
+        # for a topic look for its customized topic and return it if there's. Else return the default one but completed with FormatTopic 
         
         if(type(topic)==dict):
             checkTopic = topic['topic']
@@ -145,7 +164,7 @@ class Sensor():
             if checkTopic== customs['original']:
                 return customs['custom']
         
-        return self.GetTopic(checkTopic)
+        return self.FormatTopic(checkTopic)
 
 
     def SendData(self):
@@ -153,7 +172,7 @@ class Sensor():
             return  # Don't send if disabled in config
 
         if self.mqtt_client is not None:
-            for topic in self.topics:  # Send data for all topic
+            for topic in self.outTopics:  # Send data for all topic
 
                 # For each topic I check if I send to that or if it has to be replaced with a custom topic defined in options
                 topicToUse = self.SelectTopic(topic)
@@ -165,27 +184,35 @@ class Sensor():
                 self.mqtt_client.SendTopicData(
                     topicToUse, topic['value'])
 
-    def FindCommand(self, name):  # Find active commands for some specific action
+
+    def SubscribeToTopic(self, topic):
+        self.inTopicsAddedNumber += 1
+
+        # If user in options defined custom topics, use them and not the one choosen in the command
+        if self.GetOption(CUSTOM_TOPICS_OPTION_KEY) and len(self.GetOption(CUSTOM_TOPICS_OPTION_KEY)) >= self.inTopicsAddedNumber:
+            topic = self.GetOption(CUSTOM_TOPICS_OPTION_KEY)[
+                self.inTopicsAddedNumber-1]
+            self.Log(Logger.LOG_INFO, 'Using custom topic defined in options')
+
+        self.mqtt_client.AddNewTopic(topic, self)
+        print(topic)
+
+        # Log the topic as debug if user wants
+        if self.GetOption(DEBUG_OPTION_KEY):
+            self.Log(Logger.LOG_DEBUG, 'Subscribed to topic: ' + topic)
+
+        return topic  # Return the topic cause upper function should now that topic may have been edited
+
+
+    def FindEntity(self, name):  # Find active entities for some specific action
         if(self.sensorManager):
-            if(self.sensorManager.commandManager):
-                return self.sensorManager.commandManager.FindCommand(name, self.monitor_id)
-            else:
-                self.Log(Logger.LOG_ERROR,
-                         'SensorManager not set in the CommandManager!')
+            return self.sensorManager.FindEntity(name, self.monitor_id)
         else:
             self.Log(Logger.LOG_ERROR,
-                     'SensorManager not set in the sensor!')
+                     'SensorManager not set!')
         return None
 
-    def FindSensor(self, name):  # Find active sensors for some specific action
-        if(self.sensorManager):
-            return self.sensorManager.FindSensor(name, self.monitor_id)
-        else:
-            self.Log(Logger.LOG_ERROR,
-                     'SensorManager not set in the sensor!')
-        return None
-
-    def GetTopic(self, last_part_of_topic):
+    def FormatTopic(self, last_part_of_topic):
         model = TOPIC_FORMAT
         if 'topic_prefix' in self.brokerConfigs:
             model = self.brokerConfigs['topic_prefix'] + '/'+model
@@ -193,6 +220,9 @@ class Sensor():
 
     # Calculate if a send_interval spent since the last sending time
     def ShouldSendMessage(self):
+        if self.outTopicsAddedNumber == 0:
+            return False
+
         if self.GetLastSendingTime() is None:  # Never sent anything
             return True  # Definitely yes, you should send
         else:
@@ -244,9 +274,9 @@ class Sensor():
         # Sensor.SENSORFOLDER.SENSORCLASS
         return self.__class__.__name__
 
-    def GetSensorName(self):
+    def GetEntityName(self,suffix):
         # Only SENSORCLASS (without Sensor suffix)
-        return self.GetClassName().split('.')[-1].split('Sensor')[0]
+        return self.GetClassName().split('.')[-1].split(suffix)[0]
 
     def GetSendMessageInterval(self):
         return self.send_interval
@@ -277,7 +307,7 @@ class Sensor():
         # Start:
         # 1
         settings_path = path.join(
-            self.sensorPath, OBJECT_SETTINGS_FILENAME)
+            self.individualPath, OBJECT_SETTINGS_FILENAME)
         # try 3 except 2
         try:
             with open(settings_path) as f:
@@ -311,7 +341,7 @@ class Sensor():
                 sensor_preset_data = cf.GetOption(self.settings,[SETTINGS_DISCOVERY_KEY,preset]) # THIS
 
 
-            for topic in self.topics:
+            for topic in self.outTopics:
                 payload = {}
                 topicSettings=None
 

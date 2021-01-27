@@ -1,3 +1,8 @@
+SENSOR_NAME_SUFFIX = "Sensor"
+COMMAND_NAME_SUFFIX = "Command"
+SENSORS_MODULE_NAME = "Sensors"
+COMMAND_MODULE_NAME = "Commands"
+
 # Topic format
 TOPIC_FORMAT = 'monitor/{}/{}'
 AUTODISCOVERY_TOPIC_CONFIG_FORMAT="{}/{}/monitormqtt/{}/config"
