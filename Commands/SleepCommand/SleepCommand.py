@@ -1,6 +1,6 @@
 import subprocess
 import os as sys_os
-from Sensors.Sensor import Sensor
+from Entity import Entity
 
 TOPIC = 'sleep_command'
 
@@ -10,9 +10,9 @@ commands = {
 }
 
 
-class SleepCommand(Sensor):
+class SleepCommand(Entity):
     def Initialize(self):
-        self.SubscribeToTopic(self.FormatTopic(TOPIC))
+        self.SubscribeToTopic(TOPIC)
 
     def Callback(self, message):
         try:

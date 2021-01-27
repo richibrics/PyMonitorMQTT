@@ -1,5 +1,5 @@
 import psutil
-from Sensors.Sensor import *
+from Entity import Entity
 import os
 from consts import *
 
@@ -7,7 +7,7 @@ from consts import *
 TOPIC = 'file/file'
 
 
-class FileReadSensor(Sensor):
+class FileReadSensor(Entity):
     def Initialize(self):
         self.AddTopic(TOPIC)
         self.filename = self.GetOption([CONTENTS_OPTION_KEY,FILE_READ_SENSOR_FILENAME_CONTENTS_OPTION])

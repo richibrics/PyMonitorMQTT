@@ -5,13 +5,13 @@ from Configurator import Configurator as cf
 import sys
 import yaml
 import hashlib
-from ValueFormatter import ValueFormatter
 from os import path
 from consts import *
 
-class Sensor():
+class Entity():
     import consts
     from Settings import Settings
+    from ValueFormatter import ValueFormatter
     # To replace an original topic with a personalized one from configuration (may not be used).
     # When a sensor send the data with a topic, if the user choose a fixed topic in config,
     # then when I send the data I don't use the topic defined in the function but I replaced that
@@ -25,6 +25,7 @@ class Sensor():
         self.monitor_id = monitor_id
 
         self.outTopics = []  # List of {topic, value}
+        self.inTopics = []  # Only used for discovery, real used list is in the mqtt client where I have a list with topic-callback
         self.outTopicsAddedNumber = 0
         self.inTopicsAddedNumber = 0 # was subscribedTopics 
 
@@ -186,7 +187,10 @@ class Sensor():
 
 
     def SubscribeToTopic(self, topic):
+        self.inTopics.append(topic)
         self.inTopicsAddedNumber += 1
+
+        topic=self.FormatTopic(topic)
 
         # If user in options defined custom topics, use them and not the one choosen in the command
         if self.GetOption(CUSTOM_TOPICS_OPTION_KEY) and len(self.GetOption(CUSTOM_TOPICS_OPTION_KEY)) >= self.inTopicsAddedNumber:
@@ -195,7 +199,6 @@ class Sensor():
             self.Log(Logger.LOG_INFO, 'Using custom topic defined in options')
 
         self.mqtt_client.AddNewTopic(topic, self)
-        print(topic)
 
         # Log the topic as debug if user wants
         if self.GetOption(DEBUG_OPTION_KEY):
@@ -332,63 +335,81 @@ class Sensor():
             
             prefix = cf.GetOption(self.brokerConfigs,[DISCOVERY_KEY,DISCOVERY_DISCOVER_PREFIX_KEY],DISCOVERY_DISCOVER_PREFIX_DEFAULT) 
             preset = cf.GetOption(self.brokerConfigs,[DISCOVERY_KEY,DISCOVERY_PRESET_KEY])
-            sensor_preset_data = None
+            entity_preset_data = None
             topic_data = None
-
 
             if preset:
                 # Check here if I have an entry in the discovery file for this topic and use that data (PLACE IN 'sensor_data')
-                sensor_preset_data = cf.GetOption(self.settings,[SETTINGS_DISCOVERY_KEY,preset]) # THIS
-
+                entity_preset_data = cf.GetOption(self.settings,[SETTINGS_DISCOVERY_KEY,preset]) # THIS
 
             for topic in self.outTopics:
-                payload = {}
-                topicSettings=None
-
-                # Look for custom discovery settings for this sensor, topic and preset:
-                if sensor_preset_data:
-                    for discoveryTopic in sensor_preset_data:
-                        topicSettings=discoveryTopic
-                        dtTopic = cf.GetOption(discoveryTopic,"topic")
-                        if (dtTopic == topic['topic'] or dtTopic == "*") and cf.GetOption(discoveryTopic,SETTINGS_DISCOVERY_PRESET_PAYLOAD_KEY):
-                            # Found dict for this topic in this sensor for this preset: Place in the payload
-                            payload = cf.GetOption(discoveryTopic,SETTINGS_DISCOVERY_PRESET_PAYLOAD_KEY).copy()
-
-                # Do I have the type in the sensor preset settings or do I set it to 'sensor' ?
-                sensor_type = cf.GetOption(topicSettings,SETTINGS_DISCOVERY_PRESET_TYPE_KEY,"sensor")
-
-                # Do I have the name in the sensor preset settings or do I set it using the default topic ?
-                if not 'name' in payload:
-                    payload['name'] = topic['topic'].replace("/","_")
-
-                # Check and add this only if has option true
-                if cf.GetOption(self.brokerConfigs,[DISCOVERY_KEY,DISCOVERY_NAME_PREFIX_KEY],DISCOVERY_NAME_PREFIX_DEFAULT):
-                    payload['name'] = self.brokerConfigs['name'] + " - " + payload['name']
-
-                # Send the topic where the Sensor will send his state
-                payload['state_topic']=self.SelectTopic(topic)
-
-                # Prepare the part of the config topic where you place the component id
-                topic_component=self.TopicRemoveBadCharacters(self.brokerConfigs['name']+"_"+topic['topic'])
-
-                # Compose the topic that will be used to send the disoovery configuration
-                config_send_topic = AUTODISCOVERY_TOPIC_CONFIG_FORMAT.format(prefix,sensor_type,topic_component)
-
-                # Add device information
-                sw_info = self.Settings.GetInformation()
-                payload['device']={}
-                payload['device']['name']="Monitor "+ self.brokerConfigs['name']
-                payload['device']['manufacturer']=sw_info['name']
-                payload['device']['model']=sw_info['name']  
-                payload['device']['identifiers']=sw_info['name']  
-                payload['device']['sw_version']=sw_info['version'] 
-
-                payload['unique_id']=hashlib.md5(topic['topic'].encode('utf-8')).hexdigest()
-
                 # discoveryData: {name, config_topic, payload}
-                discovery_data.append({"name":topic['topic'], "config_topic": config_send_topic, "payload":dict(payload)})
+                discovery_data.append(self.PrepareTopicDiscoveryData(topic['topic'],TYPE_TOPIC_OUT,prefix,preset,entity_preset_data))
+
+            for topic in self.inTopics:
+                # discoveryData: {name, config_topic, payload}
+                discovery_data.append(self.PrepareTopicDiscoveryData(topic,TYPE_TOPIC_IN,prefix,preset,entity_preset_data))
 
         return discovery_data
+
+    def PrepareTopicDiscoveryData(self,topic,entity_model,prefix,preset,entity_preset_data):
+        payload = {}
+        topicSettings=None
+
+        # Look for custom discovery settings for this sensor, topic and preset:
+        if entity_preset_data:
+            for discoveryTopic in entity_preset_data:
+                topicSettings=discoveryTopic
+                dtTopic = cf.GetOption(discoveryTopic,"topic")
+                if (dtTopic == topic or dtTopic == "*") and cf.GetOption(discoveryTopic,SETTINGS_DISCOVERY_PRESET_PAYLOAD_KEY):
+                    # Found dict for this topic in this sensor for this preset: Place in the payload
+                    payload = cf.GetOption(discoveryTopic,SETTINGS_DISCOVERY_PRESET_PAYLOAD_KEY).copy()
+
+
+        # Do I have the name in the  preset settings or do I set it using the default topic ?
+        if not 'name' in payload:
+            payload['name'] = topic.replace("/","_")
+        
+        # Check and add this only if has option true
+        if cf.GetOption(self.brokerConfigs,[DISCOVERY_KEY,DISCOVERY_NAME_PREFIX_KEY],DISCOVERY_NAME_PREFIX_DEFAULT):
+            payload['name'] = self.brokerConfigs['name'] + " - " + payload['name']
+
+        # Prepare the part of the config topic where you place the component id
+        topic_component=self.TopicRemoveBadCharacters(self.brokerConfigs['name']+"_"+topic)
+
+
+        payload['device']=self.GetDiscoveryDeviceData()
+        payload['unique_id']=hashlib.md5(topic.encode('utf-8')).hexdigest()
+
+        if(entity_model==TYPE_TOPIC_OUT):
+            # Do I have the type in the sensor preset settings or do I set it to 'sensor' ?
+            entity_type = cf.GetOption(topicSettings,SETTINGS_DISCOVERY_PRESET_TYPE_KEY,"sensor")
+            # Send the topic where the Sensor will send his state
+            payload['state_topic']=self.SelectTopic(topic)
+        else:
+            # Do I have the type in the sensor preset settings or do I set it to 'sensor' ?
+            entity_type = cf.GetOption(topicSettings,SETTINGS_DISCOVERY_PRESET_TYPE_KEY,"switch")
+            # Send the topic where the Switch will receive the message
+            payload['command_topic']=self.SelectTopic(topic)
+        
+
+
+        # Compose the topic that will be used to send the disoovery configuration
+        config_send_topic = AUTODISCOVERY_TOPIC_CONFIG_FORMAT.format(prefix,entity_type,topic_component)
+
+        return {"name":topic, "config_topic": config_send_topic, "payload":dict(payload)}
+
+
+
+    def GetDiscoveryDeviceData(self):# Add device information
+        sw_info = self.Settings.GetInformation()
+        device = {}
+        device['name']="Monitor "+ self.brokerConfigs['name']
+        device['manufacturer']=sw_info['name']
+        device['model']=sw_info['name']  
+        device['identifiers']=sw_info['name']  
+        device['sw_version']=sw_info['version'] 
+        return device
 
     # discoveryData: {name, config_topic, payload}
     def PublishDiscoveryData(self,discovery_data):

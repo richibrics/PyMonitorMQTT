@@ -1,16 +1,16 @@
 import psutil
-from Sensors.Sensor import *
+from Entity import Entity
 
 
 TOPIC = 'disk_used_percentage'
 
 
-class DiskSensor(Sensor):
+class DiskSensor(Entity):
     def Initialize(self):
         self.AddTopic(TOPIC)
 
     def Update(self):
-        self.SetTopicValue(TOPIC, self.GetDiskUsedPercentage(),ValueFormatter.TYPE_PERCENTAGE)
+        self.SetTopicValue(TOPIC, self.GetDiskUsedPercentage(),self.ValueFormatter.TYPE_PERCENTAGE)
 
     def GetDiskUsedPercentage(self):
         return psutil.disk_usage('/')[3]

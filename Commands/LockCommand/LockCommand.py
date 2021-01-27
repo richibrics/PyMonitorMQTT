@@ -1,5 +1,5 @@
 import subprocess
-from Sensors.Sensor import Sensor
+from Entity import Entity
 import Logger
 
 TOPIC = 'lock_command'
@@ -19,9 +19,9 @@ commands = {
 }
 
 
-class LockCommand(Sensor):
+class LockCommand(Entity):
     def Initialize(self):
-        self.SubscribeToTopic(self.FormatTopic(TOPIC))
+        self.SubscribeToTopic(TOPIC)
 
     def Callback(self, message):
         os = self.GetOS()

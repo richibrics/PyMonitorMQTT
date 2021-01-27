@@ -1,4 +1,4 @@
-from Sensors.Sensor import Sensor
+from Entity import Entity
 import subprocess
 
 supports_win_brightness = True
@@ -12,9 +12,9 @@ except:
 TOPIC = 'brightness/set'
 
 
-class BrightnessCommand(Sensor):
+class BrightnessCommand(Entity):
     def Initialize(self):
-        self.SubscribeToTopic(self.FormatTopic(TOPIC))
+        self.SubscribeToTopic(TOPIC)
 
     def Callback(self, message):
         self.SetBrightness(int(message.payload))

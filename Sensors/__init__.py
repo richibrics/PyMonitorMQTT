@@ -1,4 +1,3 @@
-from Sensors.Sensor import Sensor
 from Sensors.RamSensor.RamSensor import RamSensor
 from Sensors.TimeSensor.TimeSensor import TimeSensor
 from Sensors.CpuSensor.CpuSensor import CpuSensor

@@ -1,4 +1,4 @@
-from Sensors.Sensor import *
+from Entity import Entity
 import subprocess
 import re
 
@@ -12,12 +12,12 @@ except:
 TOPIC = 'brightness/get'
 
 
-class BrightnessSensor(Sensor):
+class BrightnessSensor(Entity):
     def Initialize(self):
         self.AddTopic(TOPIC)
 
     def Update(self):
-        self.SetTopicValue(TOPIC, self.GetBrightness(),ValueFormatter.TYPE_PERCENTAGE)
+        self.SetTopicValue(TOPIC, self.GetBrightness(),self.ValueFormatter.TYPE_PERCENTAGE)
 
     def GetBrightness(self):
         os = self.GetOS()

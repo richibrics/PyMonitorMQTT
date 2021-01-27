@@ -1,4 +1,4 @@
-from Sensors.Sensor import Sensor
+from Entity import Entity
 from consts import *
 import subprocess
 import fnmatch
@@ -14,10 +14,10 @@ WHITELIST_ALLOW = 'allow'
 # 'whitelist' accepts: deny, allow, or allowed commands regex rules
 
 
-class TerminalCommand(Sensor):
+class TerminalCommand(Entity):
 
     def Initialize(self):
-        self.SubscribeToTopic(self.FormatTopic(TOPIC))
+        self.SubscribeToTopic(TOPIC)
 
     def Callback(self, message):
         messageDict = ''

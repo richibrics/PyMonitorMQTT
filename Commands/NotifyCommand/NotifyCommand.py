@@ -1,5 +1,5 @@
 import os
-from Sensors.Sensor import Sensor
+from Entity import Entity
 import Logger
 
 supports_win = True
@@ -25,9 +25,9 @@ DEFAULT_TITLE = 'PyMonitorMQTT'
 DEFAULT_DURATION = 10  # Seconds
 
 
-class NotifyCommand(Sensor):
+class NotifyCommand(Entity):
     def Initialize(self):
-        self.SubscribeToTopic(self.FormatTopic(TOPIC))
+        self.SubscribeToTopic(TOPIC)
 
     # I need it here cause I have to check the right import for my OS (and I may not know the OS in Init function)
     def PostInitialize(self):

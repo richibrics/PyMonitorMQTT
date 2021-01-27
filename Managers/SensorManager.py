@@ -1,7 +1,6 @@
 import sys
 import inspect
 import time
-import Sensors
 import Logger
 
 # Delay in second

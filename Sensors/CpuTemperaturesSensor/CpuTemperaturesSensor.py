@@ -1,4 +1,4 @@
-from Sensors.Sensor import *
+from Entity import Entity
 import psutil
 import json
 import Logger
@@ -14,7 +14,7 @@ except:
 TOPIC = 'cpu/temperatures'
 
 
-class CpuTemperaturesSensor(Sensor):
+class CpuTemperaturesSensor(Entity):
     def Initialize(self):
         self.AddTopic(TOPIC)
 

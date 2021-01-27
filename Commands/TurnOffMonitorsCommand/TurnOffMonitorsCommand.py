@@ -1,15 +1,15 @@
 import subprocess
 import ctypes
 import os as sys_os
-from Sensors.Sensor import Sensor
+from Entity import Entity
 from ctypes import *
 
 TOPIC = 'turn_off_monitors_command'
 
 
-class TurnOffMonitorsCommand(Sensor):
+class TurnOffMonitorsCommand(Entity):
     def Initialize(self):
-        self.SubscribeToTopic(self.FormatTopic(TOPIC))
+        self.SubscribeToTopic(TOPIC)
 
     def Callback(self, message):
         os = self.GetOS()

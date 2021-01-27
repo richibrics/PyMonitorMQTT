@@ -1,4 +1,4 @@
-from Sensors.Sensor import Sensor
+from Entity import Entity
 import Logger
 
 TOPIC = 'inbox_command'
@@ -6,9 +6,9 @@ TOPIC = 'inbox_command'
 # Great to be used with the custom topic and # wildcard to discover on which topic messages are received
 
 
-class InboxCommand(Sensor):
+class InboxCommand(Entity):
     def Initialize(self):
-        self.SubscribeToTopic(self.FormatTopic(TOPIC))
+        self.SubscribeToTopic(TOPIC)
 
     def Callback(self, message):
         self.Log(Logger.LOG_INFO, 'Message received from topic: ' +

@@ -1,5 +1,5 @@
 import subprocess
-from Sensors.Sensor import Sensor
+from Entity import Entity
 
 TOPIC = 'reboot_command'
 
@@ -10,9 +10,9 @@ commands = {
 }
 
 
-class RebootCommand(Sensor):
+class RebootCommand(Entity):
     def Initialize(self):
-        self.SubscribeToTopic(self.FormatTopic(TOPIC))
+        self.SubscribeToTopic(TOPIC)
 
     def Callback(self, message):
         try:

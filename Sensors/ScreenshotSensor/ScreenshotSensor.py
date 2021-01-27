@@ -1,7 +1,7 @@
 import os
 import pyscreenshot as ImageGrab
 from PIL import Image
-from Sensors.Sensor import *
+from Entity import Entity
 
 
 TOPIC = 'screenshot'
@@ -10,7 +10,7 @@ SCREENSHOT_FILENAME = 'screenshot.png'
 scriptFolder = str(os.path.dirname(os.path.realpath(__file__)))
 
 
-class ScreenshotSensor(Sensor):
+class ScreenshotSensor(Entity):
     def Initialize(self):
         self.AddTopic(TOPIC)
 

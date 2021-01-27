@@ -1,5 +1,5 @@
 import subprocess
-from Sensors.Sensor import Sensor
+from Entity import Entity
 
 TOPIC = 'shutdown_command'
 
@@ -11,9 +11,9 @@ commands = {
 }
 
 
-class ShutdownCommand(Sensor):
+class ShutdownCommand(Entity):
     def Initialize(self):
-        self.SubscribeToTopic(self.FormatTopic(TOPIC))
+        self.SubscribeToTopic(TOPIC)
 
     def Callback(self, message):
         try:

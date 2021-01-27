@@ -1,5 +1,5 @@
 import os
-from Sensors.Sensor import *
+from Entity import Entity
 from consts import *
 from Configurator import Configurator as cf
 
@@ -8,7 +8,7 @@ default_message = "default"
 
 config_content_message_key = "message"
 
-class MessageSensor(Sensor):
+class MessageSensor(Entity):
     def Initialize(self):
         self.AddTopic(TOPIC)
 

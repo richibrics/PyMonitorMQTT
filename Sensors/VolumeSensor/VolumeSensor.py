@@ -1,4 +1,4 @@
-from Sensors.Sensor import *
+from Entity import Entity
 from os import path
 from ctypes import *
 
@@ -9,7 +9,7 @@ scriptFolder = str(path.dirname(path.realpath(__file__)))
 #EXTERNAL_SOFTWARE_FILENAME = path.join(scriptFolder,'..','..','ExternalUtilities','FILE')
 
 
-class VolumeSensor(Sensor):
+class VolumeSensor(Entity):
     def Initialize(self):
         self.AddTopic(TOPIC_LEVEL)
         self.AddTopic(TOPIC_MUTE)

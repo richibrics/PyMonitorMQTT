@@ -1,11 +1,11 @@
 import platform
-from Sensors.Sensor import *
+from Entity import Entity
 #from consts import FIXED_VALUE_OS_MACOS
 
 TOPIC = 'operating_system'
 
 
-class OsSensor(Sensor):
+class OsSensor(Entity):
     def Initialize(self):
         self.AddTopic(TOPIC)
 
