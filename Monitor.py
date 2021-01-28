@@ -2,7 +2,7 @@ import Sensors
 import Commands
 from Configurator import Configurator as cf
 from MqttClient import MqttClient
-import Logger
+from Logger import Logger
 import multiprocessing
 from consts import *
 
@@ -21,7 +21,7 @@ class Monitor():
 
     def Setup(self):
         # Setup logger
-        self.logger = Logger.Logger(self.globalConfig, self.monitor_id)
+        self.logger = Logger(self.globalConfig, self.monitor_id)
         self.Log(Logger.LOG_INFO, 'Starting')
         # Setup MQTT client
         self.mqttClient = MqttClient(self.config, self.logger)

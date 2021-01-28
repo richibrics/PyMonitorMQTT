@@ -4,13 +4,6 @@ import sys
 from consts import *
 from Configurator import Configurator
 
-LOG_MESSAGE = 0
-LOG_ERROR = 1
-LOG_WARNING = 2
-LOG_INFO = 3
-LOG_DEBUG = 4
-LOG_DEVELOPMENT = 5
-
 # Fill start of string with spaces to jusitfy the message (0: no padding)
 # First for type, second for monitor, third for source
 STRINGS_LENGTH = [8, 12, 26]
@@ -27,6 +20,13 @@ MAIN_LOG_FILENAME = 'Log.log'
 
 
 class Logger():
+    LOG_MESSAGE = 0
+    LOG_ERROR = 1
+    LOG_WARNING = 2
+    LOG_INFO = 3
+    LOG_DEBUG = 4
+    LOG_DEVELOPMENT = 5
+
     def __init__(self, globalConfig, monitor_id=None):
         self.globalConfig = globalConfig
         self.monitor_id = monitor_id
@@ -34,17 +34,17 @@ class Logger():
         self.SetupFolder()
 
     def Log(self, messageLevel, source, message):
-        if messageLevel == LOG_INFO:
+        if messageLevel == self.LOG_INFO:
             messageType = 'Info'
-        elif messageLevel == LOG_ERROR:
+        elif messageLevel == self.LOG_ERROR:
             messageType = 'Error'
-        elif messageLevel == LOG_WARNING:
+        elif messageLevel == self.LOG_WARNING:
             messageType = 'Warning'
-        elif messageLevel == LOG_DEBUG:
+        elif messageLevel == self.LOG_DEBUG:
             messageType = 'Debug'
-        elif messageLevel == LOG_MESSAGE:
+        elif messageLevel == self.LOG_MESSAGE:
             messageType = 'Message'
-        elif messageLevel == LOG_DEVELOPMENT:
+        elif messageLevel == self.LOG_DEVELOPMENT:
             messageType = 'Dev'
         else:
             messageType = 'Logger'

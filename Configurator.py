@@ -1,5 +1,4 @@
 from consts import *
-import Logger
 
 class Configurator():
     # Returns the value of the option I find using the path from a passed config
@@ -27,5 +26,4 @@ class Configurator():
                 raise Exception(
                     "Error during GetOption: option type not valid " + str(type(path)))
         except Exception as e:
-            Logger.Logger.Log(Logger.LOG_ERROR,"Configurator","Configurator error during GetOption: " + path)
             raise Exception(e)

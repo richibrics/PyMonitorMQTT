@@ -1,7 +1,7 @@
 from Entity import Entity
 import psutil
 import json
-import Logger
+from Logger import Logger
 
 supports_win_temperature = True
 try:

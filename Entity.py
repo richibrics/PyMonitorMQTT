@@ -1,5 +1,5 @@
 import datetime
-import Logger
+from Logger import Logger
 import json
 from Configurator import Configurator as cf
 import sys
@@ -12,6 +12,8 @@ class Entity():
     import consts
     from Settings import Settings
     from ValueFormatter import ValueFormatter
+    from Logger import Logger
+
     # To replace an original topic with a personalized one from configuration (may not be used).
     # When a sensor send the data with a topic, if the user choose a fixed topic in config,
     # then when I send the data I don't use the topic defined in the function but I replaced that
@@ -80,7 +82,6 @@ class Entity():
 
     def AddTopic(self, topic):
         self.outTopicsAddedNumber += 1
-
         # If user in options defined custom topics, store original and custom topic and replace it in the send function
         replaced = False
         if self.GetOption('custom_topics') is not None and len(self.GetOption('custom_topics')) >= self.outTopicsAddedNumber:
@@ -356,11 +357,16 @@ class Entity():
 
             for topic in self.outTopics:
                 # discoveryData: {name, config_topic, payload}
-                discovery_data.append(self.PrepareTopicDiscoveryData(topic['topic'],TYPE_TOPIC_OUT,prefix,preset,entity_preset_data))
+                #print(topic)
+                data = self.PrepareTopicDiscoveryData(topic['topic'],TYPE_TOPIC_OUT,prefix,preset,entity_preset_data)
+                if data:
+                    discovery_data.append(data)
 
             for topic in self.inTopics:
                 # discoveryData: {name, config_topic, payload}
-                discovery_data.append(self.PrepareTopicDiscoveryData(topic,TYPE_TOPIC_IN,prefix,preset,entity_preset_data))
+                data = self.PrepareTopicDiscoveryData(topic,TYPE_TOPIC_IN,prefix,preset,entity_preset_data)
+                if data:
+                    discovery_data.append(data)
 
         return discovery_data
 
@@ -371,12 +377,14 @@ class Entity():
         # Look for custom discovery settings for this sensor, topic and preset:
         if entity_preset_data:
             for discoveryTopic in entity_preset_data:
-                topicSettings=discoveryTopic
                 dtTopic = cf.GetOption(discoveryTopic,"topic")
                 if (dtTopic == topic or dtTopic == "*") and cf.GetOption(discoveryTopic,SETTINGS_DISCOVERY_PRESET_PAYLOAD_KEY):
                     # Found dict for this topic in this sensor for this preset: Place in the payload
+                    topicSettings=discoveryTopic
                     payload = cf.GetOption(discoveryTopic,SETTINGS_DISCOVERY_PRESET_PAYLOAD_KEY).copy()
 
+        if cf.GetOption(topicSettings,self.consts.SETTINGS_DISCOVERY_PRESET_DISABLE_KEY,False): # If I have to disable, return None
+            return None
 
         # Do I have the name in the  preset settings or do I set it using the default topic ?
         if not 'name' in payload:

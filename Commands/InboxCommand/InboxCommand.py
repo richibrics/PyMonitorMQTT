@@ -1,5 +1,5 @@
 from Entity import Entity
-import Logger
+from Logger import Logger
 
 TOPIC = 'inbox_command'
 

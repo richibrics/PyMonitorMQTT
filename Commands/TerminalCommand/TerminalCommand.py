@@ -2,7 +2,7 @@ from Entity import Entity
 from consts import *
 import subprocess
 import fnmatch
-import Logger
+from Logger import Logger
 
 TOPIC = 'terminal_command'
 

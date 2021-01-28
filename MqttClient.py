@@ -1,6 +1,6 @@
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
-import Logger
+from Logger import Logger
 
 
 class MqttClient():

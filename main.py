@@ -1,7 +1,7 @@
 import os
 import yaml
 import time
-import Logger
+from Logger import Logger
 from EntityManager import EntityManager
 import sys
 from Monitor import Monitor
@@ -112,7 +112,7 @@ if __name__ == "__main__":
 
 
     except Exception as exc:  # Main try except to give information about exception management
-        logger = Logger.Logger(config)
+        logger = Logger(config)
         logger.Log(Logger.LOG_ERROR, 'Main',
                    Logger.ExceptionTracker.TrackString(exc))
         logger.Log(Logger.LOG_ERROR, 'Main',

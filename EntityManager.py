@@ -1,7 +1,7 @@
 import sys
 import inspect
 import time
-import Logger
+from Logger import Logger
 
 # Delay in second
 update_rate = 20  # If not set in config
@@ -14,7 +14,7 @@ class EntityManager():
 
     def __init__(self, config):
         self.config = config
-        self.logger = Logger.Logger(config)
+        self.logger = Logger(config)
 
     def Start(self):
         # Start the send loop

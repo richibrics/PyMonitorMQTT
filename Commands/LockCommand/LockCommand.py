@@ -1,6 +1,6 @@
 import subprocess
 from Entity import Entity
-import Logger
+from Logger import Logger
 
 TOPIC = 'lock_command'
 

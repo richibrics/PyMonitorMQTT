@@ -1,6 +1,6 @@
 import os
 from Entity import Entity
-import Logger
+from Logger import Logger
 
 supports_win = True
 try:
