@@ -32,7 +32,7 @@ class CpuSensor(Entity):
         self.AddTopic(TOPIC_COUNT)
 
         # Advanced only if asked in options
-        if self.GetOption(ADVANCED_INFO_OPTION_KEY):
+        if self.GetOption(self.consts.ADVANCED_INFO_OPTION_KEY):
             # CPU times
             self.AddTopic(TOPIC_TIMES_USER)
             self.AddTopic(TOPIC_TIMES_SYSTEM)
@@ -59,7 +59,7 @@ class CpuSensor(Entity):
                            self.ValueFormatter.TYPE_PERCENTAGE)
         self.SetTopicValue(TOPIC_COUNT, psutil.cpu_count())
         # Send if wanted, extra data
-        if self.GetOption(ADVANCED_INFO_OPTION_KEY):
+        if self.GetOption(self.consts.ADVANCED_INFO_OPTION_KEY):
             # CPU times
             self.SetTopicValue(TOPIC_TIMES_USER, psutil.cpu_times()[
                                0], self.ValueFormatter.TYPE_TIME)

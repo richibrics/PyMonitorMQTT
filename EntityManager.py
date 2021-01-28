@@ -67,13 +67,14 @@ class EntityManager():
                  ' entity unloaded', logger=obj.GetLogger())
         self.entities.remove(obj)
 
-    def FindEntity(self, name, monitor_id):
+    def FindEntities(self, name, monitor_id):
         # Return the entity object present in entities list: to get entity value from another entity for example
+        entities = []
         for entity in self.ActiveEntities():
             # If it's an object->obj.name, if a class must use the .__dict__ for the name
             if name == entity.name and monitor_id == entity.GetMonitorID():
-                return entity
-        return None
+                entities.append(entity)
+        return entities
 
     def ActiveEntities(self):
         return self.entities

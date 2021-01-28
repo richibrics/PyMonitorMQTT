@@ -207,9 +207,21 @@ class Entity():
         return topic  # Return the topic cause upper function should now that topic may have been edited
 
 
-    def FindEntity(self, name):  # Find active entities for some specific action
+    def FindEntities(self, name):  # Find active entities for some specific action
         if(self.entityManager):
-            return self.entityManager.FindEntity(name, self.monitor_id)
+            return self.entityManager.FindEntities(name, self.monitor_id)
+        else:
+            self.Log(Logger.LOG_ERROR,
+                     'EntityManager not set!')
+        return None
+
+    def FindEntity(self, name):  # Return first found entity from FindEntities
+        if(self.entityManager):
+            entities = self.FindEntities(name)
+            if(len(entities)):
+                return entities[0]
+            else:
+                return None
         else:
             self.Log(Logger.LOG_ERROR,
                      'EntityManager not set!')

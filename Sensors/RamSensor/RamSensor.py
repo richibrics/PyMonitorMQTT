@@ -22,7 +22,7 @@ class RamSensor(Entity):
         self.AddTopic(TOPIC_MEMORY_PERCENTAGE)
         self.AddTopic(TOPIC_SWAP_PERCENTAGE)
 
-        if self.GetOption(ADVANCED_INFO_OPTION_KEY):
+        if self.GetOption(self.consts.ADVANCED_INFO_OPTION_KEY):
             # Virtual memory
             self.AddTopic(TOPIC_MEMORY_TOTAL)
             self.AddTopic(TOPIC_MEMORY_AVAILABLE)
@@ -39,7 +39,7 @@ class RamSensor(Entity):
         self.SetTopicValue(TOPIC_SWAP_PERCENTAGE, psutil.swap_memory()[
                            3], self.ValueFormatter.TYPE_PERCENTAGE)
 
-        if self.GetOption(ADVANCED_INFO_OPTION_KEY):
+        if self.GetOption(self.consts.ADVANCED_INFO_OPTION_KEY):
             # Virtual memory
             self.SetTopicValue(TOPIC_MEMORY_TOTAL,
                                psutil.virtual_memory()[0], self.ValueFormatter.TYPE_BYTE)
