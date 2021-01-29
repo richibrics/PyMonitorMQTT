@@ -1,7 +1,7 @@
 from Entity import Entity
 import psutil
 import json
-from Logger import Logger
+from Logger import Logger, ExceptionTracker
 
 supports_win_temperature = True
 try:
@@ -48,11 +48,12 @@ class CpuTemperaturesSensor(Entity):
                     return temp.current
         elif 'cpu_thermal' in temps:
             for temp in temps['cpu_thermal']:
-                    return temp.current
+                return temp.current
         else:
-            self.Log(Logger.LOG_ERROR,"Can't get temperature for your system.")
-            self.Log(Logger.LOG_ERROR,"Open a Git Issue and show this: " + str(temps))
-            self.Log(Logger.LOG_ERROR,"Thank you")
+            self.Log(Logger.LOG_ERROR, "Can't get temperature for your system.")
+            self.Log(Logger.LOG_ERROR,
+                     "Open a Git Issue and show this: " + str(temps))
+            self.Log(Logger.LOG_ERROR, "Thank you")
             raise Exception("No dict data")
         # Send the list as json
         raise Exception("No temperature data found")

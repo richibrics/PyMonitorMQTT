@@ -1,6 +1,6 @@
 import subprocess
 from Entity import Entity
-from Logger import Logger
+from Logger import Logger, ExceptionTracker
 
 TOPIC = 'lock_command'
 
@@ -25,12 +25,13 @@ class LockCommand(Entity):
 
     def Callback(self, message):
         os = self.GetOS()
-        de=self.GetDE()
+        de = self.GetDE()
         if os in commands:
             if de in commands[os]:
                 try:
                     command = commands[os][de]
-                    process = subprocess.Popen(command.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    process = subprocess.Popen(
+                        command.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 except Exception as e:
                     raise Exception('Error during system lock: ' + str(e))
             else:
