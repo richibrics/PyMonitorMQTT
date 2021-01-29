@@ -33,7 +33,7 @@ class ScreenshotSensor(Entity):
         '''
         discovery_data[0]['payload']['availability']={}
         discovery_data[0]['payload']['availability']['topic']=self.SelectTopic("status")
-        discovery_data[0]['payload']['availability']['payload_available']=ONLINE_STATUS
-        discovery_data[0]['payload']['availability']['payload_not_available']=OFFLINE_STATUS
+        discovery_data[0]['payload']['availability']['payload_available']=ONLINE_STATE
+        discovery_data[0]['payload']['availability']['payload_not_available']=OFFLINE_STATE
         '''
         return discovery_data

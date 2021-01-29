@@ -413,6 +413,12 @@ class Entity():
             payload['command_topic']=self.SelectTopic(topic)
         
 
+        # Last thing: if StateSensor is loaded, use that to publish availability
+        stateSensor=self.FindEntity("State")
+        if(stateSensor):
+            payload['availability_topic']=stateSensor.SelectTopic(stateSensor.GetFirstTopic())
+            payload['payload_available']=self.consts.ONLINE_STATE
+            payload['payload_not_available']=self.consts.OFFLINE_STATE
 
         # Compose the topic that will be used to send the disoovery configuration
         config_send_topic = AUTODISCOVERY_TOPIC_CONFIG_FORMAT.format(prefix,entity_type,topic_component)

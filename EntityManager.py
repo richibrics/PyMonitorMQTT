@@ -3,6 +3,8 @@ import inspect
 import time
 from Logger import Logger
 
+import signal # To catch interrupt signals
+
 # Delay in second
 update_rate = 20  # If not set in config
 
@@ -136,3 +138,4 @@ class EntityManager():
         if logger is None:
             logger = self.logger
         logger.Log(messageType, 'Entity Manager', message)
+
