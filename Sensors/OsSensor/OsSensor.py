@@ -1,11 +1,11 @@
 import platform
-from Sensors.Sensor import *
-from consts import FIXED_VALUE_OS_MACOS
+from Entity import Entity
+#from consts import FIXED_VALUE_OS_MACOS
 
 TOPIC = 'operating_system'
 
 
-class OsSensor(Sensor):
+class OsSensor(Entity):
     def Initialize(self):
         self.AddTopic(TOPIC)
 
@@ -15,5 +15,5 @@ class OsSensor(Sensor):
     def GetOperatingSystem(self):
         os = platform.system()
         if os == 'Darwin':  # It's macOS
-            return FIXED_VALUE_OS_MACOS
+            return self.consts.FIXED_VALUE_OS_MACOS
         return os

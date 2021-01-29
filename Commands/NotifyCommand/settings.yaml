@@ -3,3 +3,8 @@ requirements:
     - Os:
         dont_send: True
       
+discovery:
+  homeassistant: # Must match discovery preset name
+    - topic: "*"
+      payload:
+        name: "Notify"

@@ -1,11 +1,11 @@
 import os
-from Sensors.Sensor import *
+from Entity import Entity
 from consts import *
 
 TOPIC = 'desktop_environment'
 
 
-class DesktopEnvironmentSensor(Sensor):
+class DesktopEnvironmentSensor(Entity):
     def Initialize(self):
         self.AddTopic(TOPIC)
 

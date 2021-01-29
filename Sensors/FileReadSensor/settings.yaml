@@ -1,1 +1,8 @@
 requirements:
+
+discovery:
+  homeassistant: # Must match discovery preset name
+    - topic: "*"
+      payload:
+        name: "File content"
+        unit_of_measurement: ""

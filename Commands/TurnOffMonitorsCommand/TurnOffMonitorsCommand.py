@@ -1,15 +1,15 @@
 import subprocess
 import ctypes
 import os as sys_os
-from Commands.Command import Command
+from Entity import Entity
 from ctypes import *
 
 TOPIC = 'turn_off_monitors_command'
 
 
-class TurnOffMonitorsCommand(Command):
+class TurnOffMonitorsCommand(Entity):
     def Initialize(self):
-        self.SubscribeToTopic(self.GetTopic(TOPIC))
+        self.SubscribeToTopic(TOPIC)
 
     def Callback(self, message):
         os = self.GetOS()
@@ -30,7 +30,7 @@ class TurnOffMonitorsCommand(Command):
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os
-        os = self.FindSensor('Os')
+        os = self.FindEntity('Os')
         if os:
             os.Update()
             return os.GetTopicValue()

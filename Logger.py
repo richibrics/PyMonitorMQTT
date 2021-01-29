@@ -4,13 +4,6 @@ import sys
 from consts import *
 from Configurator import Configurator
 
-LOG_MESSAGE = 0
-LOG_ERROR = 1
-LOG_WARNING = 2
-LOG_INFO = 3
-LOG_DEBUG = 4
-LOG_DEVELOPMENT = 5
-
 # Fill start of string with spaces to jusitfy the message (0: no padding)
 # First for type, second for monitor, third for source
 STRINGS_LENGTH = [8, 12, 26]
@@ -27,6 +20,13 @@ MAIN_LOG_FILENAME = 'Log.log'
 
 
 class Logger():
+    LOG_MESSAGE = 0
+    LOG_ERROR = 1
+    LOG_WARNING = 2
+    LOG_INFO = 3
+    LOG_DEBUG = 4
+    LOG_DEVELOPMENT = 5
+
     def __init__(self, globalConfig, monitor_id=None):
         self.globalConfig = globalConfig
         self.monitor_id = monitor_id
@@ -34,17 +34,17 @@ class Logger():
         self.SetupFolder()
 
     def Log(self, messageLevel, source, message):
-        if messageLevel == LOG_INFO:
+        if messageLevel == self.LOG_INFO:
             messageType = 'Info'
-        elif messageLevel == LOG_ERROR:
+        elif messageLevel == self.LOG_ERROR:
             messageType = 'Error'
-        elif messageLevel == LOG_WARNING:
+        elif messageLevel == self.LOG_WARNING:
             messageType = 'Warning'
-        elif messageLevel == LOG_DEBUG:
+        elif messageLevel == self.LOG_DEBUG:
             messageType = 'Debug'
-        elif messageLevel == LOG_MESSAGE:
+        elif messageLevel == self.LOG_MESSAGE:
             messageType = 'Message'
-        elif messageLevel == LOG_DEVELOPMENT:
+        elif messageLevel == self.LOG_DEVELOPMENT:
             messageType = 'Dev'
         else:
             messageType = 'Logger'
@@ -65,7 +65,7 @@ class Logger():
             message = message[self.logger_message_width:]
             if(len(message) > 0):
                 string = string+'-'  # Print new line indicator if I will go down in the next iteration
-            self.PrintAndSave(string,messageLevel)
+            self.PrintAndSave(string, messageLevel)
             # -1 + space cause if the char in the prestring isn't a space, it will be directly attached to my message without a space
 
             prestring = (len(prestring)-PRESTRING_MESSAGE_SEPARATOR_LEN) * \
@@ -79,7 +79,7 @@ class Logger():
         now = datetime.datetime.now()
         return now.strftime(DATETIME_FORMAT)
 
-    def PrintAndSave(self, string,level):
+    def PrintAndSave(self, string, level):
         if level <= self.console_log_level:
             print(string)
         if level <= self.file_log_level:
@@ -88,12 +88,15 @@ class Logger():
 
     def GetConfiguration(self):
         # Message width
-        self.logger_message_width = Configurator.GetOption(self.globalConfig,[LOGGER_CONFIG_KEY,LOGGER_MESSAGE_WIDTH_KEY],LOGGER_MESSAGE_WIDTH_DEFAULT)
+        self.logger_message_width = Configurator.GetOption(self.globalConfig, [
+                                                           LOGGER_CONFIG_KEY, LOGGER_MESSAGE_WIDTH_KEY], LOGGER_MESSAGE_WIDTH_DEFAULT)
         # File level
-        self.file_log_level = Configurator.GetOption(self.globalConfig,[LOGGER_CONFIG_KEY,LOGGER_FILE_LEVEL_KEY],LOGGER_DEFAULT_LEVEL)
+        self.file_log_level = Configurator.GetOption(
+            self.globalConfig, [LOGGER_CONFIG_KEY, LOGGER_FILE_LEVEL_KEY], LOGGER_DEFAULT_LEVEL)
         # Console level
-        self.console_log_level = Configurator.GetOption(self.globalConfig,[LOGGER_CONFIG_KEY,LOGGER_CONSOLE_LEVEL_KEY],LOGGER_DEFAULT_LEVEL)
-        
+        self.console_log_level = Configurator.GetOption(self.globalConfig, [
+                                                        LOGGER_CONFIG_KEY, LOGGER_CONSOLE_LEVEL_KEY], LOGGER_DEFAULT_LEVEL)
+
 
 class ExceptionTracker():
 

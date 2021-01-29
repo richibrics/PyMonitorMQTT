@@ -2,6 +2,7 @@ requirements:
 
 discovery:
   homeassistant: # Must match discovery preset name
-    - topic: "*"
+    - topic: "state"
       payload:
-        name: "Terminal command"
+        name: "Online state"
+

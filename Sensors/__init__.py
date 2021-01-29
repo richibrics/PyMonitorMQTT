@@ -1,4 +1,3 @@
-from Sensors.Sensor import Sensor
 from Sensors.RamSensor.RamSensor import RamSensor
 from Sensors.TimeSensor.TimeSensor import TimeSensor
 from Sensors.CpuSensor.CpuSensor import CpuSensor
@@ -9,6 +8,7 @@ from Sensors.BatterySensor.BatterySensor import BatterySensor
 from Sensors.ScreenshotSensor.ScreenshotSensor import ScreenshotSensor
 from Sensors.DesktopEnvironmentSensor.DesktopEnvironmentSensor import DesktopEnvironmentSensor
 from Sensors.VolumeSensor.VolumeSensor import VolumeSensor
-from Sensors.BrightnessSensor.BrightnessSensor import BrightnessSensor
 from Sensors.NetworkSensor.NetworkSensor import NetworkSensor
 from Sensors.FileReadSensor.FileReadSensor import FileReadSensor
+from Sensors.MessageSensor.MessageSensor import MessageSensor
+from Sensors.StateSensor.StateSensor import StateSensor

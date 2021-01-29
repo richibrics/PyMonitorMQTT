@@ -1,19 +1,19 @@
 import psutil
-from Sensors.Sensor import *
+from Entity import Entity
 
 
 TOPIC_PERCENTAGE = 'battery/battery_level_percentage'
 TOPIC_CHARGING_STATUS = 'battery/battery_charging'
 
 
-class BatterySensor(Sensor):
+class BatterySensor(Entity):
     def Initialize(self):
         self.AddTopic(TOPIC_PERCENTAGE)
         self.AddTopic(TOPIC_CHARGING_STATUS)
 
     def Update(self):
         batteryInfo = self.GetBatteryInformation()
-        self.SetTopicValue(TOPIC_PERCENTAGE, batteryInfo['level'],ValueFormatter.TYPE_PERCENTAGE)
+        self.SetTopicValue(TOPIC_PERCENTAGE, batteryInfo['level'],self.ValueFormatter.TYPE_PERCENTAGE)
         self.SetTopicValue(TOPIC_CHARGING_STATUS, str(batteryInfo['charging']))
 
     def GetBatteryInformation(self):

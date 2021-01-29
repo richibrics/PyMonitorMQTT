@@ -1,5 +1,5 @@
 import psutil
-from Sensors.Sensor import *
+from Entity import Entity
 
 
 # Basic CPU info
@@ -25,14 +25,14 @@ TOPIC_AVERAGE_LOAD_LAST_15 = 'cpu/cpu_avg_load/15minutes'
 # Supports ADVANCED
 
 
-class CpuSensor(Sensor):
+class CpuSensor(Entity):
     def Initialize(self):
 
         self.AddTopic(TOPIC_PERCENTAGE)
         self.AddTopic(TOPIC_COUNT)
 
         # Advanced only if asked in options
-        if self.GetOption(ADVANCED_INFO_OPTION_KEY):
+        if self.GetOption(self.consts.ADVANCED_INFO_OPTION_KEY):
             # CPU times
             self.AddTopic(TOPIC_TIMES_USER)
             self.AddTopic(TOPIC_TIMES_SYSTEM)
@@ -56,27 +56,27 @@ class CpuSensor(Sensor):
     def Update(self):
         # Send base data
         self.SetTopicValue(TOPIC_PERCENTAGE, psutil.cpu_percent(),
-                           ValueFormatter.TYPE_PERCENTAGE)
+                           self.ValueFormatter.TYPE_PERCENTAGE)
         self.SetTopicValue(TOPIC_COUNT, psutil.cpu_count())
         # Send if wanted, extra data
-        if self.GetOption(ADVANCED_INFO_OPTION_KEY):
+        if self.GetOption(self.consts.ADVANCED_INFO_OPTION_KEY):
             # CPU times
             self.SetTopicValue(TOPIC_TIMES_USER, psutil.cpu_times()[
-                               0], ValueFormatter.TYPE_TIME)
+                               0], self.ValueFormatter.TYPE_TIME)
             self.SetTopicValue(TOPIC_TIMES_SYSTEM, psutil.cpu_times()[
-                               1], ValueFormatter.TYPE_TIME)
+                               1], self.ValueFormatter.TYPE_TIME)
             self.SetTopicValue(TOPIC_TIMES_IDLE, psutil.cpu_times()[
-                               2], ValueFormatter.TYPE_TIME)
+                               2], self.ValueFormatter.TYPE_TIME)
             # CPU stats
             self.SetTopicValue(TOPIC_STATS_CTX, psutil.cpu_stats()[0])
             self.SetTopicValue(TOPIC_STATS_INTERR, psutil.cpu_stats()[1])
             # CPU freq
             self.SetTopicValue(TOPIC_FREQ_CURRENT, psutil.cpu_freq()[
-                               0], ValueFormatter.TYPE_FREQUENCY)
+                               0], self.ValueFormatter.TYPE_FREQUENCY)
             self.SetTopicValue(TOPIC_FREQ_MIN, psutil.cpu_freq()[
-                               1], ValueFormatter.TYPE_FREQUENCY)
+                               1], self.ValueFormatter.TYPE_FREQUENCY)
             self.SetTopicValue(TOPIC_FREQ_MAX, psutil.cpu_freq()[
-                               2], ValueFormatter.TYPE_FREQUENCY)
+                               2], self.ValueFormatter.TYPE_FREQUENCY)
             if self.os != 'macOS':
                 # CPU avg load
                 self.SetTopicValue(TOPIC_AVERAGE_LOAD_LAST_1,
@@ -88,7 +88,7 @@ class CpuSensor(Sensor):
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os
-        os = self.FindSensor('Os')
+        os = self.FindEntity('Os')
         if os:
             os.Update()
             return os.GetTopicValue()

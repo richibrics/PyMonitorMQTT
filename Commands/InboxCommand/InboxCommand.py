@@ -1,14 +1,14 @@
-from Commands.Command import Command
-import Logger
+from Entity import Entity
+from Logger import Logger, ExceptionTracker
 
 TOPIC = 'inbox_command'
 
 # Great to be used with the custom topic and # wildcard to discover on which topic messages are received
 
 
-class InboxCommand(Command):
+class InboxCommand(Entity):
     def Initialize(self):
-        self.SubscribeToTopic(self.GetTopic(TOPIC))
+        self.SubscribeToTopic(TOPIC)
 
     def Callback(self, message):
         self.Log(Logger.LOG_INFO, 'Message received from topic: ' +

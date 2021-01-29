@@ -1,61 +1,63 @@
 import Sensors
 import Commands
-import Managers
+from Configurator import Configurator as cf
 from MqttClient import MqttClient
-import Logger
+from Logger import Logger, ExceptionTracker
 import multiprocessing
 from consts import *
 
 
 class Monitor():
 
-    def __init__(self, config, globalConfig, commandManager, sensorManager, monitor_id=1):
+    def __init__(self, config, globalConfig, valueFormatter, monitor_id=1):
         self.config = config
         self.globalConfig = globalConfig
         self.monitor_id = monitor_id
-        self.commandManager = commandManager
-        self.sensorManager = sensorManager
+        self.ValueFormatter = valueFormatter
         # Some Sensors and Commands, after load, will return which sensor or command they need to run
         self.requirements = []
-        self.loadedSensors = []  # To avoid reload for requirements, something is working
-        self.loadedCommands = []  # To avoid reload for requirements, something is working
+        self.loadedEntities = []  # To avoid reload for requirements, something is working
         self.Setup()
 
     def Setup(self):
-        # Setip logger
-        self.logger = Logger.Logger(self.globalConfig, self.monitor_id)
+        # Setup logger
+        self.logger = Logger(self.globalConfig, self.monitor_id)
         self.Log(Logger.LOG_INFO, 'Starting')
         # Setup MQTT client
         self.mqttClient = MqttClient(self.config, self.logger)
 
         if CONFIG_SENSORS_KEY in self.config:
-            self.LoadSensors(self.config[CONFIG_SENSORS_KEY])
+            self.LoadEntities(
+                self.config[CONFIG_SENSORS_KEY], SENSOR_NAME_SUFFIX, SENSORS_MODULE_NAME)
         if CONFIG_COMMANDS_KEY in self.config:
-            self.LoadCommands(self.config[CONFIG_COMMANDS_KEY])
+            self.LoadEntities(
+                self.config[CONFIG_COMMANDS_KEY], COMMAND_NAME_SUFFIX, COMMAND_MODULE_NAME)
         # While because some requirements may need other requirements themselves
         while(len(self.requirements)):
             self.Log(Logger.LOG_INFO, "Loading dependencies...")
             self.LoadRequirements()
 
         # Some need post-initialize configuration
-        self.sensorManager.PostInitializeSensors()
+        self.ValueFormatter.PostInitializeSensors()
         # Some need post-initialize configuration
-        self.commandManager.PostInitializeCommands()
+        # self.commandManager.PostInitializeCommands()
 
-    def LoadSensors(self, sensorsToAdd, loadingRequirements=False):
+    def LoadEntities(self, entitiesToAdd, name_suffix, module_name, loadingRequirements=False):
         # From configs I read sensors list and I give the names to the sensors manager which will initialize them
         # and will keep trace of who is the mqtt_client and the logger of the sensor
-        # self.sensorManager.PostInitializeSensors()
-        if sensorsToAdd:
-            for sensor in sensorsToAdd:
+        # self.ValueFormatter.PostInitializeSensors()
+        if entitiesToAdd:
+            for entity in entitiesToAdd:
                 # I load the sensor and if I need some requirements, I save them to the list
                 # Additional check to not load double if I am loading requirements
-                if not (loadingRequirements and sensor in self.loadedSensors):
-                    requirement = self.sensorManager.LoadSensor(
-                        sensor, self.monitor_id, self.config, self.mqttClient, self.config['send_interval'], self.logger)
-                    if requirement is not None:
-                        self.requirements.append(requirement)
-                    self.loadedSensors.append(sensor)
+                if not (loadingRequirements and entity in self.loadedEntities):
+                    settings = self.ValueFormatter.LoadEntity(name_suffix, module_name,
+                                                              entity, self.monitor_id, self.config, self.mqttClient, self.config['send_interval'], self.logger)
+                    requirements = cf.GetOption(
+                        settings, SETTINGS_REQUIREMENTS_KEY)
+                    if requirements:
+                        self.requirements.append(requirements)
+                    self.loadedEntities.append(entity)
 
     def LoadCommands(self, commandsToAdd, loadingRequirements=False):
         # From configs I read commands list and I give the names to the commands manager which will initialize them
@@ -65,26 +67,31 @@ class Monitor():
                 # I load the command and if I need some requirements, I save them to the list
                 # Additional check to not load double if I am loading requirements
                 if not (loadingRequirements and command in self.loadedCommands):
-                    requirement = self.commandManager.LoadCommand(
+                    settings = self.commandManager.LoadCommand(
                         command, self.monitor_id, self.config, self.mqttClient, self.logger)
-                    if requirement is not None:
-                        self.requirements.append(requirement)
+                    requirements = cf.GetOption(
+                        settings, SETTINGS_REQUIREMENTS_KEY)
+                    if requirements:
+                        self.requirements.append(requirements)
                     self.loadedCommands.append(command)
 
     def LoadRequirements(self):
         # Here I load sensors and commands
-        # I have a dict with {'requirements':'sensors':[SENSORS],'commands':[COMMANDS]}
+        # I have a dict with {'sensors':[SENSORS],'commands':[COMMANDS]}
         # SENSORS and COMMANDS have the same format as the configutaration.yaml so I
         # tell to LoadSensor and LoadCommands what to load with the usual method
-        for requirement in self.requirements:
-            if 'requirements' in requirement and requirement['requirements']:
-                if 'sensors' in requirement['requirements']:
-                    self.LoadSensors(
-                        requirement['requirements']['sensors'], loadingRequirements=True)
-                if 'commands' in requirement['requirements']:
-                    self.LoadCommands(
-                        requirement['requirements']['commands'], loadingRequirements=True)
-            self.requirements.remove(requirement)
+        for requirements in self.requirements:
+            sensors = cf.GetOption(
+                requirements, SETTINGS_REQUIREMENTS_SENSOR_KEY)
+            commands = cf.GetOption(
+                requirements, SETTINGS_REQUIREMENTS_COMMAND_KEY)
+            if sensors:
+                self.LoadSensors(
+                    sensors, loadingRequirements=True)
+            if commands:
+                self.LoadCommands(
+                    commands, loadingRequirements=True)
+            self.requirements.remove(requirements)
 
     def Log(self, messageType, message):
         self.logger.Log(messageType, 'Main', message)

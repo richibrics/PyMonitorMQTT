@@ -2,3 +2,70 @@ requirements:
   sensors:
     - Os:
         dont_send: True
+
+discovery:
+  homeassistant: # Must match discovery preset name
+    - topic: "cpu/cpu_used_percentage"
+      payload:
+        name: "Cpu usage"
+        unit_of_measurement: "%"
+
+    - topic: cpu/cpu_count
+      payload:
+        name: "Cpu count"
+        unit_of_measurement: ""
+
+    - topic: cpu/cpu_times/user
+      payload:
+        name: "Cpu user time"
+        unit_of_measurement: "s"
+
+    - topic: cpu/cpu_times/system
+      payload:
+        name: "Cpu system time"
+        unit_of_measurement: "s"
+
+    - topic: cpu/cpu_times/idle
+      payload:
+        name: "Cpu idle time"
+        unit_of_measurement: "s"
+
+    - topic: cpu/cpu_stats/ctx_switches
+      payload:
+        name: "Cpu CTX switches"
+        unit_of_measurement: ""
+
+    - topic: cpu/cpu_stats/interrupts
+      payload:
+        name: "Cpu interrupts"
+        unit_of_measurement: ""
+
+    - topic: cpu/cpu_freq/min
+      payload:
+        name: "Cpu minimum frequency"
+        unit_of_measurement: "Hz"
+
+    - topic: cpu/cpu_freq/max 
+      payload:
+        name: "Cpu maximum frequency"
+        unit_of_measurement: "Hz"
+
+    - topic: cpu/cpu_freq/current 
+      payload:
+        name: "Cpu current frequency"
+        unit_of_measurement: "Hz"
+
+    - topic: cpu/cpu_avg_load/1minute
+      payload:
+        name: "Cpu average load (last minute)"
+        unit_of_measurement: "s"
+
+    - topic: cpu/cpu_avg_load/5minutes
+      payload:
+        name: "Cpu average load (last 5 minutes)"
+        unit_of_measurement: "s"
+
+    - topic: cpu/cpu_avg_load/15minutes
+      payload:
+        name: "Cpu average load (last 15 minutes)"
+        unit_of_measurement: "s"

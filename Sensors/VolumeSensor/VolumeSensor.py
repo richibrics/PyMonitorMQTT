@@ -1,15 +1,15 @@
-from Sensors.Sensor import *
+from Entity import Entity
 from os import path
 from ctypes import *
 
-TOPIC_LEVEL = 'volume_level_get'
-TOPIC_MUTE = 'volume_mute_get'
+TOPIC_LEVEL = 'volume/level_get'
+TOPIC_MUTE = 'volume/mute_get'
 
 scriptFolder = str(path.dirname(path.realpath(__file__)))
 #EXTERNAL_SOFTWARE_FILENAME = path.join(scriptFolder,'..','..','ExternalUtilities','FILE')
 
 
-class VolumeSensor(Sensor):
+class VolumeSensor(Entity):
     def Initialize(self):
         self.AddTopic(TOPIC_LEVEL)
         self.AddTopic(TOPIC_MUTE)
@@ -28,7 +28,7 @@ class VolumeSensor(Sensor):
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os
-        os = self.FindSensor('Os')
+        os = self.FindEntity('Os')
         if os:
             os.Update()
             return os.GetTopicValue()

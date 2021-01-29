@@ -1,6 +1,6 @@
 import psutil
 import math
-from Sensors.Sensor import *
+from Entity import Entity
 
 # Virtual memory
 TOPIC_MEMORY_TOTAL = 'ram/physical_memory/total'
@@ -17,12 +17,12 @@ TOPIC_SWAP_PERCENTAGE = 'ram/swap_memory/percentage'
 # Supports SIZED, ADVANCED
 
 
-class RamSensor(Sensor):
+class RamSensor(Entity):
     def Initialize(self):
         self.AddTopic(TOPIC_MEMORY_PERCENTAGE)
         self.AddTopic(TOPIC_SWAP_PERCENTAGE)
 
-        if self.GetOption(ADVANCED_INFO_OPTION_KEY):
+        if self.GetOption(self.consts.ADVANCED_INFO_OPTION_KEY):
             # Virtual memory
             self.AddTopic(TOPIC_MEMORY_TOTAL)
             self.AddTopic(TOPIC_MEMORY_AVAILABLE)
@@ -35,24 +35,24 @@ class RamSensor(Sensor):
 
     def Update(self):
         self.SetTopicValue(TOPIC_MEMORY_PERCENTAGE, psutil.virtual_memory()[
-                           2], ValueFormatter.TYPE_PERCENTAGE)
+                           2], self.ValueFormatter.TYPE_PERCENTAGE)
         self.SetTopicValue(TOPIC_SWAP_PERCENTAGE, psutil.swap_memory()[
-                           3], ValueFormatter.TYPE_PERCENTAGE)
+                           3], self.ValueFormatter.TYPE_PERCENTAGE)
 
-        if self.GetOption(ADVANCED_INFO_OPTION_KEY):
+        if self.GetOption(self.consts.ADVANCED_INFO_OPTION_KEY):
             # Virtual memory
             self.SetTopicValue(TOPIC_MEMORY_TOTAL,
-                               psutil.virtual_memory()[0], ValueFormatter.TYPE_BYTE)
+                               psutil.virtual_memory()[0], self.ValueFormatter.TYPE_BYTE)
             self.SetTopicValue(TOPIC_MEMORY_AVAILABLE,
-                               psutil.virtual_memory()[1], ValueFormatter.TYPE_BYTE)
+                               psutil.virtual_memory()[1], self.ValueFormatter.TYPE_BYTE)
             self.SetTopicValue(TOPIC_MEMORY_USED,
-                               psutil.virtual_memory()[3], ValueFormatter.TYPE_BYTE)
+                               psutil.virtual_memory()[3], self.ValueFormatter.TYPE_BYTE)
             self.SetTopicValue(TOPIC_MEMORY_FREE,
-                               psutil.virtual_memory()[4], ValueFormatter.TYPE_BYTE)
+                               psutil.virtual_memory()[4], self.ValueFormatter.TYPE_BYTE)
             # Swap memory
             self.SetTopicValue(
-                TOPIC_SWAP_TOTAL, psutil.swap_memory()[0], ValueFormatter.TYPE_BYTE)
+                TOPIC_SWAP_TOTAL, psutil.swap_memory()[0], self.ValueFormatter.TYPE_BYTE)
             self.SetTopicValue(
-                TOPIC_SWAP_USED,  psutil.swap_memory()[1], ValueFormatter.TYPE_BYTE)
+                TOPIC_SWAP_USED,  psutil.swap_memory()[1], self.ValueFormatter.TYPE_BYTE)
             self.SetTopicValue(
-                TOPIC_SWAP_FREE, psutil.swap_memory()[2], ValueFormatter.TYPE_BYTE)
+                TOPIC_SWAP_FREE, psutil.swap_memory()[2], self.ValueFormatter.TYPE_BYTE)

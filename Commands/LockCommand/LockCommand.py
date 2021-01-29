@@ -1,6 +1,6 @@
 import subprocess
-from Commands.Command import Command
-import Logger
+from Entity import Entity
+from Logger import Logger, ExceptionTracker
 
 TOPIC = 'lock_command'
 
@@ -19,18 +19,19 @@ commands = {
 }
 
 
-class LockCommand(Command):
+class LockCommand(Entity):
     def Initialize(self):
-        self.SubscribeToTopic(self.GetTopic(TOPIC))
+        self.SubscribeToTopic(TOPIC)
 
     def Callback(self, message):
         os = self.GetOS()
-        de=self.GetDE()
+        de = self.GetDE()
         if os in commands:
             if de in commands[os]:
                 try:
                     command = commands[os][de]
-                    process = subprocess.Popen(command.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    process = subprocess.Popen(
+                        command.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 except Exception as e:
                     raise Exception('Error during system lock: ' + str(e))
             else:
@@ -42,14 +43,14 @@ class LockCommand(Command):
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os
-        os = self.FindSensor('Os')
+        os = self.FindEntity('Os')
         if os:
             os.Update()
             return os.GetTopicValue()
 
     def GetDE(self):
         # Get OS from OsSensor and get temperature based on the os
-        de = self.FindSensor(
+        de = self.FindEntity(
             'DesktopEnvironment')
         if de:
             de.Update()

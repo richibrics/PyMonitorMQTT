@@ -1,11 +1,11 @@
 import datetime
-from Sensors.Sensor import *
+from Entity import Entity
 
 
 TOPIC_MESSAGE_TIME = 'message_time'
 
 
-class TimeSensor(Sensor):
+class TimeSensor(Entity):
     def Initialize(self):
         self.AddTopic(TOPIC_MESSAGE_TIME)
 

@@ -2,3 +2,15 @@ requirements:
   sensors:
     - Os:
         dont_send: True
+
+discovery:
+  homeassistant: # Must match discovery preset name
+    - topic: "volume/level_get"
+      payload:
+        name: "Volume level"
+        unit_of_measurement: "%"
+
+    - topic: "volume/mute_get"
+      payload:
+        name: "Volume mute status"
+        unit_of_measurement: ""
