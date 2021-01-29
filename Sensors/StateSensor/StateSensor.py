@@ -1,6 +1,7 @@
 import psutil
 from Entity import Entity
 import signal, sys
+import time
 
 TOPIC_STATE = 'state'
 
@@ -22,6 +23,7 @@ class StateSensor(Entity):
         print("\r", end="") # This removes the Control-C symbol (^C)
         self.Log(self.Logger.LOG_INFO,'Let me send the Offline state message')
         self.SendOfflineState()
+        time.sleep(1)
         self.Log(self.Logger.LOG_INFO,"All done, goodbye !")
         sys.exit(0)
         
