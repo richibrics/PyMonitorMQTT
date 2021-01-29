@@ -25,8 +25,3 @@ class StateSensor(Entity):
         self.Log(self.Logger.LOG_INFO,"All done, goodbye !")
         sys.exit(0)
         
-    def ManageDiscoveryData(self,payload_data): # Don't send unavailable config for this state, it's okay the Oflline state
-        payload_data[0]['payload']['availability_topic'] = ""  
-        payload_data[0]['payload']['payload_available'] = ""
-        payload_data[0]['payload']['payload_not_available'] = ""
-        return payload_data
