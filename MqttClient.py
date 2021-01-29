@@ -1,6 +1,6 @@
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
-from Logger import Logger
+from Logger import Logger, ExceptionTracker
 
 
 class MqttClient():

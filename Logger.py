@@ -65,7 +65,7 @@ class Logger():
             message = message[self.logger_message_width:]
             if(len(message) > 0):
                 string = string+'-'  # Print new line indicator if I will go down in the next iteration
-            self.PrintAndSave(string,messageLevel)
+            self.PrintAndSave(string, messageLevel)
             # -1 + space cause if the char in the prestring isn't a space, it will be directly attached to my message without a space
 
             prestring = (len(prestring)-PRESTRING_MESSAGE_SEPARATOR_LEN) * \
@@ -79,7 +79,7 @@ class Logger():
         now = datetime.datetime.now()
         return now.strftime(DATETIME_FORMAT)
 
-    def PrintAndSave(self, string,level):
+    def PrintAndSave(self, string, level):
         if level <= self.console_log_level:
             print(string)
         if level <= self.file_log_level:
@@ -88,12 +88,15 @@ class Logger():
 
     def GetConfiguration(self):
         # Message width
-        self.logger_message_width = Configurator.GetOption(self.globalConfig,[LOGGER_CONFIG_KEY,LOGGER_MESSAGE_WIDTH_KEY],LOGGER_MESSAGE_WIDTH_DEFAULT)
+        self.logger_message_width = Configurator.GetOption(self.globalConfig, [
+                                                           LOGGER_CONFIG_KEY, LOGGER_MESSAGE_WIDTH_KEY], LOGGER_MESSAGE_WIDTH_DEFAULT)
         # File level
-        self.file_log_level = Configurator.GetOption(self.globalConfig,[LOGGER_CONFIG_KEY,LOGGER_FILE_LEVEL_KEY],LOGGER_DEFAULT_LEVEL)
+        self.file_log_level = Configurator.GetOption(
+            self.globalConfig, [LOGGER_CONFIG_KEY, LOGGER_FILE_LEVEL_KEY], LOGGER_DEFAULT_LEVEL)
         # Console level
-        self.console_log_level = Configurator.GetOption(self.globalConfig,[LOGGER_CONFIG_KEY,LOGGER_CONSOLE_LEVEL_KEY],LOGGER_DEFAULT_LEVEL)
-        
+        self.console_log_level = Configurator.GetOption(self.globalConfig, [
+                                                        LOGGER_CONFIG_KEY, LOGGER_CONSOLE_LEVEL_KEY], LOGGER_DEFAULT_LEVEL)
+
 
 class ExceptionTracker():
 

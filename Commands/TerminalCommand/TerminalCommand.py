@@ -2,7 +2,7 @@ from Entity import Entity
 from consts import *
 import subprocess
 import fnmatch
-from Logger import Logger
+from Logger import Logger, ExceptionTracker
 
 TOPIC = 'terminal_command'
 
@@ -48,9 +48,10 @@ class TerminalCommand(Entity):
                     content = messageDict['command']
                     self.ExecuteCommand(content)
                 # Check if in list: wildcard check
-                elif type(whitelist) == list: # and messageDict['command'].split()[0] in whitelist)
+                # and messageDict['command'].split()[0] in whitelist)
+                elif type(whitelist) == list:
                     for rule in whitelist:
-                        if fnmatch.fnmatch(messageDict['command'],rule):
+                        if fnmatch.fnmatch(messageDict['command'], rule):
                             content = messageDict['command']
                             self.ExecuteCommand(content)
                             return

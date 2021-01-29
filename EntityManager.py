@@ -1,7 +1,7 @@
 import sys
 import inspect
 import time
-from Logger import Logger
+from Logger import Logger, ExceptionTracker
 
 # Delay in second
 update_rate = 20  # If not set in config
@@ -28,14 +28,14 @@ class EntityManager():
                 self.Log(Logger.LOG_ERROR, entity.name +
                          ': error during post-initialization')
                 self.Log(Logger.LOG_ERROR,
-                         Logger.ExceptionTracker.TrackString(exc))
+                         ExceptionTracker.TrackString(exc))
                 self.UnloadEntity(entity.name, entity.GetMonitorID())
 
     # Here I receive the name of the entity (or maybe also the options) and pass it to a function to get the object
     # which will be initialized and appended in the list of entities
     # Here configs are specific for the monitor, it's not the same as this manager
 
-    def LoadEntity(self,entity_suffix, module_name,entityString, monitor_id, config, mqtt_client, send_interval, logger):
+    def LoadEntity(self, entity_suffix, module_name, entityString, monitor_id, config, mqtt_client, send_interval, logger):
         name = entityString
         options = None
 
@@ -44,7 +44,7 @@ class EntityManager():
             name = list(entityString.keys())[0]
             options = entityString[name]
 
-        obj = self.GetEntityObjectByName(entity_suffix, module_name,name)
+        obj = self.GetEntityObjectByName(entity_suffix, module_name, name)
         if obj:
             try:
                 objAlive = obj(monitor_id, config, mqtt_client,
@@ -57,12 +57,12 @@ class EntityManager():
             except Exception as exc:
                 self.Log(Logger.LOG_ERROR, name +
                          ' entity occured an error during loading: ' + str(exc), logger=logger)
-                self.Log(Logger.LOG_ERROR, Logger.ExceptionTracker.TrackString(
+                self.Log(Logger.LOG_ERROR, ExceptionTracker.TrackString(
                     exc), logger=logger)
         return None
 
     def UnloadEntity(self, name, monitor_id):
-        obj = self.FindEntity(name, monitor_id) # HEREEE
+        obj = self.FindEntities(name, monitor_id)[0]  # HEREEE
         self.Log(Logger.LOG_WARNING, name +
                  ' entity unloaded', logger=obj.GetLogger())
         self.entities.remove(obj)
@@ -82,13 +82,13 @@ class EntityManager():
     def GetEntityObjectByName(self, entity_suffix, module_name, name):
         entitiesList = self.GetObjectsList(entity_suffix, module_name)
         for entity in entitiesList:
-            if name == self.GetEntityName(entity,entity_suffix):
+            if name == self.GetEntityName(entity, entity_suffix):
                 return entity
-        self.Log(Logger.LOG_ERROR, str(name) + ' ' + entity_suffix  + ' not found - check the module import line is added'
-                                               ' to ' + module_name +  '/__init__.py')
+        self.Log(Logger.LOG_ERROR, str(name) + ' ' + entity_suffix + ' not found - check the module import line is added'
+                                               ' to ' + module_name + '/__init__.py')
         return None
 
-    def GetObjectsList(self,entity_suffix, module_name):
+    def GetObjectsList(self, entity_suffix, module_name):
         classes = []
         for name, obj in inspect.getmembers(sys.modules[module_name]):
             if inspect.isclass(obj):
@@ -118,19 +118,18 @@ class EntityManager():
         while self.continue_sending:
             for entity in self.ActiveEntities():
                 if entity.GetMqttClient().connected:
-                    if entity.ShouldSendMessage(): # HERE CHECK IF HAS OUTTOPICS
+                    if entity.ShouldSendMessage():  # HERE CHECK IF HAS OUTTOPICS
                         entity.CallUpdate()
                         entity.SendData()
                         # Save this time as time when last message is sent
-                        entity.SaveTimeMessageSent()            
+                        entity.SaveTimeMessageSent()
                     if entity.ShouldSendDiscoveryConfig():
                         discovery_data = entity.PrepareDiscoveryPayloads()
-                        discovery_data = entity.ManageDiscoveryData(discovery_data)
+                        discovery_data = entity.ManageDiscoveryData(
+                            discovery_data)
                         entity.PublishDiscoveryData(discovery_data)
                         entity.SaveTimeDiscoverySent()
             time.sleep(1)  # Wait a second and recheck if someone has to send
-            
-
 
     def Log(self, messageType, message, logger=None):
         if logger is None:

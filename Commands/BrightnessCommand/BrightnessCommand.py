@@ -9,43 +9,52 @@ except:
     supports_win_brightness = False
 
 
-IN_TOPIC = 'brightness/set' # Receive a set message
+IN_TOPIC = 'brightness/set'  # Receive a set message
 OUT_TOPIC = 'brightness/get'  # Send a message with the value
+
 
 class BrightnessCommand(Entity):
     def Initialize(self):
         self.SubscribeToTopic(IN_TOPIC)
         self.AddTopic(OUT_TOPIC)
-        self.stopCommand=False
-        self.stopSensor=False
-        self.stateOff=False
+        self.stopCommand = False
+        self.stopSensor = False
+        self.stateOff = False
 
     def Callback(self, message):
+        state = message.payload.decode("utf-8")
+        print(state)
         if not self.stopCommand:
 
-            if message.payload ==  self.consts.ON_STATE and self.stateOff:
-                message.payload=100
+            if state == self.consts.ON_STATE and self.stateOff is not False:
+                state = self.stateOff if self.stateOff is not None else 100
 
-            if message.payload == self.consts.OFF_STATE:
-                self.stateOff=True
-                message.payload=1
+            if state == self.consts.OFF_STATE:
+                self.stateOff = self.GetTopicValue(OUT_TOPIC)
+                state = 1
+            elif self.stateOff is not False:
+                self.stateOff = False
 
-            elif self.stateOff == True:
-                self.stateOff=False
-
-
-            try: 
-                int(message.payload)
+            print("Qua")
+            try:
+                state = int(state)
             except:
                 return
+            print("ma non qua")
 
-            print(message.payload)
+            print(state)
             # Well I can convert it to int
-            self.SetBrightness(int(message.payload))
+            self.SetBrightness(int(state))
+
+            # Finally, tell the sensor to update and to send
+            self.CallUpdate()
+            self.SendOnlineState()
+            self.lastSendingTime = None
 
     def Update(self):
         if not self.stopSensor:
-            self.SetTopicValue(OUT_TOPIC, self.GetBrightness(),self.ValueFormatter.TYPE_PERCENTAGE)
+            self.SetTopicValue(OUT_TOPIC, self.GetBrightness(),
+                               self.ValueFormatter.TYPE_PERCENTAGE)
 
     def GetBrightness(self):
         os = self.GetOS()
@@ -55,7 +64,7 @@ class BrightnessCommand(Entity):
             return self.GetBrightness_macOS()
         else:
             self.Log(self.Logger.LOG_WARNING,
-                'No brightness sensor available for this operating system')
+                     'No brightness sensor available for this operating system')
             self.stopSensor = True
 
     def SetBrightness(self, value):
@@ -69,9 +78,8 @@ class BrightnessCommand(Entity):
             return self.SetBrightness_Linux(value)
         else:
             self.Log(self.Logger.LOG_WARNING,
-                'No brightness command available for this operating system')
+                     'No brightness command available for this operating system')
             self.stopCommand = True
-        
 
     def SetBrightness_macOS(self, value):
         value = value/100  # cause I need it from 0 to 1
@@ -118,23 +126,29 @@ class BrightnessCommand(Entity):
             os.Update()
             return os.GetTopicValue()
 
+    def ManageDiscoveryData(self, discovery_data):
+        self.SendOnlineState()
 
-
-    def ManageDiscoveryData(self,discovery_data):
-        STATE_TOPIC = 'brightness/state'  
-
-        if self.GetTopicValue(OUT_TOPIC) and int(self.GetTopicValue(OUT_TOPIC))  > 1:
-            self.mqtt_client.SendTopicData(self.SelectTopic(STATE_TOPIC),self.consts.ON_STATE)
-        else:
-            self.mqtt_client.SendTopicData(self.SelectTopic(STATE_TOPIC),self.consts.OFF_STATE)
-
-        discovery_data[0]['payload']['brightness_state_topic']=self.SelectTopic(OUT_TOPIC)
-        discovery_data[0]['payload']['state_topic']=self.SelectTopic(OUT_TOPIC)
-        discovery_data[0]['payload']['brightness_command_topic']=self.SelectTopic(STATE_TOPIC)
-        discovery_data[0]['payload']['command_topic']=self.SelectTopic(IN_TOPIC)
-        discovery_data[0]['payload']['payload_on']=self.consts.ON_STATE
-        discovery_data[0]['payload']['payload_off']=self.consts.OFF_STATE
-        discovery_data[0]['payload']['brightness_scale']=100
-         
+        discovery_data[0]['payload']['brightness_state_topic'] = self.SelectTopic(
+            OUT_TOPIC)
+        discovery_data[0]['payload']['state_topic'] = self.SelectTopic(
+            self.STATE_TOPIC)
+        discovery_data[0]['payload']['brightness_command_topic'] = self.SelectTopic(
+            IN_TOPIC)
+        discovery_data[0]['payload']['command_topic'] = self.SelectTopic(
+            IN_TOPIC)
+        discovery_data[0]['payload']['payload_on'] = self.consts.ON_STATE
+        discovery_data[0]['payload']['payload_off'] = self.consts.OFF_STATE
+        discovery_data[0]['payload']['brightness_scale'] = 100
 
         return discovery_data
+
+    STATE_TOPIC = 'brightness/state'
+
+    def SendOnlineState(self):
+        if self.GetTopicValue(OUT_TOPIC) and int(self.GetTopicValue(OUT_TOPIC)) > 1:
+            self.mqtt_client.SendTopicData(
+                self.SelectTopic(self.STATE_TOPIC), self.consts.ON_STATE)
+        else:
+            self.mqtt_client.SendTopicData(
+                self.SelectTopic(self.STATE_TOPIC), self.consts.OFF_STATE)

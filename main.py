@@ -1,7 +1,7 @@
 import os
 import yaml
 import time
-from Logger import Logger
+from Logger import Logger, ExceptionTracker
 from EntityManager import EntityManager
 import sys
 from Monitor import Monitor
@@ -61,7 +61,8 @@ def output_available_modules():
 
         # Have we seen this root level before?
         if root_topic not in build_output:
-            build_output[root_topic] = []  # Create empty placeholder for output
+            # Create empty placeholder for output
+            build_output[root_topic] = []
 
         available_command = split_module_name[2]  # TurnOffMonitorsCommand
 
@@ -70,7 +71,8 @@ def output_available_modules():
         if trim_prefix.endswith('s'):
             trim_prefix = trim_prefix[0:-1]  # (Command)
 
-        available_command = available_command.replace(trim_prefix, '')  # (TurnOffMonitors)
+        available_command = available_command.replace(
+            trim_prefix, '')  # (TurnOffMonitors)
 
         build_output[root_topic].append(available_command)
 
@@ -108,13 +110,13 @@ if __name__ == "__main__":
                 output_available_modules()
                 exit(1)
 
-            print("Run without arguments to start application or use --help to see available options")
-
+            print(
+                "Run without arguments to start application or use --help to see available options")
 
     except Exception as exc:  # Main try except to give information about exception management
         logger = Logger(config)
         logger.Log(Logger.LOG_ERROR, 'Main',
-                   Logger.ExceptionTracker.TrackString(exc))
+                   ExceptionTracker.TrackString(exc))
         logger.Log(Logger.LOG_ERROR, 'Main',
                    'Try to check your configuration.yaml')
         logger.Log(Logger.LOG_ERROR, 'Main',

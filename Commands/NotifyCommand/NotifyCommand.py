@@ -1,6 +1,6 @@
 import os
 from Entity import Entity
-from Logger import Logger
+from Logger import Logger, ExceptionTracker
 
 supports_win = True
 try:
