@@ -23,7 +23,6 @@ class BrightnessCommand(Entity):
 
     def Callback(self, message):
         state = message.payload.decode("utf-8")
-        print(state)
         if not self.stopCommand:
 
             if state == self.consts.ON_STATE and self.stateOff is not False:
@@ -35,14 +34,11 @@ class BrightnessCommand(Entity):
             elif self.stateOff is not False:
                 self.stateOff = False
 
-            print("Qua")
             try:
                 state = int(state)
             except:
                 return
-            print("ma non qua")
 
-            print(state)
             # Well I can convert it to int
             self.SetBrightness(int(state))
 
