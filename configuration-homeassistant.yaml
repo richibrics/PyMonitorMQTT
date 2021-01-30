@@ -1,0 +1,41 @@
+logger:
+  logger_message_width: 70
+  file_level: 3
+  console_level: 4
+
+monitors:
+  - broker: bricsiot.duckdns.org
+    name: LenovoYoga
+    send_interval: 20 # Seconds
+
+    advanced_information: True # Set to False to receive less data
+
+    discovery:
+      enable: True
+      preset: homeassistant
+      discover_prefix: homeassistant # prefix of config topic, this is the default value of homeassistant
+      name_prefix: True # To add the computer name in front of sensors and switches name
+      publish_interval: 30
+
+    sensors:
+      - State # Important to send availability information
+      - Os
+      - Ram
+      - Disk
+      - Cpu
+      - Battery
+      - CpuTemperatures
+      - Network
+      - DesktopEnvironment: # When the software returns "base", it's better for you to manually set it
+          contents:
+            value: gnome
+      - Screenshot
+
+    commands:
+      - Shutdown
+      - Lock
+      - Reboot
+      - Sleep
+      - Brightness
+      - TurnOffMonitors
+      - TurnOnMonitors
