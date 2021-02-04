@@ -86,33 +86,33 @@ def output_available_modules():
 
 
 if __name__ == "__main__":
-    try:
-        # Do we have a config file?
-        config_path = scriptFolder + '/' + config_filename
-        if not os.path.isfile(config_path):
-            print("\nOops, looks like you've not setup a configuration.yaml file yet!")
-            print("Tried to load: {}".format(config_path))
-            print("   See the configuration.yaml.example to get you started\n")
-            print("Check the wiki and/or website for help")
-            print("   https://github.com/richibrics/PyMonitorMQTT/wiki - https://richibrics.github.io/PyMonitorMQTT/\n")
-            print("Here's a list of options to get you started....")
+    #try:
+    # Do we have a config file?
+    config_path = scriptFolder + '/' + config_filename
+    if not os.path.isfile(config_path):
+        print("\nOops, looks like you've not setup a configuration.yaml file yet!")
+        print("Tried to load: {}".format(config_path))
+        print("   See the configuration.yaml.example to get you started\n")
+        print("Check the wiki and/or website for help")
+        print("   https://github.com/richibrics/PyMonitorMQTT/wiki - https://richibrics.github.io/PyMonitorMQTT/\n")
+        print("Here's a list of options to get you started....")
+        output_available_modules()
+        exit(1)
+    if len(sys.argv) == 1:
+        # Run the main logic
+        LoadYAML()
+        SetupMonitors()
+    else:
+        # Additional command line logic
+        x1 = sys.argv[1]
+        # Very basic help command
+        if (x1 == 'help') or (x1 == '-h') or (x1 == '--help') or (x1 == '--h'):
             output_available_modules()
             exit(1)
-        if len(sys.argv) == 1:
-            # Run the main logic
-            LoadYAML()
-            SetupMonitors()
-        else:
-            # Additional command line logic
-            x1 = sys.argv[1]
-            # Very basic help command
-            if (x1 == 'help') or (x1 == '-h') or (x1 == '--help') or (x1 == '--h'):
-                output_available_modules()
-                exit(1)
 
-            print(
-                "Run without arguments to start application or use --help to see available options")
-
+        print(
+            "Run without arguments to start application or use --help to see available options")
+    '''
     except Exception as exc:  # Main try except to give information about exception management
         logger = Logger(config)
         logger.Log(Logger.LOG_ERROR, 'Main',
@@ -122,3 +122,4 @@ if __name__ == "__main__":
         logger.Log(Logger.LOG_ERROR, 'Main',
                    "If the problem persists, check issues (or open a new one) at 'https://github.com/richibrics/PyMonitorMQTT'")
         exit(1)
+    '''        
