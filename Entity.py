@@ -443,10 +443,13 @@ class Entity():
         sw_info = self.Settings.GetInformation()
         device = {}
         device['name'] = "Monitor " + self.brokerConfigs['name']
-        device['manufacturer'] = sw_info['name']
-        device['model'] = sw_info['name']
-        device['identifiers'] = sw_info['name']
-        device['sw_version'] = sw_info['version']
+        try:
+            device['manufacturer'] = sw_info['name']
+            device['model'] = sw_info['name']
+            device['identifiers'] = sw_info['name']
+            device['sw_version'] = sw_info['version']
+        except:
+            self.Log(Logger.LOG_WARNING,"No software information file found ")
         return device
 
     # discoveryData: {name, config_topic, payload}
