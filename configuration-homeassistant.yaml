@@ -4,8 +4,8 @@ logger:
   console_level: 4
 
 monitors:
-  - broker: bricsiot.duckdns.org
-    name: LenovoYoga
+  - broker: BROKER_ADDRESS
+    name: COMPUTER_NAME
     send_interval: 20 # Seconds
 
     advanced_information: True # Set to False to receive less data
