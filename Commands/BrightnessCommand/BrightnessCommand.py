@@ -54,10 +54,12 @@ class BrightnessCommand(Entity):
 
     def GetBrightness(self):
         os = self.GetOS()
-        if(os == 'Windows'):
+        if(os == self.consts.FIXED_VALUE_OS_WINDOWS):
             return self.GetBrightness_Win()
-        elif(os == 'macOS'):
+        elif(os == self.consts.FIXED_VALUE_OS_MACOS):
             return self.GetBrightness_macOS()
+        elif(os == self.consts.FIXED_VALUE_OS_LINUX):
+            return self.GetBrightness_Linux()
         else:
             self.Log(self.Logger.LOG_WARNING,
                      'No brightness sensor available for this operating system')
@@ -66,11 +68,11 @@ class BrightnessCommand(Entity):
     def SetBrightness(self, value):
         # Value from 0 and 100
         os = self.GetOS()
-        if(os == 'Windows'):
+        if(os == self.consts.FIXED_VALUE_OS_WINDOWS):
             return self.SetBrightness_Win(value)
-        elif(os == 'macOS'):
+        elif(os == self.consts.FIXED_VALUE_OS_MACOS):
             return self.SetBrightness_macOS(value)
-        elif(os == 'Linux'):
+        elif(os == self.consts.FIXED_VALUE_OS_LINUX):
             return self.SetBrightness_Linux(value)
         else:
             self.Log(self.Logger.LOG_WARNING,
@@ -102,6 +104,17 @@ class BrightnessCommand(Entity):
             brightness = re.findall(
                 'display 0: brightness.*$', str(stdout))[0][22:30]
             brightness = float(brightness)*100  # is between 0 and 1
+            return brightness
+        except:
+            raise Exception(
+                'You sure you installed Brightness from Homebrew ? (else try checking you PATH)')
+
+    def GetBrightness_Linux(self):
+        try:
+            command = 'xbacklight'
+            process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+            stdout = process.communicate()[0]
+            brightness = float(stdout)
             return brightness
         except:
             raise Exception(
