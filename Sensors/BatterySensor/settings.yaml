@@ -12,6 +12,6 @@ discovery:
 
     - topic: "battery/battery_charging"
       payload:
-        name: "Battery status"
+        name: "Charging status"
         unit_of_measurement: ""
 
