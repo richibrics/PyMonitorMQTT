@@ -9,9 +9,13 @@ discovery:
       payload:
         name: "Battery level"
         unit_of_measurement: "%"
+        device_class: battery
 
     - topic: "battery/battery_charging"
+      type: binary_sensor
       payload:
         name: "Charging status"
-        unit_of_measurement: ""
+        device_class: battery_charging
+        payload_off: "False"
+        payload_on: "True"
 

@@ -6,7 +6,9 @@ discovery:
       payload:
         name: "Network received data"
         unit_of_measurement: "B"
+        icon: "mdi:download"
     - topic: "network/bytes_sent"
       payload:
         name: "Network sent data"
         unit_of_measurement: "B"
+        icon: "mdi:upload"

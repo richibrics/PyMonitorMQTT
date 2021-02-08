@@ -6,43 +6,52 @@ discovery:
       payload:
         name: "Ram usage"
         unit_of_measurement: "%"
+        icon: "mdi:memory"
 
     - topic: ram/swap_memory/percentage
       payload:
         name: "Swap used"
         unit_of_measurement: "%"
+        icon: "mdi:memory"
 
     - topic: ram/physical_memory/total
       payload:
         name: "Ram total memory"
         unit_of_measurement: "B"
+        icon: "mdi:memory"
     
     - topic: ram/physical_memory/available
       payload:
         name: "Ram available memory"
         unit_of_measurement: "B"
+        icon: "mdi:memory"
     
     - topic: ram/physical_memory/free
       payload:
         name: "Ram free memory"
         unit_of_measurement: "B"
+        icon: "mdi:memory"
     
     - topic: ram/physical_memory/used
       payload:
         name: "Ram used memory"
         unit_of_measurement: "B"
+        icon: "mdi:memory"
     
     - topic: ram/swap_memory/total
       payload:
         name: "Swap total memory"
         unit_of_measurement: "B"
+        icon: "mdi:memory"
     
     - topic: ram/swap_memory/used
       payload:
         name: "Swap used memory"
         unit_of_measurement: "B"
+        icon: "mdi:memory"
     
     - topic: ram/swap_memory/free
       payload:
         name: "Swap free memory"
         unit_of_measurement: "B"
+        icon: "mdi:memory"

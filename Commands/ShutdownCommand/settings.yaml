@@ -8,3 +8,4 @@ discovery:
     - topic: "*"
       payload:
         name: "Shutdown"
+        icon: "mdi:power"

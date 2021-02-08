@@ -8,3 +8,4 @@ discovery:
     - topic: "*"
       payload:
         name: "Reboot"
+        icon: "mdi:restart"

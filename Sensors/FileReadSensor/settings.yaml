@@ -6,3 +6,4 @@ discovery:
       payload:
         name: "File content"
         unit_of_measurement: ""
+        icon: "mdi:file"

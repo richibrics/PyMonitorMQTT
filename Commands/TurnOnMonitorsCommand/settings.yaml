@@ -8,3 +8,4 @@ discovery:
     - topic: "*"
       payload:
         name: "Turn on monitors"
+        icon: "mdi:monitor-star"

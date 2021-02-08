@@ -6,5 +6,6 @@ discovery:
       type: camera
       payload:
         name: "Screen"
+        icon: "mdi:camera"
 
 

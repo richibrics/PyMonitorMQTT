@@ -5,3 +5,4 @@ discovery:
     - topic: "*"
       payload:
         name: "Terminal command"
+        icon: "mdi:console"

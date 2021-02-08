@@ -6,3 +6,4 @@ discovery:
       payload:
         name: "Disk used"
         unit_of_measurement: "%"
+        icon: "mdi:harddisk"

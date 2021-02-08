@@ -6,3 +6,4 @@ discovery:
       payload:
         name: "Message time"
         unit_of_measurement: ""
+        icon: "mdi:clock"

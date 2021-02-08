@@ -10,3 +10,4 @@ discovery:
     - topic: "*"
       payload:
         name: "Lock"
+        icon: "mdi:lock"

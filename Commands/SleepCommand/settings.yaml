@@ -8,3 +8,4 @@ discovery:
     - topic: "*"
       payload:
         name: "Sleep"
+        icon: "mdi:power-sleep"

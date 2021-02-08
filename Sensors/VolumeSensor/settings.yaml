@@ -9,8 +9,12 @@ discovery:
       payload:
         name: "Volume level"
         unit_of_measurement: "%"
+        icon: "mdi:volume-source"
 
     - topic: "volume/mute_get"
+      type: binary_sensor
       payload:
         name: "Volume mute status"
-        unit_of_measurement: ""
+        device_class: sound
+        payload_on: On # Must match the fixed value in consts
+        payload_off: Off # Must match the fixed value in consts

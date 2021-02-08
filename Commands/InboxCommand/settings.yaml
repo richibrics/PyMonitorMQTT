@@ -5,3 +5,4 @@ discovery:
     - topic: "*"
       payload:
         name: "Send message"
+        icon: "mdi:email"

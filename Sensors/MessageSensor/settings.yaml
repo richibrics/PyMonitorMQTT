@@ -6,3 +6,4 @@ discovery:
       payload:
         name: "Message"
         unit_of_measurement: ""
+        icon: "mdi:email"

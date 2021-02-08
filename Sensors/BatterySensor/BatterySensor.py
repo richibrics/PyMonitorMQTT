@@ -13,7 +13,7 @@ class BatterySensor(Entity):
 
     def Update(self):
         batteryInfo = self.GetBatteryInformation()
-        self.SetTopicValue(TOPIC_PERCENTAGE, batteryInfo['level'],self.ValueFormatter.TYPE_PERCENTAGE)
+        self.SetTopicValue(TOPIC_PERCENTAGE, int(batteryInfo['level']),self.ValueFormatter.TYPE_PERCENTAGE)
         self.SetTopicValue(TOPIC_CHARGING_STATUS, str(batteryInfo['charging']))
 
     def GetBatteryInformation(self):
