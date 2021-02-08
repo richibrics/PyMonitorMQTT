@@ -123,6 +123,9 @@ class BrightnessCommand(Entity):
             return os.GetTopicValue()
 
     def ManageDiscoveryData(self, discovery_data):
+        for data in discovery_data:
+            data['expire_after']=""
+
         self.SendOnlineState()
 
         discovery_data[0]['payload']['brightness_state_topic'] = self.SelectTopic(

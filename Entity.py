@@ -408,13 +408,15 @@ class Entity():
             self.brokerConfigs['name']+"_"+topic)
 
         payload['device'] = self.GetDiscoveryDeviceData()
-        payload['unique_id'] = hashlib.md5(topic.encode('utf-8')).hexdigest()
+        # Unique hashed
+        payload['unique_id'] = hashlib.md5((self.brokerConfigs['name']+topic).encode('utf-8')).hexdigest()
 
         if(entity_model == TYPE_TOPIC_OUT):
             # Do I have the type in the sensor preset settings or do I set it to 'sensor' ?
             entity_type = cf.GetOption(
                 topicSettings, SETTINGS_DISCOVERY_PRESET_TYPE_KEY, "sensor")
             # Send the topic where the Sensor will send his state
+            payload['expire_after']=cf.GetOption(self.brokerConfigs, [DISCOVERY_KEY, DISCOVERY_EXPIRE_AFTER_KEY], DISCOVERY_EXPIRE_AFTER_DEFAULT)
             payload['state_topic'] = self.SelectTopic(topic)
         else:
             # Do I have the type in the sensor preset settings or do I set it to 'sensor' ?
@@ -422,15 +424,6 @@ class Entity():
                 topicSettings, SETTINGS_DISCOVERY_PRESET_TYPE_KEY, "switch")
             # Send the topic where the Switch will receive the message
             payload['command_topic'] = self.SelectTopic(topic)
-
-
-        # Last thing: if StateSensor is loaded, use that to publish availability
-        stateSensor=self.FindEntity("State")
-        if(stateSensor):
-            payload['availability_topic']=stateSensor.SelectTopic(stateSensor.GetFirstTopic())
-            payload['payload_available']=self.consts.ONLINE_STATE
-            payload['payload_not_available']=self.consts.OFFLINE_STATE
-
 
 
         # Compose the topic that will be used to send the disoovery configuration
@@ -445,11 +438,11 @@ class Entity():
         device['name'] = "Monitor " + self.brokerConfigs['name']
         try:
             device['manufacturer'] = sw_info['name']
-            device['model'] = sw_info['name']
-            device['identifiers'] = sw_info['name']
+            device['model'] = self.brokerConfigs['name']
+            device['identifiers'] = self.brokerConfigs['name']
             device['sw_version'] = sw_info['version']
         except:
-            self.Log(Logger.LOG_WARNING,"No software information file found ")
+            self.Log(Logger.LOG_WARNING,"No software information file found !")
         return device
 
     # discoveryData: {name, config_topic, payload}
