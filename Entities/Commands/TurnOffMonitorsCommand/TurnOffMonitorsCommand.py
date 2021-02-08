@@ -1,7 +1,7 @@
 import subprocess
 import ctypes
 import os as sys_os
-from Entity import Entity
+from Entities.Entity import Entity
 from ctypes import *
 
 TOPIC = 'turn_off_monitors_command'

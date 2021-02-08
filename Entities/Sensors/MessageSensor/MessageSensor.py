@@ -1,5 +1,5 @@
 import os
-from Entity import Entity
+from Entities.Entity import Entity
 from consts import *
 from Configurator import Configurator as cf
 

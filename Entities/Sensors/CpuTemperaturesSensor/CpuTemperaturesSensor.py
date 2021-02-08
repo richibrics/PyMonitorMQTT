@@ -1,4 +1,4 @@
-from Entity import Entity
+from Entities.Entity import Entity
 import psutil
 import json
 from Logger import Logger, ExceptionTracker

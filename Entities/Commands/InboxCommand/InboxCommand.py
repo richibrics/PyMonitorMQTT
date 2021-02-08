@@ -1,4 +1,4 @@
-from Entity import Entity
+from Entities.Entity import Entity
 from Logger import Logger, ExceptionTracker
 
 TOPIC = 'inbox_command'

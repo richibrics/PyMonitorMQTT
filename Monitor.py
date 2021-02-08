@@ -1,5 +1,3 @@
-import Sensors
-import Commands
 from Configurator import Configurator as cf
 from MqttClient import MqttClient
 from Logger import Logger, ExceptionTracker

@@ -1,4 +1,4 @@
-from Entity import Entity
+from Entities.Entity import Entity
 from consts import *
 import subprocess
 import fnmatch

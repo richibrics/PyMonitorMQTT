@@ -1,5 +1,5 @@
 import psutil
-from Entity import Entity
+from Entities.Entity import Entity
 
 
 # Basic CPU info

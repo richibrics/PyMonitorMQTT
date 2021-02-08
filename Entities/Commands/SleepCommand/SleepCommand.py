@@ -1,6 +1,6 @@
 import subprocess
 import os as sys_os
-from Entity import Entity
+from Entities.Entity import Entity
 
 TOPIC = 'sleep_command'
 

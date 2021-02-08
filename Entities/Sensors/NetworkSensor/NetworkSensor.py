@@ -1,6 +1,6 @@
 import psutil
 import math
-from Entity import Entity
+from Entities.Entity import Entity
 
 DOWNLOAD_TOPIC = 'network/bytes_recv'
 UPLOAD_TOPIC = 'network/bytes_sent'

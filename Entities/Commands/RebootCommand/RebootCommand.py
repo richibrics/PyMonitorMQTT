@@ -1,5 +1,5 @@
 import subprocess
-from Entity import Entity
+from Entities.Entity import Entity
 
 TOPIC = 'reboot_command'
 

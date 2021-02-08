@@ -1,5 +1,5 @@
 import datetime
-from Entity import Entity
+from Entities.Entity import Entity
 
 
 TOPIC_MESSAGE_TIME = 'message_time'

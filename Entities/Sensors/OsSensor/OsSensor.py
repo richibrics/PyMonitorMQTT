@@ -1,5 +1,5 @@
 import platform
-from Entity import Entity
+from Entities.Entity import Entity
 #from consts import FIXED_VALUE_OS_MACOS
 
 TOPIC = 'operating_system'

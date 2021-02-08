@@ -1,7 +1,7 @@
 import os
 import pyscreenshot as ImageGrab
 from PIL import Image
-from Entity import Entity
+from Entities.Entity import Entity
 
 
 TOPIC = 'screenshot'
