@@ -16,12 +16,22 @@ class EntityManager():
     def __init__(self, config):
         self.config = config
         self.logger = Logger(config)
+        self.classManager = ClassManager() # The one that loads and returns entities from Entities folder giving him only the name
+
+    # ENTITIES MANAGEMENT PART
 
     def Start(self):
         # Start the send loop
         self.SendAllData()
 
-    def PostInitializeSensors(self):
+
+    def ActiveEntities(self):
+        return self.entities
+
+
+    ## ENTITY POSTINITIALIZATION 
+
+    def PostInitializeEntities(self):
         for entity in self.entities:
             try:
                 entity.PostInitialize()
@@ -32,11 +42,13 @@ class EntityManager():
                          ExceptionTracker.TrackString(exc))
                 self.UnloadEntity(entity.name, entity.GetMonitorID())
 
+
+    ## ENTITY LOAD AND INITIALIZATION 
+
     # Here I receive the name of the entity (or maybe also the options) and pass it to a function to get the object
     # which will be initialized and appended in the list of entities
     # Here configs are specific for the monitor, it's not the same as this manager
-
-    def LoadEntity(self, entity_suffix, module_name, entityString, monitor_id, config, mqtt_client, send_interval, logger):
+    def LoadEntity(self, entity_suffix, entityString, monitor_id, config, mqtt_client, send_interval, logger):
         name = entityString
         options = None
 
@@ -45,7 +57,7 @@ class EntityManager():
             name = list(entityString.keys())[0]
             options = entityString[name]
 
-        obj = self.GetEntityObjectByName(entity_suffix, module_name, name)
+        obj = self.classManager.GetEntityClass(name+entity_suffix)
         if obj:
             try:
                 objAlive = obj(monitor_id, config, mqtt_client,
@@ -77,42 +89,13 @@ class EntityManager():
                 entities.append(entity)
         return entities
 
-    def ActiveEntities(self):
-        return self.entities
 
-    def GetEntityObjectByName(self, entity_suffix, module_name, name):
-        entitiesList = self.GetObjectsList(entity_suffix, module_name)
-        for entity in entitiesList:
-            if name == self.GetEntityName(entity, entity_suffix):
-                return entity
-        self.Log(Logger.LOG_ERROR, str(name) + ' ' + entity_suffix + ' not found - check the module import line is added'
-                                               ' to ' + module_name + '/__init__.py')
-        return None
 
-    def GetObjectsList(self, entity_suffix, module_name):
-        classes = []
-        for name, obj in inspect.getmembers(sys.modules[module_name]):
-            if inspect.isclass(obj):
-                # Don't add the .parent class to the list
-                if(("."+entity_suffix) not in self.GetClassName(obj)):
-                    classes.append(obj)
-        return classes
-
-    def UpdateSensors(self):
-        for sensor in self.entities:
-            sensor.CallUpdate()
+    ## ENTITIES OUTGOING DATA (AKA SENSOR ENTITIES) PART
 
     def SendSensorsData(self):
         for sensor in self.entities:
             sensor.SendData()
-
-    def GetClassName(self, entity_class):
-        # Sensor.SENSORFOLDER.SENSORCLASS
-        return entity_class.__dict__['__module__']
-
-    def GetEntityName(self, entity_class, name_suffix):
-        # Only SENSORCLASS (without Sensor suffix)
-        return self.GetClassName(entity_class).split('.')[-1].split(name_suffix)[0]
 
     # Also discovery data every X second
     def SendAllData(self):
@@ -131,6 +114,9 @@ class EntityManager():
                         entity.PublishDiscoveryData(discovery_data)
                         entity.SaveTimeDiscoverySent()
             time.sleep(1)  # Wait a second and recheck if someone has to send
+
+
+    # LOG
 
     def Log(self, messageType, message, logger=None):
         if logger is None:

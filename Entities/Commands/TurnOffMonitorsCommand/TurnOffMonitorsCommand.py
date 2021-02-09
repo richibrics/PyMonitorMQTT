@@ -6,7 +6,6 @@ from ctypes import *
 
 TOPIC = 'turn_off_monitors_command'
 
-
 class TurnOffMonitorsCommand(Entity):
     def Initialize(self):
         self.SubscribeToTopic(TOPIC)
@@ -34,3 +33,5 @@ class TurnOffMonitorsCommand(Entity):
         if os:
             os.Update()
             return os.GetTopicValue()
+
+

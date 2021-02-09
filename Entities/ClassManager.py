@@ -1,41 +1,53 @@
 import os
-import Entities
+from Entities.Entity import Entity
 from pathlib import Path
 import importlib.util
 import importlib.machinery
+import sys, inspect
 
-class ClassManager(): # Class to  load Entities in the Entitties dir and get them from name 
+class ClassManager(): # Class to load Entities from the Entitties dir and get them from name 
     def __init__(self):
-        pass
+        self.modulesFilename=[]
+        self.GetModulesFilename() 
 
-    def LoadAllEntities(self):
-        print(self.LoadAllModules())
+    def GetEntityClass(self,entityName):
+        # From entity name, load the correct module and extract the entity class
+        for module in self.modulesFilename: # Search the module file
+            moduleName=self.ModuleNameFromPath(module)
+            # Check if the module name matches the entity sname
+            if entityName==moduleName:
+                # Load the module
+                loadedModule=self.LoadModule(module)
+                return self.GetEntityClassFromModule(loadedModule)
+        return None
 
-    def LoadAllModules(self):
-        loadedModules = []
-        modules=self.RecursiveListEntitiesPy()
 
-        for module in modules:
-            classname=os.path.split(module)
-            classname=classname[len(classname)-1][:-3]
+    def LoadModule(self,path): # Get module and load it from the path
+        loader = importlib.machinery.SourceFileLoader(self.ModuleNameFromPath(path), path)
+        spec = importlib.util.spec_from_loader(loader.name, loader)
+        module = importlib.util.module_from_spec(spec)
+        loader.exec_module(module)
+        moduleName=os.path.split(path)[1][:-3]
+        sys.modules[moduleName]=module
+        return module
 
-            loader = importlib.machinery.SourceFileLoader(classname, module)
-            spec = importlib.util.spec_from_loader(loader.name, loader)
-            mod = importlib.util.module_from_spec(spec)
-            loader.exec_module(mod)
-            loadedModules.append(mod)
-        
-        return loadedModules
-            
-    def RecursiveListEntitiesPy(self):
+    def GetEntityClassFromModule(self,module): # From the module passed, I search for a Class that has the Entity class as parent
+        for name, obj in inspect.getmembers(module):
+            if inspect.isclass(obj):
+                for base in obj.__bases__: # Check parent class
+                    if(base==Entity):
+                        return obj
+
+
+    def GetModulesFilename(self): # List files in the Entities directory and get only files in subfolders
         result = list(Path("Entities/.").rglob("*.py"))
         entities = []
         for file in result:
             filename = str(file)
-            if "/" in filename:
-                if len(filename.split("/")) >= 3:
-                    entities.append(filename)
-            elif "\\" in filename:
-                if len(filename.split("\\")) >= 3:
-                    entities.append(filename)
-        return entities
+            if len(filename.split(os.sep)) >= 3: # only files in subfolders
+                entities.append(filename)
+        self.modulesFilename = entities
+
+    def ModuleNameFromPath(self,path):
+        classname=os.path.split(path)
+        return classname[1][:-3] 

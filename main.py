@@ -5,7 +5,6 @@ from Logger import Logger, ExceptionTracker
 from EntityManager import EntityManager
 import sys
 from Monitor import Monitor
-from Entities.ClassManager import ClassManager
 
 config = None
 config_filename = 'configuration.yaml'
@@ -90,8 +89,6 @@ if __name__ == "__main__":
     #try:
     # Do we have a config file?
     config_path = scriptFolder + '/' + config_filename
-    cm = ClassManager()
-    cm.LoadAllEntities()
     if not os.path.isfile(config_path):
         print("\nOops, looks like you've not setup a configuration.yaml file yet!")
         print("Tried to load: {}".format(config_path))
