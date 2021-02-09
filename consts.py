@@ -69,8 +69,8 @@ DISCOVERY_EXPIRE_AFTER_DEFAULT = 60 # Should be greater than twice the publish i
 
 # Sensor and command settings
 SETTINGS_REQUIREMENTS_KEY = "requirements"
-SETTINGS_REQUIREMENTS_SENSOR_KEY = "requirements"
-SETTINGS_REQUIREMENTS_COMMAND_KEY = "requirements"
+SETTINGS_REQUIREMENTS_SENSOR_KEY = "sensors"
+SETTINGS_REQUIREMENTS_COMMAND_KEY = "commands"
 
 SETTINGS_DISCOVERY_KEY = "discovery"
 SETTINGS_DISCOVERY_PRESET_PAYLOAD_KEY= "payload"
