@@ -32,11 +32,11 @@ class NotifyCommand(Entity):
     # I need it here cause I have to check the right import for my OS (and I may not know the OS in Init function)
     def PostInitialize(self):
         self.os = self.GetOS()
-        if self.os == 'Windows':
+        if self.os == self.consts.FIXED_VALUE_OS_WINDOWS:
             if not supports_win:
                 raise Exception(
                     'Notify not available, have you installed \'win10toast\' on pip ?')
-        elif self.os == 'Linux':
+        elif self.os == self.consts.FIXED_VALUE_OS_LINUX:
             if supports_unix:
                 # Init notify2
                 notify2.init('PyMonitorMQTT')
@@ -56,8 +56,8 @@ class NotifyCommand(Entity):
         # Priority for configuration content and title. If not set there, will try to find them in the payload
 
         # Look for notification content
-        if self.GetOption(CONTENTS_OPTION_KEY) and 'message' in self.GetOption(CONTENTS_OPTION_KEY):
-            content = self.GetOption(CONTENTS_OPTION_KEY)['message']
+        if self.GetOption(self.consts.CONTENTS_OPTION_KEY) and 'message' in self.GetOption(self.consts.CONTENTS_OPTION_KEY):
+            content = self.GetOption(self.consts.CONTENTS_OPTION_KEY)['message']
         elif 'message' in messageDict:
             content = messageDict['message']
         else:
@@ -66,8 +66,8 @@ class NotifyCommand(Entity):
                      'No message for the notification set in configuration or in the received payload')
 
         # Look for notification title
-        if self.GetOption(CONTENTS_OPTION_KEY) and 'title' in self.GetOption(CONTENTS_OPTION_KEY):
-            title = self.GetOption(CONTENTS_OPTION_KEY)['title']
+        if self.GetOption(self.consts.CONTENTS_OPTION_KEY) and 'title' in self.GetOption(self.consts.CONTENTS_OPTION_KEY):
+            title = self.GetOption(self.consts.CONTENTS_OPTION_KEY)['title']
         elif 'title' in messageDict:
             title = messageDict['title']
         else:
@@ -75,17 +75,19 @@ class NotifyCommand(Entity):
 
         # Check only the os (if it's that os, it's supported because if it wasn't supported,
         # an exception would be thrown in post-inits)
-        if self.os == 'Windows':
+        if self.os == self.consts.FIXED_VALUE_OS_WINDOWS:
             toaster = win10toast.ToastNotifier()
             toaster.show_toast(
                 title, content, duration=DEFAULT_DURATION, threaded=False)
-        elif self.os == 'Linux':
+        elif self.os == self.consts.FIXED_VALUE_OS_LINUX:
             notification = notify2.Notification(title, content)
             notification.show()
-        else:
+        elif self.os == self.consts.FIXED_VALUE_OS_MACOS:
             command = 'osascript -e \'display notification "{}" with title "{}"\''.format(
                 content, title)
             os.system(command)
+        else:
+            self.Log(self.Logger.LOG_WARNING,"No notify command available for this operating system ("+ str(self.os) +")... Aborting")
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os
