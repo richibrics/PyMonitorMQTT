@@ -258,6 +258,9 @@ class Entity():
     def ShouldSendDiscoveryConfig(self):
         # Check if Discovery is enabled
         if cf.GetOption(self.brokerConfigs, [DISCOVERY_KEY, DISCOVERY_ENABLE_KEY], False) is not False:
+            # Not for don't send sensors
+            if self.GetOption('dont_send') is True:
+                return False # Don't send if disabled in config
             if self.GetLastDiscoveryTime() is None:  # Never sent anything
                 return True  # Definitely yes, you should send
             else:

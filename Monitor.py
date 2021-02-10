@@ -60,22 +60,6 @@ class Monitor():
                         self.requirements.append(requirements)
                     self.loadedEntities.append(entity)
 
-    def LoadCommands(self, commandsToAdd, loadingRequirements=False):
-        # From configs I read commands list and I give the names to the commands manager which will initialize them
-        # and will keep trace of who is the mqtt_client and the logger of the command
-        if commandsToAdd:
-            for command in commandsToAdd:
-                # I load the command and if I need some requirements, I save them to the list
-                # Additional check to not load double if I am loading requirements
-                if not (loadingRequirements and command in self.loadedCommands):
-                    settings = self.commandManager.LoadCommand(
-                        command, self.monitor_id, self.config, self.mqttClient, self.logger)
-                    requirements = cf.GetOption(
-                        settings, SETTINGS_REQUIREMENTS_KEY)
-                    if requirements:
-                        self.requirements.append(requirements)
-                    self.loadedCommands.append(command)
-
     def LoadRequirements(self):
         # Here I load sensors and commands
         # I have a dict with {'sensors':[SENSORS],'commands':[COMMANDS]}
@@ -87,11 +71,10 @@ class Monitor():
             commands = cf.GetOption(
                 requirements, SETTINGS_REQUIREMENTS_COMMAND_KEY)
             if sensors:
-                self.LoadSensors(
-                    sensors, loadingRequirements=True)
+                self.LoadEntities(sensors, SENSOR_NAME_SUFFIX, loadingRequirements=True)
             if commands:
-                self.LoadCommands(
-                    commands, loadingRequirements=True)
+                self.LoadEntities(commands, COMMAND_NAME_SUFFIX, loadingRequirements=True)
+        
             self.requirements.remove(requirements)
 
     def Log(self, messageType, message):
