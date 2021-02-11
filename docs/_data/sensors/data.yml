@@ -242,7 +242,7 @@
 - name: Uptime
   compatibility: "mwl"
   short_description: "Seconds since last boot"
-  long_description: "This sensor sends the seconds elapsed since last boot"
+  long_description: "This sensor sends the seconds elapsed since last bootn\nRequires 'uptime' module from pip"
   topics:
     - topic: uptime
       description: "Last boot time"
@@ -254,7 +254,7 @@
 - name: Boottime
   compatibility: "mwl"
   short_description: "Last boot time"
-  long_description: "This sensor sends the last boot time"
+  long_description: "This sensor sends the last boot time\n\nRequires 'uptime' module from pip"
   topics:
     - topic: uptime
       description: "Last boot time"
