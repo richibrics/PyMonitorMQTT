@@ -62,10 +62,10 @@
     - topic: cpu/cpu_avg_load/1minute
       description: Send the average system load over the last minute (not available on macOS)
       type: extra
-    - topic: cpu/cpu_avg_load/5minute
+    - topic: cpu/cpu_avg_load/5minutes
       description: Send the average system load over the last 5 minutes (not available on macOS)
       type: extra
-    - topic: cpu/cpu_avg_load/15minute
+    - topic: cpu/cpu_avg_load/15minutes
       description: Send the average system load over the last 15 minutes (not available on macOS)
       type: extra
 
@@ -238,3 +238,27 @@
   config:
     - key: custom_topics
       required: No
+
+- name: Uptime
+  compatibility: "mwl"
+  short_description: "Seconds since last boot"
+  long_description: "This sensor sends the seconds elapsed since last boot"
+  topics:
+    - topic: uptime
+      description: "Last boot time"
+  config:
+    - key: custom_topics
+      required: No
+
+
+- name: Boottime
+  compatibility: "mwl"
+  short_description: "Last boot time"
+  long_description: "This sensor sends the last boot time"
+  topics:
+    - topic: uptime
+      description: "Last boot time"
+  config:
+    - key: custom_topics
+      required: No
+
