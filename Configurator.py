@@ -15,7 +15,9 @@ class Configurator():
                     return defaultReturnValue
 
             elif type(path) == list:  # It's a list with the option Path like contents -> values -> first
-                while (path and len(path) and searchConfigTree is not None):
+                while (path and len(path)):
+                    if searchConfigTree is None:
+                        return defaultReturnValue
                     current_option = path.pop(0)
                     if type(searchConfigTree) == dict and current_option in searchConfigTree:
                         searchConfigTree = searchConfigTree[current_option]

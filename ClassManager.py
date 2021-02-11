@@ -9,8 +9,8 @@ from Logger import Logger
 import consts
 
 class ClassManager(): # Class to load Entities from the Entitties dir and get them from name 
-    def __init__(self,logger):
-        self.logger=logger
+    def __init__(self,config):
+        self.logger=Logger(config)
         self.modulesFilename=[]
         self.mainPath = path.dirname(path.abspath(
             sys.modules[self.__class__.__module__].__file__))
