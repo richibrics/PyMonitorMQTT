@@ -303,7 +303,12 @@ class Entity():
 
     def GetEntityName(self, suffix):
         # Only SENSORCLASS (without Sensor suffix)
-        return self.GetClassName().split('.')[-1].split(suffix)[0]
+        if self.consts.SENSOR_NAME_SUFFIX in self.GetClassName():
+            return self.GetClassName().split(self.consts.SENSOR_NAME_SUFFIX)[0]
+        elif self.consts.COMMAND_NAME_SUFFIX in self.GetClassName():
+            return self.GetClassName().split(self.consts.COMMAND_NAME_SUFFIX)[0]
+        else:
+            return self.GetClassName()
 
     def GetSendMessageInterval(self):
         return self.send_interval
@@ -485,4 +490,4 @@ class Entity():
         return string.replace("/", "_").replace(" ", "_").replace("-", "_").lower()
 
     def Log(self, messageType, message):
-        self.logger.Log(messageType, self.name+' Sensor', message)
+        self.logger.Log(messageType, self.name + " Entity", message)
