@@ -16,7 +16,7 @@ class EntityManager():
     def __init__(self, config):
         self.config = config
         self.logger = Logger(config)
-        self.classManager = ClassManager() # The one that loads and returns entities from Entities folder giving him only the name
+        self.classManager = ClassManager(self.logger) # The one that loads and returns entities from Entities folder giving him only the name
 
     # ENTITIES MANAGEMENT PART
 

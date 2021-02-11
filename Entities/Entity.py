@@ -352,7 +352,6 @@ class Entity():
         return self.settings
 
     def PrepareDiscoveryPayloads(self):
-        payload = None
         discovery_data = []
 
         # Check if Discovery is enabled
@@ -368,7 +367,6 @@ class Entity():
             preset = cf.GetOption(self.brokerConfigs, [
                                   self.consts.DISCOVERY_KEY, self.consts.DISCOVERY_PRESET_KEY])
             entity_preset_data = None
-            topic_data = None
 
             if preset:
                 # Check here if I have an entry in the discovery file for this topic and use that data (PLACE IN 'sensor_data')
@@ -396,6 +394,9 @@ class Entity():
         payload = {}
         topicSettings = None
 
+        # Warning ! Discovery configuration for a single topic could be in: entity settings; user configuration
+
+        # DISCOVERY DATA FROM ENTITY SETTINGS 
         # Look for custom discovery settings for this sensor, topic and preset:
         if entity_preset_data:
             for discoveryTopic in entity_preset_data:
@@ -405,6 +406,19 @@ class Entity():
                     topicSettings = discoveryTopic
                     payload = cf.GetOption(
                         discoveryTopic, self.consts.SETTINGS_DISCOVERY_PRESET_PAYLOAD_KEY).copy()
+
+        # DISCOVERY DATA FROM USER CONFIGURATION
+        user_discovery_config=cf.ReturnAsList(cf.GetOption(self.entityConfigs,self.consts.USER_CONFIGURATION_DISCOVERY_KEY),None)
+        if user_discovery_config:
+            for user_topic_config in user_discovery_config:
+                dtTopic=cf.GetOption(user_discovery_config,"topic")
+                if not dtTopic or dtTopic == topic or dtTopic == "*":     
+                    if dtTopic: # Remove topic because is a non-payload information
+                        user_discovery_config['topic']=""
+                    # Copy all the configuration I have in the payload
+                    for key, value in user_topic_config.items():
+                        payload[key]=value
+
 
         # If I have to disable, return None
         if cf.GetOption(topicSettings, self.consts.SETTINGS_DISCOVERY_PRESET_DISABLE_KEY, False):
@@ -419,18 +433,13 @@ class Entity():
             payload['name'] = self.brokerConfigs['name'] + \
                 " - " + payload['name']
 
-        # Prepare the part of the config topic where you place the component id
-        if self.TopicHadBeenReplaced(topic): # To add different instances of commands that change only for the topic, send different configs on different config topic
-            topic_component = self.TopicRemoveBadCharacters(
-                self.brokerConfigs['name']+"_"+self.SelectTopic(topic))
-        else:
-            topic_component = self.TopicRemoveBadCharacters(
-                self.brokerConfigs['name']+"_"+topic)
-
+        # Prepare the part of the config topic after the prefix and the sensortype 
+        topic_component = self.TopicRemoveBadCharacters(self.SelectTopic(topic)) 
 
         payload['device'] = self.GetDiscoveryDeviceData()
+
         # Unique hashed
-        payload['unique_id'] = hashlib.md5((self.brokerConfigs['name']+self.SelectTopic(topic)).encode('utf-8')).hexdigest()
+        payload['unique_id'] = hashlib.md5((self.SelectTopic(topic)).encode('utf-8')).hexdigest()
 
         if(entity_model == self.consts.TYPE_TOPIC_OUT):
             # Do I have the type in the sensor preset settings or do I set it to 'sensor' ?

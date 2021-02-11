@@ -1,13 +1,19 @@
 import os
 from Entities.Entity import Entity
 from pathlib import Path
+from os import path
 import importlib.util
 import importlib.machinery
 import sys, inspect
+from Logger import Logger
+
 
 class ClassManager(): # Class to load Entities from the Entitties dir and get them from name 
-    def __init__(self):
+    def __init__(self,logger):
+        self.logger=logger
         self.modulesFilename=[]
+        self.classPath = path.dirname(path.abspath(
+            sys.modules[self.__class__.__module__].__file__))
         self.GetModulesFilename() 
 
     def GetEntityClass(self,entityName):
@@ -40,14 +46,19 @@ class ClassManager(): # Class to load Entities from the Entitties dir and get th
 
 
     def GetModulesFilename(self): # List files in the Entities directory and get only files in subfolders
-        result = list(Path("Entities/.").rglob("*.py"))
+        self.Log(Logger.LOG_DEVELOPMENT,"Now I get entities files...")
+        result = list(Path(path.join(self.classPath,".")).rglob("*.py"))
         entities = []
         for file in result:
             filename = str(file)
             if len(filename.split(os.sep)) >= 3: # only files in subfolders
                 entities.append(filename)
+                self.Log(Logger.LOG_DEVELOPMENT,filename)
         self.modulesFilename = entities
 
     def ModuleNameFromPath(self,path):
         classname=os.path.split(path)
         return classname[1][:-3] 
+
+    def Log(self,type,message):
+        self.logger.Log(type,"Class Manager",message)

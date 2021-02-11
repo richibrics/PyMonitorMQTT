@@ -70,10 +70,12 @@ SETTINGS_REQUIREMENTS_KEY = "requirements"
 SETTINGS_REQUIREMENTS_SENSOR_KEY = "sensors"
 SETTINGS_REQUIREMENTS_COMMAND_KEY = "commands"
 
-SETTINGS_DISCOVERY_KEY = "discovery"
+SETTINGS_DISCOVERY_KEY = "discovery" # where in the entity settings, options like payload, sensor type and topic will be placed
 SETTINGS_DISCOVERY_PRESET_PAYLOAD_KEY= "payload"
 SETTINGS_DISCOVERY_PRESET_TYPE_KEY = "type"
 SETTINGS_DISCOVERY_PRESET_DISABLE_KEY = "disable"
+
+USER_CONFIGURATION_DISCOVERY_KEY = SETTINGS_DISCOVERY_KEY # Where in the user configuration the custom PAYLOAD will be placed
 
 
 ON_STATE="On"

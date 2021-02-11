@@ -27,3 +27,13 @@ class Configurator():
                     "Error during GetOption: option type not valid " + str(type(path)))
         except Exception as e:
             raise Exception(e)
+    
+    def ReturnAsList(configuration, noneCondition=None): 
+        # If the configuration passed is a list, return it, else place configuration in a list and return the list 
+        # PS if configuration passed equals to noneCondition, don't return the list but the noneCondition
+        if configuration==noneCondition:
+            return noneCondition
+        if type(configuration) == list:
+            return configuration
+        else:
+            return [configuration]

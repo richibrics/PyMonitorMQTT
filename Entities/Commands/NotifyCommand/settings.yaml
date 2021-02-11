@@ -8,4 +8,4 @@ discovery:
     - topic: "*"
       payload:
         name: "Notify"
-        icon: "mdi:bell-badge-outline"
+        icon: "mdi:forum"
