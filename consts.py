@@ -77,6 +77,8 @@ SETTINGS_DISCOVERY_PRESET_DISABLE_KEY = "disable"
 
 USER_CONFIGURATION_DISCOVERY_KEY = SETTINGS_DISCOVERY_KEY # Where in the user configuration the custom PAYLOAD will be placed
 
+ENTITIES_PATH = "Entities"
+CUSTOM_ENTITIES_PATH = "Custom"
 
 ON_STATE="On"
 OFF_STATE="Off"

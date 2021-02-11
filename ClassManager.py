@@ -6,15 +6,16 @@ import importlib.util
 import importlib.machinery
 import sys, inspect
 from Logger import Logger
-
+import consts
 
 class ClassManager(): # Class to load Entities from the Entitties dir and get them from name 
     def __init__(self,logger):
         self.logger=logger
         self.modulesFilename=[]
-        self.classPath = path.dirname(path.abspath(
+        self.mainPath = path.dirname(path.abspath(
             sys.modules[self.__class__.__module__].__file__))
-        self.GetModulesFilename() 
+        self.GetModulesFilename(consts.ENTITIES_PATH) 
+        self.GetModulesFilename(consts.CUSTOM_ENTITIES_PATH) 
 
     def GetEntityClass(self,entityName):
         # From entity name, load the correct module and extract the entity class
@@ -45,16 +46,22 @@ class ClassManager(): # Class to load Entities from the Entitties dir and get th
                         return obj
 
 
-    def GetModulesFilename(self): # List files in the Entities directory and get only files in subfolders
-        self.Log(Logger.LOG_DEVELOPMENT,"Now I get entities files...")
-        result = list(Path(path.join(self.classPath,".")).rglob("*.py"))
-        entities = []
-        for file in result:
-            filename = str(file)
-            if len(filename.split(os.sep)) >= 3: # only files in subfolders
-                entities.append(filename)
-                self.Log(Logger.LOG_DEVELOPMENT,filename)
-        self.modulesFilename = entities
+    def GetModulesFilename(self,_path): # List files in the Entities directory and get only files in subfolders
+        entitiesPath=path.join(self.mainPath,_path)
+        if os.path.exists(entitiesPath):
+            self.Log(Logger.LOG_DEVELOPMENT,"Looking for Entity python file in \"" + _path + os.sep +  "\"...")
+            result = list(Path(entitiesPath).rglob("*.py"))
+            entities = []
+            for file in result:
+                filename = str(file)
+                pathList= filename.split(os.sep) # TO check if a py files is in a folder with the same name (same without extension)
+                if len(pathList)>=2:
+                    if pathList[len(pathList)-1][:-3]==pathList[len(pathList)-2]: 
+                        entities.append(filename)
+
+            self.modulesFilename = self.modulesFilename + entities
+            self.Log(Logger.LOG_DEVELOPMENT,"Found " + str(len(entities)) + " entity file")
+
 
     def ModuleNameFromPath(self,path):
         classname=os.path.split(path)

@@ -4,3 +4,6 @@ configuration.yaml
 .idea
 venv
 Logs
+
+# Add this file
+!.gitignore

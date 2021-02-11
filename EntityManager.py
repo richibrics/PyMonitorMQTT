@@ -2,7 +2,7 @@ import sys
 import inspect
 import time
 from Logger import Logger, ExceptionTracker
-from Entities.ClassManager import ClassManager
+from ClassManager import ClassManager
 
 # Delay in second
 update_rate = 20  # If not set in config
