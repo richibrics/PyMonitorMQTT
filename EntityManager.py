@@ -40,7 +40,7 @@ class EntityManager():
                          ': error during post-initialization')
                 self.Log(Logger.LOG_ERROR,
                          ExceptionTracker.TrackString(exc))
-                self.UnloadEntity(entity.name, entity.GetMonitorID())
+                self.UnloadEntity(entity)
 
 
     ## ENTITY LOAD AND INITIALIZATION 
@@ -74,11 +74,14 @@ class EntityManager():
                     exc), logger=logger)
         return None
 
-    def UnloadEntity(self, name, monitor_id):
-        obj = self.FindEntities(name, monitor_id)[0]  # HEREEE
-        self.Log(Logger.LOG_WARNING, name +
-                 ' entity unloaded', logger=obj.GetLogger())
-        self.entities.remove(obj)
+    def UnloadEntity(self, entity): # by entity object
+        self.Log(Logger.LOG_WARNING, entity.name +
+                 ' entity unloaded', logger=entity.GetLogger())
+        self.entities.remove(entity)
+        del(entity)
+
+    def UnloadEntityByName(self, name, monitor_id): # by name and monitor id
+        self.UnloadEntity(self.FindEntities(name, monitor_id)[0])  # HEREEE
 
     def FindEntities(self, name, monitor_id):
         # Return the entity object present in entities list: to get entity value from another entity for example
@@ -108,11 +111,15 @@ class EntityManager():
                         # Save this time as time when last message is sent
                         entity.SaveTimeMessageSent()
                     if entity.ShouldSendDiscoveryConfig():
-                        discovery_data = entity.PrepareDiscoveryPayloads()
-                        discovery_data = entity.ManageDiscoveryData(
-                            discovery_data)
-                        entity.PublishDiscoveryData(discovery_data)
-                        entity.SaveTimeDiscoverySent()
+                        try:
+                            discovery_data = entity.PrepareDiscoveryPayloads()
+                            discovery_data = entity.ManageDiscoveryData(
+                                discovery_data)
+                            entity.PublishDiscoveryData(discovery_data)
+                            entity.SaveTimeDiscoverySent()
+                        except Exception as e :
+                            self.Log(Logger.LOG_ERROR, "Error while preparing discovery configuration for " + entity.name + ": " + str(e))
+                            self.UnloadEntity(entity)
             time.sleep(1)  # Wait a second and recheck if someone has to send
 
 

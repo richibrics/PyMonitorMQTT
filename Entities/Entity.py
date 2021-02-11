@@ -6,8 +6,7 @@ import sys
 import yaml
 import hashlib
 from os import path
-from consts import *
-
+from consts import SENSOR_NAME_SUFFIX 
 
 class Entity():
     import consts
@@ -21,12 +20,12 @@ class Entity():
     # with the user's one that I store in this list of dict
     lastSendingTime = None
     lastDiscoveryTime = None
-    replacedTopics = []
 
     def __init__(self, monitor_id, brokerConfigs, mqtt_client, send_interval, entityConfigs, logger, entityManager, entityType=SENSOR_NAME_SUFFIX):  # Config is args
         self.name = self.GetEntityName(entityType)
         self.monitor_id = monitor_id
 
+        self.replacedTopics = []
         self.outTopics = []  # List of {topic, value}
         self.inTopics = []  # Only used for discovery, real used list is in the mqtt client where I have a list with topic-callback
         self.outTopicsAddedNumber = 0
@@ -67,7 +66,7 @@ class Entity():
         # At first I search in broker config. Then I check the per-sensor option and if I find
         # something there, I replace - if was set from first step -  broker configs (or simply add a new entry)
 
-        for optionToSearch in POSSIBLE_OPTIONS:
+        for optionToSearch in self.consts.POSSIBLE_OPTIONS:
             # 1: Set from broker's configs
             if optionToSearch in self.brokerConfigs:
                 self.options[optionToSearch] = self.brokerConfigs[optionToSearch]
@@ -87,8 +86,7 @@ class Entity():
         # If user in options defined custom topics, store original and custom topic and replace it in the send function
         replaced = False
         if self.GetOption('custom_topics') is not None and len(self.GetOption('custom_topics')) >= self.outTopicsAddedNumber:
-            self.replacedTopics.append(
-                {'original': topic, 'custom': self.GetOption('custom_topics')[self.outTopicsAddedNumber-1]})
+            self.AddReplacedTopic(topic,self.GetOption('custom_topics')[self.outTopicsAddedNumber-1])
             self.Log(Logger.LOG_INFO, 'Using custom topic defined in options')
             replaced = True
 
@@ -97,6 +95,34 @@ class Entity():
         self.Log(Logger.LOG_DEVELOPMENT, "Adding topic: " + topic)
         self.Log(Logger.LOG_DEVELOPMENT,
                  "Discovery topic normalizer: " + topic.replace("/", "_"))
+
+    def SubscribeToTopic(self, topic):
+        self.inTopics.append(topic)
+        self.inTopicsAddedNumber += 1
+
+
+        # If user in options defined custom topics, use them and not the one choosen in the command
+        if self.GetOption(self.consts.CUSTOM_TOPICS_OPTION_KEY) and len(self.GetOption(self.consts.CUSTOM_TOPICS_OPTION_KEY)) >= self.inTopicsAddedNumber:
+            original=topic
+            topic = self.GetOption(self.consts.CUSTOM_TOPICS_OPTION_KEY)[
+                self.inTopicsAddedNumber-1]
+            self.AddReplacedTopic(original,topic) # Add to edited topics
+            self.Log(Logger.LOG_INFO, 'Using custom topic defined in options')
+        else: # If I don't have a custom topic for this, use the default topic format
+            topic = self.FormatTopic(topic)
+
+        self.mqtt_client.AddNewTopic(topic, self)
+
+        # Log the topic as debug if user wants
+        if self.GetOption(self.consts.DEBUG_OPTION_KEY):
+            self.Log(Logger.LOG_DEBUG, 'Subscribed to topic: ' + topic)
+
+        return topic  # Return the topic cause upper function should now that topic may have been edited
+
+
+    def AddReplacedTopic(self,original,custom):
+        self.replacedTopics.append(
+                {'original': original, 'custom': custom})
 
     def GetFirstTopic(self):
         return self.outTopics[0]['topic'] if len(self.outTopics) else None
@@ -125,7 +151,7 @@ class Entity():
 
             # If user defined in options he wants formatted values (1200,byte -> 1,2KB)
             if self.GetOption('formatted_values'):
-                value = ValueFormatter.GetFormattedValue(value, valueType)
+                value = self.ValueFormatter.GetFormattedValue(value, valueType)
 
             # Set the value
             topic['value'] = value
@@ -139,7 +165,7 @@ class Entity():
         except Exception as exc:
             self.Log(Logger.LOG_ERROR, 'Error occured during update')
             self.Log(Logger.LOG_ERROR, ExceptionTracker.TrackString(exc))
-            self.entityManager.UnloadEntity(self.name, self.monitor_id)
+            self.entityManager.UnloadEntity(self)
 
     def Update(self):  # Implemented in sub-classes - Here values are taken
         self.Log(Logger.LOG_WARNING, 'Update method not implemented')
@@ -152,7 +178,7 @@ class Entity():
         except Exception as exc:
             self.Log(Logger.LOG_ERROR, 'Error occured in callback: '+str(exc))
             self.Log(Logger.LOG_ERROR, ExceptionTracker.TrackString(exc))
-            self.commandManager.UnloadCommand(self.name, self.monitor_id)
+            self.entityConfigs.UnloadEntity(self)
 
     def SelectTopic(self, topic):
         # for a topic look for its customized topic and return it if there's. Else return the default one but completed with FormatTopic
@@ -186,26 +212,6 @@ class Entity():
                 self.mqtt_client.SendTopicData(
                     topicToUse, topic['value'])
 
-    def SubscribeToTopic(self, topic):
-        self.inTopics.append(topic)
-        self.inTopicsAddedNumber += 1
-
-        topic = self.FormatTopic(topic)
-
-        # If user in options defined custom topics, use them and not the one choosen in the command
-        if self.GetOption(CUSTOM_TOPICS_OPTION_KEY) and len(self.GetOption(CUSTOM_TOPICS_OPTION_KEY)) >= self.inTopicsAddedNumber:
-            topic = self.GetOption(CUSTOM_TOPICS_OPTION_KEY)[
-                self.inTopicsAddedNumber-1]
-            self.Log(Logger.LOG_INFO, 'Using custom topic defined in options')
-
-        self.mqtt_client.AddNewTopic(topic, self)
-
-        # Log the topic as debug if user wants
-        if self.GetOption(DEBUG_OPTION_KEY):
-            self.Log(Logger.LOG_DEBUG, 'Subscribed to topic: ' + topic)
-
-        return topic  # Return the topic cause upper function should now that topic may have been edited
-
     def FindEntities(self, name):  # Find active entities for some specific action
         if(self.entityManager):
             return self.entityManager.FindEntities(name, self.monitor_id)
@@ -227,7 +233,7 @@ class Entity():
         return None
 
     def FormatTopic(self, last_part_of_topic):
-        model = TOPIC_FORMAT
+        model = self.consts.TOPIC_FORMAT
         if 'topic_prefix' in self.brokerConfigs:
             model = self.brokerConfigs['topic_prefix'] + '/'+model
         return model.format(self.brokerConfigs['name'], last_part_of_topic)
@@ -252,12 +258,12 @@ class Entity():
                 return False
 
     def IsDiscoveryEnabled(self):
-        return cf.GetOption(self.brokerConfigs, [DISCOVERY_KEY, DISCOVERY_ENABLE_KEY], False)
+        return cf.GetOption(self.brokerConfigs, [self.consts.DISCOVERY_KEY, self.consts.DISCOVERY_ENABLE_KEY], False)
 
     # Calculate if a send_interval spent since the last sending time
     def ShouldSendDiscoveryConfig(self):
         # Check if Discovery is enabled
-        if cf.GetOption(self.brokerConfigs, [DISCOVERY_KEY, DISCOVERY_ENABLE_KEY], False) is not False:
+        if cf.GetOption(self.brokerConfigs, [self.consts.DISCOVERY_KEY, self.consts.DISCOVERY_ENABLE_KEY], False) is not False:
             # Not for don't send sensors
             if self.GetOption('dont_send') is True:
                 return False # Don't send if disabled in config
@@ -304,7 +310,7 @@ class Entity():
 
     def GetSendDiscoveryConfigInterval(self):
         # Search in config or use default
-        return cf.GetOption(self.brokerConfigs, [DISCOVERY_KEY, DISCOVERY_PUBLISH_INTERVAL_KEY], DISCOVERY_PUBLISH_INTERVAL_DEFAULT)
+        return cf.GetOption(self.brokerConfigs, [self.consts.DISCOVERY_KEY, self.consts.DISCOVERY_PUBLISH_INTERVAL_KEY], self.consts.DISCOVERY_PUBLISH_INTERVAL_DEFAULT)
 
     def GetMqttClient(self):
         return self.mqtt_client
@@ -321,6 +327,13 @@ class Entity():
     def GetLastDiscoveryTime(self):
         return self.lastDiscoveryTime
 
+    # Use this function to ask if a topic is in the replacedTopic list
+    def TopicHadBeenReplaced(self,topic):
+        for combo in self.replacedTopics:
+            if combo['original']==topic:
+                return True
+        return False
+
     def LoadSettings(self):
         # 1: Get path of the single object
         # 2: If I dont find the yaml in that folder, I return None
@@ -328,7 +341,7 @@ class Entity():
         # Start:
         # 1
         settings_path = path.join(
-            self.individualPath, OBJECT_SETTINGS_FILENAME)
+            self.individualPath, self.consts.OBJECT_SETTINGS_FILENAME)
         # try 3 except 2
         try:
             with open(settings_path) as f:
@@ -343,7 +356,7 @@ class Entity():
         discovery_data = []
 
         # Check if Discovery is enabled
-        if cf.GetOption(self.brokerConfigs, [DISCOVERY_KEY, DISCOVERY_ENABLE_KEY], False) is not False:
+        if cf.GetOption(self.brokerConfigs, [self.consts.DISCOVERY_KEY, self.consts.DISCOVERY_ENABLE_KEY], False) is not False:
             # Okay need auto discovery
 
             # Not for don't send sensors
@@ -351,29 +364,29 @@ class Entity():
                 return  # Don't send if disabled in config
 
             prefix = cf.GetOption(self.brokerConfigs, [
-                                  DISCOVERY_KEY, DISCOVERY_DISCOVER_PREFIX_KEY], DISCOVERY_DISCOVER_PREFIX_DEFAULT)
+                                  self.consts.DISCOVERY_KEY, self.consts.DISCOVERY_DISCOVER_PREFIX_KEY], self.consts.DISCOVERY_DISCOVER_PREFIX_DEFAULT)
             preset = cf.GetOption(self.brokerConfigs, [
-                                  DISCOVERY_KEY, DISCOVERY_PRESET_KEY])
+                                  self.consts.DISCOVERY_KEY, self.consts.DISCOVERY_PRESET_KEY])
             entity_preset_data = None
             topic_data = None
 
             if preset:
                 # Check here if I have an entry in the discovery file for this topic and use that data (PLACE IN 'sensor_data')
                 entity_preset_data = cf.GetOption(
-                    self.settings, [SETTINGS_DISCOVERY_KEY, preset])  # THIS
+                    self.settings, [self.consts.SETTINGS_DISCOVERY_KEY, preset])  # THIS
 
             for topic in self.outTopics:
                 # discoveryData: {name, config_topic, payload}
                 # print(topic)
                 data = self.PrepareTopicDiscoveryData(
-                    topic['topic'], TYPE_TOPIC_OUT, prefix, preset, entity_preset_data)
+                    topic['topic'], self.consts.TYPE_TOPIC_OUT, prefix, preset, entity_preset_data)
                 if data:
                     discovery_data.append(data)
 
             for topic in self.inTopics:
                 # discoveryData: {name, config_topic, payload}
                 data = self.PrepareTopicDiscoveryData(
-                    topic, TYPE_TOPIC_IN, prefix, preset, entity_preset_data)
+                    topic, self.consts.TYPE_TOPIC_IN, prefix, preset, entity_preset_data)
                 if data:
                     discovery_data.append(data)
 
@@ -387,11 +400,11 @@ class Entity():
         if entity_preset_data:
             for discoveryTopic in entity_preset_data:
                 dtTopic = cf.GetOption(discoveryTopic, "topic")
-                if (dtTopic == topic or dtTopic == "*") and cf.GetOption(discoveryTopic, SETTINGS_DISCOVERY_PRESET_PAYLOAD_KEY):
+                if (dtTopic == topic or dtTopic == "*") and cf.GetOption(discoveryTopic, self.consts.SETTINGS_DISCOVERY_PRESET_PAYLOAD_KEY):
                     # Found dict for this topic in this sensor for this preset: Place in the payload
                     topicSettings = discoveryTopic
                     payload = cf.GetOption(
-                        discoveryTopic, SETTINGS_DISCOVERY_PRESET_PAYLOAD_KEY).copy()
+                        discoveryTopic, self.consts.SETTINGS_DISCOVERY_PRESET_PAYLOAD_KEY).copy()
 
         # If I have to disable, return None
         if cf.GetOption(topicSettings, self.consts.SETTINGS_DISCOVERY_PRESET_DISABLE_KEY, False):
@@ -402,35 +415,40 @@ class Entity():
             payload['name'] = topic.replace("/", "_")
 
         # Check and add this only if has option true
-        if cf.GetOption(self.brokerConfigs, [DISCOVERY_KEY, DISCOVERY_NAME_PREFIX_KEY], DISCOVERY_NAME_PREFIX_DEFAULT):
+        if cf.GetOption(self.brokerConfigs, [self.consts.DISCOVERY_KEY, self.consts.DISCOVERY_NAME_PREFIX_KEY], self.consts.DISCOVERY_NAME_PREFIX_DEFAULT):
             payload['name'] = self.brokerConfigs['name'] + \
                 " - " + payload['name']
 
         # Prepare the part of the config topic where you place the component id
-        topic_component = self.TopicRemoveBadCharacters(
-            self.brokerConfigs['name']+"_"+topic)
+        if self.TopicHadBeenReplaced(topic): # To add different instances of commands that change only for the topic, send different configs on different config topic
+            topic_component = self.TopicRemoveBadCharacters(
+                self.brokerConfigs['name']+"_"+self.SelectTopic(topic))
+        else:
+            topic_component = self.TopicRemoveBadCharacters(
+                self.brokerConfigs['name']+"_"+topic)
+
 
         payload['device'] = self.GetDiscoveryDeviceData()
         # Unique hashed
-        payload['unique_id'] = hashlib.md5((self.brokerConfigs['name']+topic).encode('utf-8')).hexdigest()
+        payload['unique_id'] = hashlib.md5((self.brokerConfigs['name']+self.SelectTopic(topic)).encode('utf-8')).hexdigest()
 
-        if(entity_model == TYPE_TOPIC_OUT):
+        if(entity_model == self.consts.TYPE_TOPIC_OUT):
             # Do I have the type in the sensor preset settings or do I set it to 'sensor' ?
             entity_type = cf.GetOption(
-                topicSettings, SETTINGS_DISCOVERY_PRESET_TYPE_KEY, "sensor")
+                topicSettings, self.consts.SETTINGS_DISCOVERY_PRESET_TYPE_KEY, "sensor")
             # Send the topic where the Sensor will send his state
-            payload['expire_after']=cf.GetOption(self.brokerConfigs, [DISCOVERY_KEY, DISCOVERY_EXPIRE_AFTER_KEY], DISCOVERY_EXPIRE_AFTER_DEFAULT)
+            payload['expire_after']=cf.GetOption(self.brokerConfigs, [self.consts.DISCOVERY_KEY, self.consts.DISCOVERY_EXPIRE_AFTER_KEY], self.consts.DISCOVERY_EXPIRE_AFTER_DEFAULT)
             payload['state_topic'] = self.SelectTopic(topic)
         else:
             # Do I have the type in the sensor preset settings or do I set it to 'sensor' ?
             entity_type = cf.GetOption(
-                topicSettings, SETTINGS_DISCOVERY_PRESET_TYPE_KEY, "switch")
+                topicSettings, self.consts.SETTINGS_DISCOVERY_PRESET_TYPE_KEY, "switch")
             # Send the topic where the Switch will receive the message
             payload['command_topic'] = self.SelectTopic(topic)
 
 
         # Compose the topic that will be used to send the disoovery configuration
-        config_send_topic = AUTODISCOVERY_TOPIC_CONFIG_FORMAT.format(
+        config_send_topic = self.consts.AUTODISCOVERY_TOPIC_CONFIG_FORMAT.format(
             prefix, entity_type, topic_component)
 
         return {"name": topic, "config_topic": config_send_topic, "payload": dict(payload)}
