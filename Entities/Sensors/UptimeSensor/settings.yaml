@@ -1,0 +1,10 @@
+requirements:
+
+discovery:
+  homeassistant: # Must match discovery preset name
+    - topic: "*"
+      payload:
+        name: "Uptime"
+        unit_of_measurement: "s"
+
+

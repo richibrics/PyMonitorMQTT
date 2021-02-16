@@ -6,13 +6,16 @@ import sys
 import yaml
 import hashlib
 from os import path
-from consts import SENSOR_NAME_SUFFIX 
+import consts
+
 
 class Entity():
+    import voluptuous 
     import consts
     from Settings import Settings
     from ValueFormatter import ValueFormatter
     from Logger import Logger, ExceptionTracker
+    from Configurator import Configurator
 
     # To replace an original topic with a personalized one from configuration (may not be used).
     # When a sensor send the data with a topic, if the user choose a fixed topic in config,
@@ -21,7 +24,8 @@ class Entity():
     lastSendingTime = None
     lastDiscoveryTime = None
 
-    def __init__(self, monitor_id, brokerConfigs, mqtt_client, send_interval, entityConfigs, logger, entityManager, entityType=SENSOR_NAME_SUFFIX):  # Config is args
+
+    def __init__(self, monitor_id, brokerConfigs, mqtt_client, send_interval, entityConfigs, logger, entityManager):  # Config is args
         self.name = self.GetEntityName(entityType)
         self.monitor_id = monitor_id
 
@@ -45,6 +49,10 @@ class Entity():
             sys.modules[self.__class__.__module__].__file__))
         # Do per sensor operations
         self.ParseOptions()
+
+        self.Log(self.Logger.LOG_DEVELOPMENT,"Options founds:")
+        self.Log(self.Logger.LOG_DEVELOPMENT,self.options)
+
         self.Initialize()
 
     def Initialize(self):  # Implemented in sub-classes
@@ -66,14 +74,22 @@ class Entity():
         # At first I search in broker config. Then I check the per-sensor option and if I find
         # something there, I replace - if was set from first step -  broker configs (or simply add a new entry)
 
-        for optionToSearch in self.consts.POSSIBLE_OPTIONS:
-            # 1: Set from broker's configs
-            if optionToSearch in self.brokerConfigs:
-                self.options[optionToSearch] = self.brokerConfigs[optionToSearch]
+        for optionToSearch in self.consts.SCAN_OPTIONS: # list of tuples key,default
+            # First thing: set default values
+            if type(optionToSearch[1])==dict: # Dict in default must be copied, or the default dict will be edited
+                self.options[optionToSearch[0]]=optionToSearch[1].copy() 
+            else:
+                self.options[optionToSearch[0]]=optionToSearch[1]
 
-            # 2: Set from sensor's configs
-            if self.entityConfigs and optionToSearch in self.entityConfigs:
-                self.options[optionToSearch] = self.entityConfigs[optionToSearch]
+            # 1: Set from broker's configs: join to default value
+            if optionToSearch[0] in self.brokerConfigs:
+                self.options[optionToSearch[0]]=self.JoinDictsOrLists(self.options[optionToSearch[0]],self.brokerConfigs[optionToSearch[0]])
+
+            # 2: Set from sensor's configs: join to default value
+            if self.entityConfigs and optionToSearch[0] in self.entityConfigs:
+                self.options[optionToSearch[0]]=self.JoinDictsOrLists(self.options[optionToSearch[0]],self.entityConfigs[optionToSearch[0]])
+ 
+
 
     def GetOption(self, path, defaultReturnValue=None):
         return cf.GetOption(self.options, path, defaultReturnValue)
@@ -84,11 +100,9 @@ class Entity():
     def AddTopic(self, topic):
         self.outTopicsAddedNumber += 1
         # If user in options defined custom topics, store original and custom topic and replace it in the send function
-        replaced = False
-        if self.GetOption('custom_topics') is not None and len(self.GetOption('custom_topics')) >= self.outTopicsAddedNumber:
-            self.AddReplacedTopic(topic,self.GetOption('custom_topics')[self.outTopicsAddedNumber-1])
+        if self.GetOption(self.consts.CUSTOM_TOPICS_OPTION_KEY) is not None and len(self.GetOption(self.consts.CUSTOM_TOPICS_OPTION_KEY)) >= self.outTopicsAddedNumber:
+            self.AddReplacedTopic(topic,self.GetOption(self.consts.CUSTOM_TOPICS_OPTION_KEY)[self.outTopicsAddedNumber-1])
             self.Log(Logger.LOG_INFO, 'Using custom topic defined in options')
-            replaced = True
 
         self.outTopics.append({'topic': topic, 'value': ""})
 
@@ -114,8 +128,7 @@ class Entity():
         self.mqtt_client.AddNewTopic(topic, self)
 
         # Log the topic as debug if user wants
-        if self.GetOption(self.consts.DEBUG_OPTION_KEY):
-            self.Log(Logger.LOG_DEBUG, 'Subscribed to topic: ' + topic)
+        self.Log(Logger.LOG_DEBUG, 'Subscribed to topic: ' + topic)
 
         return topic  # Return the topic cause upper function should now that topic may have been edited
 
@@ -144,20 +157,37 @@ class Entity():
         else:
             return None
 
-    def SetTopicValue(self, topic_name, value, valueType=ValueFormatter.TYPE_NONE):
+
+    # valueType, valueSize, forceValueFormatter are for the ValueFormatter and are not required
+    def SetTopicValue(self, topic_name, value, valueType=None):
         # At first using topic string, I get his dict from topics list
         topic = self.GetTopicByName(topic_name)
         if topic:  # Found
 
-            # If user defined in options he wants formatted values (1200,byte -> 1,2KB)
-            if self.GetOption('formatted_values'):
-                value = self.ValueFormatter.GetFormattedValue(value, valueType)
+            if valueType is not None:
+                # If user defined in options he wants  size / unit of measurement (1200 [in Byte] -> 1,2KB)
+                value = self.ValueFormatter.GetFormattedValue(value,valueType, self.GetValueFormatterOptionForTopic(topic_name))
+                # I pass the options from format_value that I need 
 
             # Set the value
             topic['value'] = value
         else:  # Not found, log error
             self.Log(Logger.LOG_ERROR, 'Topic ' +
                      topic_name + ' does not exist !')
+
+    def GetValueFormatterOptionForTopic(self,valueTopic): # Return the ValueFormat options for the passed topic
+        VFoptions = self.GetOption(self.consts.VALUE_FORMAT_OPTION_KEY)
+        # if the options are not in a list: specified options are for every topic
+        if type(VFoptions) is not list:
+            return VFoptions
+        else: 
+            # I have the same structure (topic with wildcard and configs) that I have for the topic settings in discovery
+            for topicOptions in VFoptions:
+                optionTopic = cf.GetOption(topicOptions,"topic")
+                if optionTopic == "*" or optionTopic==valueTopic:
+                    return topicOptions
+            return None
+        return None
 
     def CallUpdate(self):  # Call the Update method safely
         try:
@@ -491,3 +521,18 @@ class Entity():
 
     def Log(self, messageType, message):
         self.logger.Log(messageType, self.name + " Entity", message)
+
+    # Used to scan the options and join the found options in the configuration.yaml to the default option value (which is the source)
+    def JoinDictsOrLists(self,source,toJoin): # If source is a list, join toJoin to the list; if source is a dict, join toJoin keys and values to the source
+        if type(source)==list:
+            if type(toJoin)==list:
+                return source+toJoin
+            else:
+                source.append(toJoin)
+        elif type(source)==dict:
+            if type(toJoin) ==dict:
+                for key,value in toJoin.items():
+                    source[key]=value
+            else:
+                source['no_key']=toJoin
+        return source

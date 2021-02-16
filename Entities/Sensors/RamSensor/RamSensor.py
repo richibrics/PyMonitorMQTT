@@ -34,6 +34,7 @@ class RamSensor(Entity):
             self.AddTopic(TOPIC_SWAP_FREE)
 
     def Update(self):
+
         self.SetTopicValue(TOPIC_MEMORY_PERCENTAGE, psutil.virtual_memory()[
                            2], self.ValueFormatter.TYPE_PERCENTAGE)
         self.SetTopicValue(TOPIC_SWAP_PERCENTAGE, psutil.swap_memory()[

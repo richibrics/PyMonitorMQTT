@@ -2,6 +2,7 @@ import datetime
 import os
 import sys
 from consts import *
+import json
 from Configurator import Configurator
 
 # Fill start of string with spaces to jusitfy the message (0: no padding)
@@ -34,6 +35,10 @@ class Logger():
         self.SetupFolder()
 
     def Log(self, messageLevel, source, message):
+        if type(message) == dict:
+            self.LogDict(messageLevel,source,message)
+            return # Log dict will call this function so I don't need to go down at the moment
+
         if messageLevel == self.LOG_INFO:
             messageType = 'Info'
         elif messageLevel == self.LOG_ERROR:
@@ -70,6 +75,17 @@ class Logger():
 
             prestring = (len(prestring)-PRESTRING_MESSAGE_SEPARATOR_LEN) * \
                 LONG_MESSAGE_PRESTRING_CHAR+PRESTRING_MESSAGE_SEPARATOR_LEN*' '
+
+    
+    def LogDict(self, messageLevel, source, dict):
+        try:
+            string = json.dumps(dict, indent=4, sort_keys=False)
+            lines=string.splitlines()
+            for line in lines:
+                self.Log(messageLevel,source,"> "+line)
+        except:
+            self.Log(self.LOG_ERROR,source,"Can't print dictionary content")
+
 
     def SetupFolder(self):
         if not os.path.exists(os.path.join(scriptFolder, LOGS_FOLDER)):

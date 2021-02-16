@@ -5,10 +5,10 @@ discovery:
     - topic: "network/bytes_recv"
       payload:
         name: "Network received data"
-        icon: "mdi:download"
-        value_template: "{{ value | filesizeformat () }}"
+        icon: "mdi:download"        
+        unit_of_measurement: "MB"
     - topic: "network/bytes_sent"
       payload:
         name: "Network sent data"
         icon: "mdi:upload"
-        value_template: "{{ value | filesizeformat () }}"
+        unit_of_measurement: "GB"
