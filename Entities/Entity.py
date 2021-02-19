@@ -52,7 +52,7 @@ class Entity():
         
         # Do per sensor operations
 
-        # First thing: validate entity configuration
+        # First thing: validate entity configuration and set the entity config to the validated config (with defaults)
         self.ValidateSchema()
 
         # Then load the options in the entity from the configuration file
@@ -83,7 +83,7 @@ class Entity():
         try:
             self.Log(Logger.LOG_INFO,"Validating configuration...")
             if self.entityConfigs is not None:
-                self.EntitySchema()(self.entityConfigs) # Validate with the entity config
+                self.entityConfigs = self.EntitySchema()(self.entityConfigs) # Validate with the entity config and set the entity config to the validated config (with defaults)
             self.Log(Logger.LOG_INFO,"Validation successfully completed")
         except Exception as e:
             self.Log(Logger.LOG_ERROR,"Error while validating entity configuration: " +str(e))
@@ -104,10 +104,12 @@ class Entity():
             if optionToSearch in self.brokerConfigs:
                 self.options[optionToSearch]=self.brokerConfigs[optionToSearch]
 
-            # 2: Set from sensor's configs: join to previous value if was set
+            # 2: Set from entity's configs: join to previous value if was set
             if self.entityConfigs and optionToSearch in self.entityConfigs:
-                self.options[optionToSearch]=self.JoinDictsOrLists(self.options[optionToSearch],self.entityConfigs[optionToSearch])
-
+                if optionToSearch in self.options: # If I've just found this option in monitors config, then I have to add the entity config to the previous set options
+                    self.options[optionToSearch]=self.JoinDictsOrLists(self.options[optionToSearch],self.entityConfigs[optionToSearch]) 
+                else: # else I have only the entity config -> I set the option to that
+                    self.options[optionToSearch]=self.entityConfigs[optionToSearch] 
 
     def GetOption(self, path, defaultReturnValue=None):
         return cf.GetOption(self.options, path, defaultReturnValue)
