@@ -68,10 +68,9 @@ class EntityManager():
                          ' entity loaded', logger=logger)
                 return req  # Return the settings with equirements
             except Exception as exc:
-                self.Log(Logger.LOG_ERROR, name +
-                         ' entity occured an error during loading: ' + str(exc), logger=logger)
                 self.Log(Logger.LOG_ERROR, ExceptionTracker.TrackString(
                     exc), logger=logger)
+                self.Log(Logger.LOG_ERROR, name + " not loaded", logger=logger)
         return None
 
     def UnloadEntity(self, entity): # by entity object

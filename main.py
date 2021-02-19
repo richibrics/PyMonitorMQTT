@@ -7,6 +7,7 @@ from ClassManager import ClassManager # To list entities in help
 import consts
 import sys
 from Monitor import Monitor
+from Schemas import ROOT_SCHEMA
 
 config = None
 config_filename = 'configuration.yaml'
@@ -18,6 +19,8 @@ def LoadYAML():
     global config
     with open(os.path.join(scriptFolder, config_filename)) as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
+    
+    config = ROOT_SCHEMA(config) # Here I validate che config schema (not for entities)
 
 
 def SetupMonitors():
@@ -26,12 +29,12 @@ def SetupMonitors():
         config)
 
     # If I have not a list of monitors, I setup only a monitor
-    if ('monitors' not in config):
+    if (consts.CONFIG_MONITORS_KEY not in config):
         monitor = Monitor(config, config, entityManager)
     else:  # More Monitors
         # Now setup monitors
         monitor_id = 0
-        for monitor_config in config['monitors']:
+        for monitor_config in config[consts.CONFIG_MONITORS_KEY]:
             monitor_id += 1
             monitor = Monitor(monitor_config, config,
                               entityManager, monitor_id)
