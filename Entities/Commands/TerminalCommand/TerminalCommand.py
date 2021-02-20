@@ -1,13 +1,14 @@
 from Entities.Entity import Entity
-from consts import *
 import subprocess
 import fnmatch
 from Logger import Logger, ExceptionTracker
+import Schemas
 
 TOPIC = 'terminal_command'
 
-COMMAND_CONTENT_KEY = 'command'
-WHITELIST_CONTENT_KEY = 'whitelist'
+CONTENTS_COMMAND_OPTION_KEY = 'command'
+
+CONTENTS_WHITELIST_OPTION_KEY = 'whitelist'
 WHITELIST_DENY = 'deny'
 WHITELIST_ALLOW = 'allow'
 # Config content: 'whitelist'
@@ -19,6 +20,18 @@ class TerminalCommand(Entity):
     def Initialize(self):
         self.SubscribeToTopic(TOPIC)
 
+    # I have also contents with title and message (optional) in config
+    def EntitySchema(self):
+        schema = super().EntitySchema()
+        schema = schema.extend({
+            Schemas.Required(self.consts.CONTENTS_OPTION_KEY):  { # One of the lower keys is required then contents is required
+                Schemas.Optional(CONTENTS_WHITELIST_OPTION_KEY): Schemas.Or(str,dict), # Whitelist required only if message not in configuration
+                Schemas.Optional(CONTENTS_COMMAND_OPTION_KEY): str # Command optional becuase can be also in the payload
+            }
+        })
+        return schema
+
+
     def Callback(self, message):
         messageDict = ''
         try:
@@ -28,15 +41,15 @@ class TerminalCommand(Entity):
 
         # Look for the command
         # At first check if defined in options
-        if self.GetOption([CONTENTS_OPTION_KEY, COMMAND_CONTENT_KEY]):
+        if self.GetOption([self.consts.CONTENTS_OPTION_KEY, CONTENTS_COMMAND_OPTION_KEY]):
             command = self.GetOption(
-                [CONTENTS_OPTION_KEY, COMMAND_CONTENT_KEY])
+                [self.consts.CONTENTS_OPTION_KEY, CONTENTS_COMMAND_OPTION_KEY])
             self.ExecuteCommand(command)
         # Else check if I received the command: if yes, it must be in the commands whitelist (SECURITY)
         elif 'command' in messageDict:
             # Check if I have the whitelist
             whitelist = self.GetOption(
-                [CONTENTS_OPTION_KEY, WHITELIST_CONTENT_KEY])
+                [self.consts.CONTENTS_OPTION_KEY, CONTENTS_WHITELIST_OPTION_KEY])
             if (whitelist):
                 # Check if the command is in the whitelist: I have to check only for the filename, not for the arguments
                 # Disallow
