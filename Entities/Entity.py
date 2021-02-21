@@ -99,10 +99,15 @@ class Entity():
         # At first I search in broker config. Then I check the per-sensor option and if I find
         # something there, I replace - if was set from first step -  broker configs (or simply add a new entry)
 
+        a=1+1
+
         for optionToSearch in self.consts.SCAN_OPTIONS: 
             # 1: Set from broker's configs
             if optionToSearch in self.brokerConfigs:
-                self.options[optionToSearch]=self.brokerConfigs[optionToSearch]
+                if type(self.brokerConfigs[optionToSearch])==dict: # Id dict I have to copy to avoid errors
+                    self.options[optionToSearch]=self.brokerConfigs[optionToSearch].copy()
+                else:
+                    self.options[optionToSearch]=self.brokerConfigs[optionToSearch]
 
             # 2: Set from entity's configs: join to previous value if was set
             if self.entityConfigs and optionToSearch in self.entityConfigs:
@@ -313,7 +318,7 @@ class Entity():
     # Calculate if a send_interval spent since the last sending time
     def ShouldSendDiscoveryConfig(self):
         # Check if Discovery is enabled
-        if cf.GetOption(self.brokerConfigs, [self.consts.CONFIG_DISCOVERY_KEY, self.consts.DISCOVERY_ENABLE_KEY], False) is not False:
+        if self.GetOption([self.consts.CONFIG_DISCOVERY_KEY, self.consts.DISCOVERY_ENABLE_KEY], False) is not False:
             # Not for don't send sensors
             if self.GetOption('dont_send') is True:
                 return False # Don't send if disabled in config
@@ -368,7 +373,7 @@ class Entity():
 
     def GetSendDiscoveryConfigInterval(self):
         # Search in config or use default
-        return cf.GetOption(self.brokerConfigs, [self.consts.CONFIG_DISCOVERY_KEY, self.consts.DISCOVERY_PUBLISH_INTERVAL_KEY], self.consts.DISCOVERY_PUBLISH_INTERVAL_DEFAULT)
+        return self.GetOption([self.consts.CONFIG_DISCOVERY_KEY, self.consts.DISCOVERY_PUBLISH_INTERVAL_KEY], self.consts.DISCOVERY_PUBLISH_INTERVAL_DEFAULT)
 
     def GetMqttClient(self):
         return self.mqtt_client
@@ -413,23 +418,22 @@ class Entity():
         discovery_data = []
 
         # Check if Discovery is enabled
-        if cf.GetOption(self.brokerConfigs, [self.consts.CONFIG_DISCOVERY_KEY, self.consts.DISCOVERY_ENABLE_KEY], False) is not False:
+        if self.GetOption([self.consts.CONFIG_DISCOVERY_KEY, self.consts.DISCOVERY_ENABLE_KEY], False) is not False:
             # Okay need auto discovery
 
             # Not for don't send sensors
             if self.GetOption('dont_send') is True:
                 return  # Don't send if disabled in config
 
-            prefix = cf.GetOption(self.brokerConfigs, [
+            prefix = self.GetOption([
                                   self.consts.CONFIG_DISCOVERY_KEY, self.consts.DISCOVERY_DISCOVER_PREFIX_KEY], self.consts.DISCOVERY_DISCOVER_PREFIX_DEFAULT)
-            preset = cf.GetOption(self.brokerConfigs, [
+            preset = self.GetOption([
                                   self.consts.CONFIG_DISCOVERY_KEY, self.consts.DISCOVERY_PRESET_KEY])
             entity_preset_data = None
 
             if preset:
                 # Check here if I have an entry in the discovery file for this topic and use that data (PLACE IN 'sensor_data')
-                entity_preset_data = cf.GetOption(
-                    self.settings, [self.consts.SETTINGS_DISCOVERY_KEY, preset])  # THIS
+                entity_preset_data = cf.GetOption(self.settings,[self.consts.SETTINGS_DISCOVERY_KEY, preset])  # THIS
 
             for topic in self.outTopics:
                 # discoveryData: {name, config_topic, payload}
@@ -465,8 +469,10 @@ class Entity():
                     payload = cf.GetOption(
                         discoveryTopic, self.consts.SETTINGS_DISCOVERY_PRESET_PAYLOAD_KEY).copy()
 
-        # DISCOVERY DATA FROM USER CONFIGURATION
-        user_discovery_config=cf.ReturnAsList(cf.GetOption(self.entityConfigs,self.consts.USER_CONFIGURATION_DISCOVERY_KEY),None)
+        # DISCOVERY DATA FROM USER CONFIGURATION in entityConfig -> discovery -> settings
+
+        # Take user_discovery_config not from options( thaht includes also monitors discovery config but oly from entity configs
+        user_discovery_config=cf.ReturnAsList(cf.GetOption(self.entityConfigs,[self.consts.ENTITY_DISCOVERY_KEY,self.consts.ENTITY_DISCOVERY_PAYLOAD_KEY]),None) 
         if user_discovery_config:
             for user_topic_config in user_discovery_config:
                 dtTopic=cf.GetOption(user_discovery_config,"topic")
@@ -487,7 +493,7 @@ class Entity():
             payload['name'] = topic.replace("/", "_")
 
         # Check and add this only if has option true
-        if cf.GetOption(self.brokerConfigs, [self.consts.CONFIG_DISCOVERY_KEY, self.consts.DISCOVERY_NAME_PREFIX_KEY], self.consts.DISCOVERY_NAME_PREFIX_DEFAULT):
+        if self.GetOption([self.consts.CONFIG_DISCOVERY_KEY, self.consts.DISCOVERY_NAME_PREFIX_KEY], self.consts.DISCOVERY_NAME_PREFIX_DEFAULT):
             payload['name'] = self.brokerConfigs['name'] + \
                 " - " + payload['name']
 
@@ -504,7 +510,7 @@ class Entity():
             entity_type = cf.GetOption(
                 topicSettings, self.consts.SETTINGS_DISCOVERY_PRESET_TYPE_KEY, "sensor")
             # Send the topic where the Sensor will send his state
-            payload['expire_after']=cf.GetOption(self.brokerConfigs, [self.consts.CONFIG_DISCOVERY_KEY, self.consts.DISCOVERY_EXPIRE_AFTER_KEY], self.consts.DISCOVERY_EXPIRE_AFTER_DEFAULT)
+            payload['expire_after']=self.GetOption([self.consts.CONFIG_DISCOVERY_KEY, self.consts.DISCOVERY_EXPIRE_AFTER_KEY], self.consts.DISCOVERY_EXPIRE_AFTER_DEFAULT)
             payload['state_topic'] = self.SelectTopic(topic)
         else:
             # Do I have the type in the sensor preset settings or do I set it to 'sensor' ?
@@ -524,10 +530,10 @@ class Entity():
         sw_info = self.Settings.GetInformation()
         device = {}
         device['name'] = "Monitor " + self.brokerConfigs['name']
+        device['model'] = self.brokerConfigs['name']
+        device['identifiers'] = self.brokerConfigs['name']
         try:
             device['manufacturer'] = sw_info['name']
-            device['model'] = self.brokerConfigs['name']
-            device['identifiers'] = self.brokerConfigs['name']
             device['sw_version'] = sw_info['version']
         except:
             self.Log(Logger.LOG_WARNING,"No software information file found !")
@@ -562,4 +568,5 @@ class Entity():
                     source[key]=value
             else:
                 source['no_key']=toJoin
+            return source
         return toJoin # If no source recognized, return toJoin

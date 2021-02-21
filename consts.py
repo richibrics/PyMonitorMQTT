@@ -52,7 +52,8 @@ SCAN_OPTIONS = [
     CUSTOM_TOPICS_OPTION_KEY,
     DONT_SEND_DATA_OPTION_KEY,
     VALUE_FORMAT_OPTION_KEY,
-    CONTENTS_OPTION_KEY
+    CONTENTS_OPTION_KEY,
+    CONFIG_DISCOVERY_KEY
 ]
 
 # Removed DEBUG mode because you only need to set the console/file level to debug or upper
@@ -105,7 +106,8 @@ SETTINGS_DISCOVERY_PRESET_TYPE_KEY = "type"
 SETTINGS_DISCOVERY_PRESET_DISABLE_KEY = "disable"
 
 # Where in the user configuration the custom PAYLOAD will be placed
-USER_CONFIGURATION_DISCOVERY_KEY = SETTINGS_DISCOVERY_KEY
+ENTITY_DISCOVERY_KEY = "discovery"
+ENTITY_DISCOVERY_PAYLOAD_KEY = "settings"
 
 ENTITIES_PATH = "Entities"
 CUSTOM_ENTITIES_PATH = "Custom"

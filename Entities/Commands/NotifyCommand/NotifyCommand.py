@@ -71,8 +71,8 @@ class NotifyCommand(Entity):
         # Priority for configuration content and title. If not set there, will try to find them in the payload
 
         # Look for notification content
-        if self.GetOption(self.consts.CONTENTS_OPTION_KEY) and self.GetOption(self.consts.CONTENTS_OPTION_KEY,CONTENTS_MESSAGE_OPTION_KEY): # In config ?
-            content = self.GetOption(self.consts.CONTENTS_OPTION_KEY,CONTENTS_MESSAGE_OPTION_KEY)
+        if self.GetOption([self.consts.CONTENTS_OPTION_KEY,CONTENTS_MESSAGE_OPTION_KEY]): # In config ?
+            content = self.GetOption([self.consts.CONTENTS_OPTION_KEY,CONTENTS_MESSAGE_OPTION_KEY])
         elif CONTENTS_MESSAGE_OPTION_KEY in messageDict: # In the payload ?
             content = messageDict[CONTENTS_MESSAGE_OPTION_KEY]
         else: # Nothing found: use default
@@ -81,8 +81,8 @@ class NotifyCommand(Entity):
                      'No message for the notification set in configuration or in the received payload')
 
         # Look for notification title
-        if self.GetOption(self.consts.CONTENTS_OPTION_KEY) and self.GetOption(self.consts.CONTENTS_OPTION_KEY,CONTENTS_TITLE_OPTION_KEY): # In config ?
-            title = self.GetOption(self.consts.CONTENTS_OPTION_KEY,CONTENTS_TITLE_OPTION_KEY)
+        if self.GetOption([self.consts.CONTENTS_OPTION_KEY,CONTENTS_TITLE_OPTION_KEY]): # In config ?
+            title = self.GetOption([self.consts.CONTENTS_OPTION_KEY,CONTENTS_TITLE_OPTION_KEY])
         elif CONTENTS_TITLE_OPTION_KEY in messageDict: # In the payload ?
             title = messageDict[CONTENTS_TITLE_OPTION_KEY]
         else: # Nothing found: use default

@@ -60,7 +60,9 @@ ROOT_SCHEMA = Schema({
 })
 
 
-# ENTITY
+# ENTITY SCHEMAS 
+
+# Part of the entity schemas where I have schemas with same values as before but without defaults: defaults are the configuration from the monitor schemas upper
 
 ENTITY_VALUE_FORMAT_SCHEMA = Schema({
     Optional(VALUEFORMATTER_OPTIONS_UNIT_OF_MEASUREMENT_KEY): bool,
@@ -68,9 +70,22 @@ ENTITY_VALUE_FORMAT_SCHEMA = Schema({
     Optional(VALUEFORMATTER_OPTIONS_SIZE_KEY): Or(str,False)
 })
 
+
+ENTITY_DISCOVERY_SCHEMA = Schema({
+    Optional(DISCOVERY_ENABLE_KEY): bool,
+    Optional(DISCOVERY_PRESET_KEY): str,
+    Optional(DISCOVERY_DISCOVER_PREFIX_KEY): str, 
+    Optional(DISCOVERY_NAME_PREFIX_KEY): bool,
+    Optional(DISCOVERY_PUBLISH_INTERVAL_KEY): int,
+    Optional(ENTITY_DISCOVERY_PAYLOAD_KEY): dict  # Where I can put the name for the entity in the hub and the custom icon without editing the entity code
+})
+
+
+
 ENTITY_DEFAULT_SCHEMA = Schema({ # No default here (only custom topics), will be used monitor config if not set here
     Optional(ADVANCED_INFO_OPTION_KEY): bool,
     Optional(CUSTOM_TOPICS_OPTION_KEY, default=CUSTOM_TOPICS_OPTION_DEFAULT):  Or(str,[str]),
     Optional(DONT_SEND_DATA_OPTION_KEY): bool,
-    Optional(VALUE_FORMAT_OPTION_KEY): ENTITY_VALUE_FORMAT_SCHEMA
+    Optional(VALUE_FORMAT_OPTION_KEY): ENTITY_VALUE_FORMAT_SCHEMA,
+    Optional(ENTITY_DISCOVERY_KEY): ENTITY_DISCOVERY_SCHEMA
 })
