@@ -6,5 +6,4 @@ discovery:
       payload:
         name: "Uptime"
         unit_of_measurement: "s"
-
-
+        icon: "mdi:clock"
