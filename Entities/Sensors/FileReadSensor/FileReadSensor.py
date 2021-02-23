@@ -1,16 +1,28 @@
 import psutil
 from Entities.Entity import Entity
 import os
-from consts import *
+import Schemas
+
 
 # Tip: customize topic because with more than one file, you must have different topics
 TOPIC = 'file/file'
 
+FILE_READ_SENSOR_FILENAME_CONTENTS_OPTION = "filename"
 
 class FileReadSensor(Entity):
     def Initialize(self):
         self.AddTopic(TOPIC)
-        self.filename = self.GetOption([CONTENTS_OPTION_KEY,FILE_READ_SENSOR_FILENAME_CONTENTS_OPTION])
+        self.filename = self.GetOption([self.consts.CONTENTS_OPTION_KEY,FILE_READ_SENSOR_FILENAME_CONTENTS_OPTION])
+
+    # I have also contents with filename (required) in config
+    def EntitySchema(self):
+        schema = super().EntitySchema()
+        schema = schema.extend({
+            Schemas.Required(self.consts.CONTENTS_OPTION_KEY):  {
+                Schemas.Required(FILE_READ_SENSOR_FILENAME_CONTENTS_OPTION): str
+            }
+        })
+        return schema
 
     def Update(self):
         if not self.FileExists():

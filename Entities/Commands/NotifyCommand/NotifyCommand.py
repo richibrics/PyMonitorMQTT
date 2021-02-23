@@ -1,6 +1,7 @@
 import os
 from Entities.Entity import Entity
 from Logger import Logger, ExceptionTracker
+import Schemas
 
 supports_win = True
 try:
@@ -24,10 +25,24 @@ DEFAULT_TITLE = 'PyMonitorMQTT'
 
 DEFAULT_DURATION = 10  # Seconds
 
+# SAME KEYS MUST BE PLACED IN THE PAYLOAD OF THE MESSAGE IF YOU WANT TO PASS FROM THERE
+CONTENTS_TITLE_OPTION_KEY = "title"
+CONTENTS_MESSAGE_OPTION_KEY = "message" 
 
 class NotifyCommand(Entity):
     def Initialize(self):
         self.SubscribeToTopic(TOPIC)
+
+    # I have also contents with title and message (optional) in config
+    def EntitySchema(self):
+        schema = super().EntitySchema()
+        schema = schema.extend({
+            Schemas.Optional(self.consts.CONTENTS_OPTION_KEY):  {
+                Schemas.Optional(CONTENTS_TITLE_OPTION_KEY): str,
+                Schemas.Optional(CONTENTS_MESSAGE_OPTION_KEY): str
+            }
+        })
+        return schema
 
     # I need it here cause I have to check the right import for my OS (and I may not know the OS in Init function)
     def PostInitialize(self):
@@ -56,21 +71,21 @@ class NotifyCommand(Entity):
         # Priority for configuration content and title. If not set there, will try to find them in the payload
 
         # Look for notification content
-        if self.GetOption(self.consts.CONTENTS_OPTION_KEY) and 'message' in self.GetOption(self.consts.CONTENTS_OPTION_KEY):
-            content = self.GetOption(self.consts.CONTENTS_OPTION_KEY)['message']
-        elif 'message' in messageDict:
-            content = messageDict['message']
-        else:
+        if self.GetOption([self.consts.CONTENTS_OPTION_KEY,CONTENTS_MESSAGE_OPTION_KEY]): # In config ?
+            content = self.GetOption([self.consts.CONTENTS_OPTION_KEY,CONTENTS_MESSAGE_OPTION_KEY])
+        elif CONTENTS_MESSAGE_OPTION_KEY in messageDict: # In the payload ?
+            content = messageDict[CONTENTS_MESSAGE_OPTION_KEY]
+        else: # Nothing found: use default
             content = DEFAULT_MESSAGE
             self.Log(Logger.LOG_WARNING,
                      'No message for the notification set in configuration or in the received payload')
 
         # Look for notification title
-        if self.GetOption(self.consts.CONTENTS_OPTION_KEY) and 'title' in self.GetOption(self.consts.CONTENTS_OPTION_KEY):
-            title = self.GetOption(self.consts.CONTENTS_OPTION_KEY)['title']
-        elif 'title' in messageDict:
-            title = messageDict['title']
-        else:
+        if self.GetOption([self.consts.CONTENTS_OPTION_KEY,CONTENTS_TITLE_OPTION_KEY]): # In config ?
+            title = self.GetOption([self.consts.CONTENTS_OPTION_KEY,CONTENTS_TITLE_OPTION_KEY])
+        elif CONTENTS_TITLE_OPTION_KEY in messageDict: # In the payload ?
+            title = messageDict[CONTENTS_TITLE_OPTION_KEY]
+        else: # Nothing found: use default
             title = DEFAULT_TITLE
 
         # Check only the os (if it's that os, it's supported because if it wasn't supported,

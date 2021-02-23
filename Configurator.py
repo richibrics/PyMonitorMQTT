@@ -3,6 +3,7 @@ from consts import *
 class Configurator():
     # Returns the value of the option I find using the path from a passed config
     # Can also return a value (that you can pass to the fucntion) if it can't find the path 
+    @staticmethod
     def GetOption(config, path, defaultReturnValue=None):
         try:
             searchConfigTree=config
@@ -30,6 +31,7 @@ class Configurator():
         except Exception as e:
             raise Exception(e)
     
+    @staticmethod
     def ReturnAsList(configuration, noneCondition=None): 
         # If the configuration passed is a list, return it, else place configuration in a list and return the list 
         # PS if configuration passed equals to noneCondition, don't return the list but the noneCondition
