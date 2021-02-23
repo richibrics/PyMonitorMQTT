@@ -16,6 +16,19 @@ try:
 except:
     windows_support=False
 
+# macOS dep
+try:
+    from AppKit import NSWorkspace
+    from Quartz import (
+        CGWindowListCopyWindowInfo,
+        kCGWindowListOptionOnScreenOnly,
+        kCGNullWindowID
+    )
+    macos_support=True
+except:
+    macos_support=False
+
+
 
 TOPIC = 'active_window'
 
@@ -42,9 +55,30 @@ class ActiveWindowSensor(Entity):
                 return self.GetActiveWindow_Windows()
             else:
                 raise Exception("Unsatisfied dependencies for this entity")
+        elif self.os == self.consts.FIXED_VALUE_OS_MACOS:
+            if macos_support:
+                return self.GetActiveWindow_macOS()
+            else:
+                raise Exception("Unsatisfied dependencies for this entity")
         else:
             raise Exception(
                 'Entity not available for this operating system')
+
+    def GetActiveWindow_macOS(self):
+        curr_app = NSWorkspace.sharedWorkspace().frontmostApplication()
+        curr_pid = NSWorkspace.sharedWorkspace().activeApplication()['NSApplicationProcessIdentifier']
+        curr_app_name = curr_app.localizedName()
+        options = kCGWindowListOptionOnScreenOnly
+        windowList = CGWindowListCopyWindowInfo(options, kCGNullWindowID)
+        for window in windowList:
+            pid = window['kCGWindowOwnerPID']
+            windowNumber = window['kCGWindowNumber']
+            ownerName = window['kCGWindowOwnerName']
+            geometry = window['kCGWindowBounds']
+            windowTitle = window.get('kCGWindowName', u'Unknown')
+            if curr_pid == pid:
+                return windowTitle
+
 
     def GetActiveWindow_Windows(self):
         return GetWindowText(GetForegroundWindow())

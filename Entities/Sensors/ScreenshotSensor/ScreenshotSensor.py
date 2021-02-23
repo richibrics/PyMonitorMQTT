@@ -18,7 +18,6 @@ class ScreenshotSensor(Entity):
         self.SetTopicValue(TOPIC, self.TakeScreenshot())
 
     def TakeScreenshot(self):
-        print("TAKE")
         filename = os.path.join(scriptFolder, SCREENSHOT_FILENAME)
         ImageGrab.grab().save(filename)
         f = open(filename, "rb")  # 3.7kiB in same folder
