@@ -452,6 +452,7 @@ class Entity():
 
         return discovery_data
 
+
     def PrepareTopicDiscoveryData(self, topic, entity_model, prefix, preset, entity_preset_data):
         payload = {}
         topicSettings = None
@@ -468,6 +469,11 @@ class Entity():
                     topicSettings = discoveryTopic
                     payload = cf.GetOption(
                         discoveryTopic, self.consts.SETTINGS_DISCOVERY_PRESET_PAYLOAD_KEY).copy()
+
+        # Check for Advanced information topic if I don't send advanced infomration: PS THIS IS USELESS CAUSE THIS TOPIC WON'T BE IN OUTTOPIC IN THAT CASE BUT IT'S BETTER TO CHECK
+        # If I don't send advanced_information and the topic settings says the topic is advanced, I return None because this entity won't send any message on this topic
+        if self.GetOption(self.consts.ADVANCED_INFO_OPTION_KEY,False)==False and cf.GetOption(topicSettings,[self.consts.SETTINGS_DISCOVERY_KEY,self.consts.SETTINGS_DISCOVERY_ADVANCED_TOPIC_KEY],False)==True:
+            return None
 
         # DISCOVERY DATA FROM USER CONFIGURATION in entityConfig -> discovery -> settings
 

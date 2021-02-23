@@ -105,6 +105,8 @@ SETTINGS_DISCOVERY_PRESET_PAYLOAD_KEY = "payload"
 SETTINGS_DISCOVERY_PRESET_TYPE_KEY = "type"
 SETTINGS_DISCOVERY_PRESET_DISABLE_KEY = "disable"
 
+SETTINGS_DISCOVERY_ADVANCED_TOPIC_KEY = "advanced_topic"
+
 # Where in the user configuration the custom PAYLOAD will be placed
 ENTITY_DISCOVERY_KEY = "discovery"
 ENTITY_DISCOVERY_PAYLOAD_KEY = "settings"
