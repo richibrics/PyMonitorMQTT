@@ -11,4 +11,4 @@ discovery:
       payload:
         name: "Network sent data"
         icon: "mdi:upload"
-        unit_of_measurement: "GB"
+        unit_of_measurement: "MB"
