@@ -8,4 +8,4 @@ discovery:
     - topic: "*"
       payload:
         name: "Cpu temperature"
-        unit_of_measurement: "°C"
+        unit_of_measurement: "\u00b0C"
