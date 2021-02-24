@@ -47,7 +47,7 @@ class CpuSensor(Entity):
 
     def PostInitialize(self):
         self.os = self.GetOS()
-        if self.os != 'macOS':
+        if self.os != 'macOS' and self.GetOption(self.consts.ADVANCED_INFO_OPTION_KEY):
             # CPU avg load (not available in macos)
             self.AddTopic(TOPIC_AVERAGE_LOAD_LAST_1)
             self.AddTopic(TOPIC_AVERAGE_LOAD_LAST_5)
