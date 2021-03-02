@@ -33,14 +33,16 @@ class EntityManager():
 
     def PostInitializeEntities(self):
         for entity in self.entities:
-            try:
-                entity.PostInitialize()
-            except Exception as exc:
-                self.Log(Logger.LOG_ERROR, entity.name +
-                         ': error during post-initialization')
-                self.Log(Logger.LOG_ERROR,
-                         ExceptionTracker.TrackString(exc))
-                self.UnloadEntity(entity)
+            if not entity.postinitializeState:
+                try:
+                    entity.PostInitialize()
+                    entity.postinitializeState=True
+                except Exception as exc:
+                    self.Log(Logger.LOG_ERROR, entity.name +
+                            ': error during post-initialization')
+                    self.Log(Logger.LOG_ERROR,
+                            ExceptionTracker.TrackString(exc))
+                    self.UnloadEntity(entity)
 
 
     ## ENTITY LOAD AND INITIALIZATION 

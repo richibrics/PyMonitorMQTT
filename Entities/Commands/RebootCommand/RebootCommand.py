@@ -14,9 +14,12 @@ class RebootCommand(Entity):
     def Initialize(self):
         self.SubscribeToTopic(TOPIC)
 
+    def PostInitialize(self):
+        self.os = self.GetOS()
+
     def Callback(self, message):
         try:
-            command = commands[self.GetOS()]
+            command = commands[self.os]
             subprocess.Popen(command.split(), stdout=subprocess.PIPE)
         except:
             raise Exception(
@@ -26,5 +29,7 @@ class RebootCommand(Entity):
         # Get OS from OsSensor and get temperature based on the os
         os = self.FindEntity('Os')
         if os:
-            os.Update()
+            if not os.postinitializeState: # I run this function in post initialize so the os sensor might not be ready
+                os.PostInitialize()
+            os.CallUpdate()
             return os.GetTopicValue()

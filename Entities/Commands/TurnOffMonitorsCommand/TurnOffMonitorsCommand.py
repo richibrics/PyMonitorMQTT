@@ -10,11 +10,13 @@ class TurnOffMonitorsCommand(Entity):
     def Initialize(self):
         self.SubscribeToTopic(TOPIC)
 
+    def PostInitialize(self):
+        self.os = self.GetOS()
+
     def Callback(self, message):
-        os = self.GetOS()
-        if os == 'Windows':
+        if self.os == 'Windows':
             ctypes.windll.user32.SendMessageA(0xFFFF, 0x0112, 0xF170, 2)
-        elif os == 'Linux':
+        elif self.os == 'Linux':
             # Check if X11 or something else
             if sys_os.environ.get('DISPLAY'):
                 command = 'xset dpms force off'
@@ -31,7 +33,9 @@ class TurnOffMonitorsCommand(Entity):
         # Get OS from OsSensor and get temperature based on the os
         os = self.FindEntity('Os')
         if os:
-            os.Update()
+            if not os.postinitializeState: # I run this function in post initialize so the os sensor might not be ready
+                os.PostInitialize()
+            os.CallUpdate()
             return os.GetTopicValue()
 
 

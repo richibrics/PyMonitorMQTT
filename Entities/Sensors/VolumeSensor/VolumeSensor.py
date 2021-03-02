@@ -14,14 +14,14 @@ class VolumeSensor(Entity):
         self.AddTopic(TOPIC_LEVEL)
         self.AddTopic(TOPIC_MUTE)
 
-    def Update(self):
-        self.GetSystemVolume()
-        #self.SetTopicValue(TOPIC, self.GetSystemVolume())
-
-    def GetSystemVolume(self):
+    def PostInitialize(self):
         os = self.GetOS()
-        # for this Operating System')
-        raise Exception('No volume method coded')
+        self.UpdateSpecificFunction = None   # Specific function for this os/de, set this here to avoid all if else except at each update
+        
+        raise Exception('No volume sensor available')
+
+    def Update(self):
+        self.SetTopicValue(TOPIC, self.UpdateSpecificFunction())
 
     def GetWindowsVolume(self):
         pass
@@ -30,5 +30,7 @@ class VolumeSensor(Entity):
         # Get OS from OsSensor and get temperature based on the os
         os = self.FindEntity('Os')
         if os:
-            os.Update()
+            if not os.postinitializeState: # I run this function in post initialize so the os sensor might not be ready
+                os.PostInitialize()
+            os.CallUpdate()
             return os.GetTopicValue()

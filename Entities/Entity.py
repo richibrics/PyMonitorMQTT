@@ -27,6 +27,8 @@ class Entity():
 
 
     def __init__(self, monitor_id, brokerConfigs, mqtt_client, send_interval, entityConfigs, logger, entityManager, entityType=None):  # Config is args
+        self.initializeState=False
+        self.postinitializeState=False
 
         self.name = self.GetEntityName(entityType)
         self.monitor_id = monitor_id
@@ -62,6 +64,7 @@ class Entity():
         self.Log(self.Logger.LOG_DEVELOPMENT,self.options)
 
         self.Initialize()
+        self.initializeState = True
 
     def Initialize(self):  # Implemented in sub-classes
         pass
@@ -412,8 +415,6 @@ class Entity():
         except:
             self.settings = None
 
-        self.Log(Logger.LOG_INFO,self.settings)
-
         return self.settings
 
     def PrepareDiscoveryPayloads(self):
@@ -471,7 +472,6 @@ class Entity():
                     topicSettings = discoveryTopic
                     payload = cf.GetOption(
                         discoveryTopic, self.consts.SETTINGS_DISCOVERY_PRESET_PAYLOAD_KEY).copy()
-        print(topic,payload)
 
         # Check for Advanced information topic if I don't send advanced infomration: PS THIS IS USELESS CAUSE THIS TOPIC WON'T BE IN OUTTOPIC IN THAT CASE BUT IT'S BETTER TO CHECK
         # If I don't send advanced_information and the topic settings says the topic is advanced, I return None because this entity won't send any message on this topic

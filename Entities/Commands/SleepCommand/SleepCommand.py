@@ -14,19 +14,21 @@ class SleepCommand(Entity):
     def Initialize(self):
         self.SubscribeToTopic(TOPIC)
 
+    def PostInitialize(self):
+        self.os=self.GetOS()
+
     def Callback(self, message):
         try:
             prefix = ''
-            os_type = self.GetOS()
 
             # Additional linux checking to find Window Manager
             # TODO: Update TurnOffMonitors, TurnOnMonitors, ShutdownCommand, LockCommand to use prefix lookup below
-            if os_type == 'Linux':
+            if self.os == 'Linux':
                 # Check running X11
                 if sys_os.environ.get('DISPLAY'):
                     prefix = '_X11'
 
-            lookup_key = os_type + prefix
+            lookup_key = self.os + prefix
             command = commands[lookup_key]
             subprocess.Popen(command.split(), stdout=subprocess.PIPE)
 
@@ -38,5 +40,7 @@ class SleepCommand(Entity):
         # Get OS from OsSensor and get temperature based on the os
         os = self.FindEntity('Os')
         if os:
-            os.Update()
+            if not os.postinitializeState: # I run this function in post initialize so the os sensor might not be ready
+                os.PostInitialize()
+            os.CallUpdate()
             return os.GetTopicValue()

@@ -21,6 +21,34 @@ class BrightnessCommand(Entity):
         self.stopSensor = False
         self.stateOff = False
 
+    def PostInitialize(self):
+        os = self.GetOS()
+
+        # Sensor function settings
+        if(os == self.consts.FIXED_VALUE_OS_WINDOWS):
+            self.GetBrightness_OS =  self.GetBrightness_Win
+        elif(os == self.consts.FIXED_VALUE_OS_MACOS):
+            self.GetBrightness_OS =  self.GetBrightness_macOS
+        elif(os == self.consts.FIXED_VALUE_OS_LINUX):
+            self.GetBrightness_OS =  self.GetBrightness_Linux
+        else:
+            self.Log(self.Logger.LOG_WARNING,
+                     'No brightness sensor available for this operating system')
+            self.stopSensor = True
+
+        # Command function settings
+        if(os == self.consts.FIXED_VALUE_OS_WINDOWS):
+            self.SetBrightness_OS = self.SetBrightness_Win
+        elif(os == self.consts.FIXED_VALUE_OS_MACOS):
+            self.SetBrightness_OS = self.SetBrightness_macOS
+        elif(os == self.consts.FIXED_VALUE_OS_LINUX):
+            self.SetBrightness_OS = self.SetBrightness_Linux
+        else:
+            self.Log(self.Logger.LOG_WARNING,
+                     'No brightness command available for this operating system')
+            self.stopCommand = True
+        
+
     def Callback(self, message):
         state = message.payload.decode("utf-8")
         if not self.stopCommand:
@@ -35,49 +63,23 @@ class BrightnessCommand(Entity):
                 self.stateOff = False
 
             try:
-                state = int(state)
-            except:
+                # Value from 0 and 100
+                self.SetBrightness_OS(int(state))
+            except ValueError: # Not int -> not a message for that function
                 return
-
-            # Well I can convert it to int
-            self.SetBrightness(int(state))
-
+            except Exception as e:
+                raise Exception("Error during brightness set: " + str(e))
+            
             # Finally, tell the sensor to update and to send
             self.CallUpdate()
             self.SendOnlineState()
-            self.lastSendingTime = None
+            self.lastSendingTime = None # Force sensor to send immediately
 
     def Update(self):
         if not self.stopSensor:
-            self.SetTopicValue(OUT_TOPIC, self.GetBrightness(),
+            self.SetTopicValue(OUT_TOPIC, self.GetBrightness_OS(),
                                self.ValueFormatter.TYPE_PERCENTAGE)
-
-    def GetBrightness(self):
-        os = self.GetOS()
-        if(os == self.consts.FIXED_VALUE_OS_WINDOWS):
-            return self.GetBrightness_Win()
-        elif(os == self.consts.FIXED_VALUE_OS_MACOS):
-            return self.GetBrightness_macOS()
-        elif(os == self.consts.FIXED_VALUE_OS_LINUX):
-            return self.GetBrightness_Linux()
-        else:
-            self.Log(self.Logger.LOG_WARNING,
-                     'No brightness sensor available for this operating system')
-            self.stopSensor = True
-
-    def SetBrightness(self, value):
-        # Value from 0 and 100
-        os = self.GetOS()
-        if(os == self.consts.FIXED_VALUE_OS_WINDOWS):
-            return self.SetBrightness_Win(value)
-        elif(os == self.consts.FIXED_VALUE_OS_MACOS):
-            return self.SetBrightness_macOS(value)
-        elif(os == self.consts.FIXED_VALUE_OS_LINUX):
-            return self.SetBrightness_Linux(value)
-        else:
-            self.Log(self.Logger.LOG_WARNING,
-                     'No brightness command available for this operating system')
-            self.stopCommand = True
+            self.SendOnlineState()
 
     def SetBrightness_macOS(self, value):
         value = value/100  # cause I need it from 0 to 1
@@ -132,7 +134,9 @@ class BrightnessCommand(Entity):
         # Get OS from OsSensor and get temperature based on the os
         os = self.FindEntity('Os')
         if os:
-            os.Update()
+            if not os.postinitializeState: # I run this function in post initialize so the os sensor might not be ready
+                os.PostInitialize()
+            os.CallUpdate()
             return os.GetTopicValue()
 
     def ManageDiscoveryData(self, discovery_data):

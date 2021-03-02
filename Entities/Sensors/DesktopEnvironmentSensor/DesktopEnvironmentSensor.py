@@ -10,6 +10,10 @@ class DesktopEnvironmentSensor(Entity):
     def Initialize(self):
         self.AddTopic(TOPIC)
 
+    def PostInitialize(self):
+        # The value for this sensor is static for the entire script run time
+        self.value=self.GetDesktopEnvironment()
+
     # I have also contents with value (optional) in config
     def EntitySchema(self):
         schema = super().EntitySchema()
@@ -21,7 +25,7 @@ class DesktopEnvironmentSensor(Entity):
         return schema
 
     def Update(self):
-        self.SetTopicValue(TOPIC, self.GetDesktopEnvironment())
+        self.SetTopicValue(TOPIC, self.value)
 
     # If value passed use it else get it from the system
     def GetDesktopEnvironment(self):

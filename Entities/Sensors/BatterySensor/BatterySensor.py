@@ -11,6 +11,11 @@ class BatterySensor(Entity):
         self.AddTopic(TOPIC_PERCENTAGE)
         self.AddTopic(TOPIC_CHARGING_STATUS)
 
+    def PostInitialize(self):
+        # Check if battery infomration are present
+        if not psutil.sensors_battery():
+            raise("No battery sensor for this host")
+
     def Update(self):
         batteryInfo = self.GetBatteryInformation()
         self.SetTopicValue(TOPIC_PERCENTAGE, int(batteryInfo['level']),self.ValueFormatter.TYPE_PERCENTAGE)
@@ -18,7 +23,4 @@ class BatterySensor(Entity):
 
     def GetBatteryInformation(self):
         battery = psutil.sensors_battery()
-        if battery:  # Then the device has a battery
-            return {'level': battery.percent, 'charging': battery.power_plugged}
-        else:
-            return {'level': 'None', 'charging': 'None'}
+        return {'level': battery.percent, 'charging': battery.power_plugged}

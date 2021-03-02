@@ -23,29 +23,33 @@ class LockCommand(Entity):
     def Initialize(self):
         self.SubscribeToTopic(TOPIC)
 
+    def PostInitialize(self):
+        self.os = self.GetOS()
+        self.de = self.GetDE()
+
     def Callback(self, message):
-        os = self.GetOS()
-        de = self.GetDE()
-        if os in commands:
-            if de in commands[os]:
+        if self.os in commands:
+            if self.de in commands[self.os]:
                 try:
-                    command = commands[os][de]
+                    command = commands[self.os][self.de]
                     process = subprocess.Popen(
                         command.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 except Exception as e:
                     raise Exception('Error during system lock: ' + str(e))
             else:
                 raise Exception(
-                    'No lock command for this Desktop Environment: ' + de)
+                    'No lock command for this Desktop Environment: ' + self.de)
         else:
             raise Exception(
-                'No lock command for this Operating System: ' + os)
+                'No lock command for this Operating System: ' + self.os)
 
     def GetOS(self):
         # Get OS from OsSensor and get temperature based on the os
         os = self.FindEntity('Os')
         if os:
-            os.Update()
+            if not os.postinitializeState: # I run this function in post initialize so the os sensor might not be ready
+                os.PostInitialize()
+            os.CallUpdate()
             return os.GetTopicValue()
 
     def GetDE(self):
@@ -53,5 +57,7 @@ class LockCommand(Entity):
         de = self.FindEntity(
             'DesktopEnvironment')
         if de:
-            de.Update()
+            if not de.postinitializeState: # I run this function in post initialize so the os sensor might not be ready
+                de.PostInitialize()
+            de.CallUpdate()
             return de.GetTopicValue()

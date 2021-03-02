@@ -9,8 +9,13 @@ class OsSensor(Entity):
     def Initialize(self):
         self.AddTopic(TOPIC)
 
-    def Update(self):
+    def PostInitialize(self):
+        # The value for this sensor is static for the entire script run time
         self.SetTopicValue(TOPIC, self.GetOperatingSystem())
+
+        
+    def Update(self): # Nothing to update
+        pass
 
     def GetOperatingSystem(self):
         os = platform.system()

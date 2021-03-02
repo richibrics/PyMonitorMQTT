@@ -18,27 +18,22 @@ class CpuTemperaturesSensor(Entity):
     def Initialize(self):
         self.AddTopic(TOPIC)
 
-    def Update(self):
-        self.SetTopicValue(TOPIC, self.GetCpuTemperatures())
-
-    def GetCpuTemperatures(self):
+    def PostInitialize(self):
         os = self.GetOS()
+        self.UpdateSpecificFunction = None   # Specific function for this os/de, set this here to avoid all if else except at each update
+
         if(os == 'Windows'):
-            return self.GetCpuTemperature_Win()
+            self.UpdateSpecificFunction = self.GetCpuTemperature_Win
         # elif(Get_Operating_System() == 'macOS'):
-        #    return Get_Temperatures_macOS() NOT SUPPORTED
+        #    self.UpdateSpecificFunction = Get_Temperatures_macOS NOT SUPPORTED
         elif(os == 'Linux'):
-            return self.GetCpuTemperature_Unix()
+            self.UpdateSpecificFunction = self.GetCpuTemperature_Unix
         else:
             raise Exception(
                 'No temperature sensor available for this operating system')
 
-    def GetOS(self):
-        # Get OS from OsSensor and get temperature based on the os
-        os = self.FindEntity('Os')
-        if os:
-            os.Update()
-            return os.GetTopicValue()
+    def Update(self):
+        self.SetTopicValue(TOPIC, self.UpdateSpecificFunction())
 
     def GetCpuTemperature_Unix(self):
         temps = psutil.sensors_temperatures()
@@ -79,3 +74,13 @@ class CpuTemperaturesSensor(Entity):
         # print(temperature)
         # Send the list as json
         # return str(json.dumps(temperature))
+
+
+    def GetOS(self):
+        # Get OS from OsSensor and get temperature based on the os
+        os = self.FindEntity('Os')
+        if os:
+            if not os.postinitializeState: # I run this function in post initialize so the os sensor might not be ready
+                os.PostInitialize()
+            os.CallUpdate()
+            return os.GetTopicValue()

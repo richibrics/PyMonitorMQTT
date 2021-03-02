@@ -38,31 +38,30 @@ class ActiveWindowSensor(Entity):
         self.AddTopic(TOPIC)
 
     def PostInitialize(self):
-        self.os = self.GetOS()
+        os = self.GetOS()
+        self.UpdateSpecificFunction = None   # Specific function for this os/de, set this here to avoid all if else except at each update
 
-    def Update(self):
-        self.SetTopicValue(TOPIC, str(self.GetActiveWindow()))
-
-
-    def GetActiveWindow(self):
-        if self.os == self.consts.FIXED_VALUE_OS_LINUX:
+        if os == self.consts.FIXED_VALUE_OS_LINUX:
             if linux_support:
-                return self.GetActiveWindow_Linux()
+                self.UpdateSpecificFunction = self.GetActiveWindow_Linux
             else:
                 raise Exception("Unsatisfied dependencies for this entity")
-        elif self.os == self.consts.FIXED_VALUE_OS_WINDOWS:
+        elif os == self.consts.FIXED_VALUE_OS_WINDOWS:
             if windows_support:
-                return self.GetActiveWindow_Windows()
+                self.UpdateSpecificFunction = self.GetActiveWindow_Windows
             else:
                 raise Exception("Unsatisfied dependencies for this entity")
-        elif self.os == self.consts.FIXED_VALUE_OS_MACOS:
+        elif os == self.consts.FIXED_VALUE_OS_MACOS:
             if macos_support:
-                return self.GetActiveWindow_macOS()
+                self.UpdateSpecificFunction = self.GetActiveWindow_macOS
             else:
                 raise Exception("Unsatisfied dependencies for this entity")
         else:
             raise Exception(
                 'Entity not available for this operating system')
+
+    def Update(self):
+        self.SetTopicValue(TOPIC, str(self.UpdateSpecificFunction()))
 
     def GetActiveWindow_macOS(self):
         curr_app = NSWorkspace.sharedWorkspace().frontmostApplication()
@@ -104,5 +103,7 @@ class ActiveWindowSensor(Entity):
         # Get OS from OsSensor and get temperature based on the os
         os = self.FindEntity('Os')
         if os:
-            os.Update()
+            if not os.postinitializeState: # I run this function in post initialize so the os sensor might not be ready
+                os.PostInitialize()
+            os.CallUpdate()
             return os.GetTopicValue()
