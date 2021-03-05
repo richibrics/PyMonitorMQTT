@@ -28,8 +28,14 @@ class ScreenshotSensor(Entity):
         return image
 
     def ManageDiscoveryData(self, discovery_data):
+        # Camera must not have some information that sensors have so here they have to be removed ! (done with expire_after)
+         
         discovery_data[0]['payload'].pop('state_topic', None)
         discovery_data[0]['payload']['topic']=self.SelectTopic({"topic":TOPIC})
+
+        if 'expire_after' in discovery_data[0]['payload']: # Camera must not have this information or will be discarded
+            del(discovery_data[0]['payload']['expire_after'])
+        
         '''
         discovery_data[0]['payload']['availability']={}
         discovery_data[0]['payload']['availability']['topic']=self.SelectTopic("status")
