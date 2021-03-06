@@ -32,17 +32,11 @@ class EntityManager():
     ## ENTITY POSTINITIALIZATION 
 
     def PostInitializeEntities(self):
+        self.Log(Logger.LOG_DEBUG,"Starting post-initialization")
         for entity in self.entities:
             if not entity.postinitializeState:
-                try:
-                    entity.PostInitialize()
-                    entity.postinitializeState=True
-                except Exception as exc:
-                    self.Log(Logger.LOG_ERROR, entity.name +
-                            ': error during post-initialization')
-                    self.Log(Logger.LOG_ERROR,
-                            ExceptionTracker.TrackString(exc))
-                    self.UnloadEntity(entity)
+                entity.CallPostInitialize()
+        self.Log(Logger.LOG_DEBUG,"Finished post-initialization")
 
 
     ## ENTITY LOAD AND INITIALIZATION 
@@ -64,11 +58,12 @@ class EntityManager():
             try:
                 objAlive = obj(monitor_id, config, mqtt_client,
                                send_interval, options, logger, self)
-                self.entities.append(objAlive)
-                req = objAlive.LoadSettings()
-                self.Log(Logger.LOG_INFO, name +
-                         ' entity loaded', logger=logger)
-                return req  # Return the settings with equirements
+                if objAlive: # If initialize went great
+                    self.entities.append(objAlive)
+                    req = objAlive.LoadSettings()
+                    # self.Log(Logger.LOG_INFO, name +
+                    #         ' entity loaded', logger=logger)
+                    return req  # Return the settings with equirements
             except Exception as exc:
                 self.Log(Logger.LOG_ERROR, ExceptionTracker.TrackString(
                     exc), logger=logger)
@@ -111,6 +106,7 @@ class EntityManager():
                         entity.SendData()
                         # Save this time as time when last message is sent
                         entity.SaveTimeMessageSent()
+                        self.Log(Logger.LOG_DEBUG,"Sending " + entity.name)
                     if entity.ShouldSendDiscoveryConfig():
                         try:
                             discovery_data = entity.PrepareDiscoveryPayloads()

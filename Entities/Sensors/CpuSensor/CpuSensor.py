@@ -91,6 +91,6 @@ class CpuSensor(Entity):
         os = self.FindEntity('Os')
         if os:
             if not os.postinitializeState: # I run this function in post initialize so the os sensor might not be ready
-                os.PostInitialize()
+                os.CallPostInitialize()
             os.CallUpdate()
             return os.GetTopicValue()

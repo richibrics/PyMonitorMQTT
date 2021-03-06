@@ -20,13 +20,14 @@ class CpuTemperaturesSensor(Entity):
 
     def PostInitialize(self):
         os = self.GetOS()
+    
         self.UpdateSpecificFunction = None   # Specific function for this os/de, set this here to avoid all if else except at each update
 
-        if(os == 'Windows'):
+        if(os == self.consts.FIXED_VALUE_OS_WINDOWS):
             self.UpdateSpecificFunction = self.GetCpuTemperature_Win
-        # elif(Get_Operating_System() == 'macOS'):
+        # elif(Get_Operating_System() ==  self.consts.FIXED_VALUE_OS_MACOS):
         #    self.UpdateSpecificFunction = Get_Temperatures_macOS NOT SUPPORTED
-        elif(os == 'Linux'):
+        elif(os ==  self.consts.FIXED_VALUE_OS_LINUX):
             self.UpdateSpecificFunction = self.GetCpuTemperature_Unix
         else:
             raise Exception(
@@ -81,6 +82,6 @@ class CpuTemperaturesSensor(Entity):
         os = self.FindEntity('Os')
         if os:
             if not os.postinitializeState: # I run this function in post initialize so the os sensor might not be ready
-                os.PostInitialize()
+                os.CallPostInitialize()
             os.CallUpdate()
             return os.GetTopicValue()

@@ -63,18 +63,42 @@ class Entity():
         self.Log(self.Logger.LOG_DEVELOPMENT,"Options founds:")
         self.Log(self.Logger.LOG_DEVELOPMENT,self.options)
 
-        self.Initialize()
-        self.initializeState = True
+        self.CallInitialize()
 
     def Initialize(self):  # Implemented in sub-classes
         pass
+
+    def CallInitialize(self): 
+        try:
+            self.Initialize()
+            self.initializeState=True
+            self.Log(Logger.LOG_INFO,"Initialization successfully completed")
+        except Exception as e:
+            self.Log(Logger.LOG_ERROR,"Initialization interrupted due to an error")
+            self.Log(Logger.LOG_ERROR,
+                    ExceptionTracker.TrackString(e))
+            del(self)
+        
 
     # Implemented in sub-classes
     def Callback(self, message):  # Run by the OnMessageEvent
         pass
 
+
     def PostInitialize(self):  # Implemented in sub-classes
         pass
+
+    def CallPostInitialize(self):  
+        try:
+            self.PostInitialize()
+            self.postinitializeState=True
+            self.Log(Logger.LOG_INFO,"Post-initialization successfully completed")
+        except Exception as e:
+            self.Log(Logger.LOG_ERROR,"Post-initialization interrupted due to an error")
+            self.Log(Logger.LOG_ERROR,
+                    ExceptionTracker.TrackString(e))
+            del(self)
+
 
     
     # Function that returns the default schema if not implemented directly in each entity
@@ -484,13 +508,12 @@ class Entity():
         user_discovery_config=cf.ReturnAsList(cf.GetOption(self.entityConfigs,[self.consts.ENTITY_DISCOVERY_KEY,self.consts.ENTITY_DISCOVERY_PAYLOAD_KEY]),None) 
         if user_discovery_config:
             for user_topic_config in user_discovery_config:
-                dtTopic=cf.GetOption(user_discovery_config,"topic")
+                dtTopic=cf.GetOption(user_topic_config,"topic")
                 if not dtTopic or dtTopic == topic or dtTopic == "*":     
-                    if dtTopic: # Remove topic because is a non-payload information
-                        user_discovery_config['topic']=""
                     # Copy all the configuration I have in the payload
                     for key, value in user_topic_config.items():
-                        payload[key]=value
+                        if key != "topic": # Avoid topic because is a non-payload information but only to recognise settings
+                            payload[key]=value
 
 
         # If I have to disable, return None
