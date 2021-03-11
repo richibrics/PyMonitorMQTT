@@ -161,7 +161,7 @@
 - name: Network
   compatibility: "mwl"
   short_description: "Network interfaces and traffic"
-  long_description: "This sensor reports network information about interfaces, wireless signal and the amount of network bytes transmitted both up and down"
+  long_description: "This sensor reports network information about interfaces, wireless signal and the amount of network bytes transmitted both up and down.\n\nWarning: interfaces information currently not available for macOS."
   topics:
     - topic: network/interfaces/{interface_name}/private_address
       description: Private address of the interface
