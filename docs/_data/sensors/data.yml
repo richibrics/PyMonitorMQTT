@@ -179,6 +179,7 @@
       type: List
       required: No
       level: 2
+      description: Put in this list the name of the interfaces you want to exclude from the scan (enable the DEBUG log and run this entity to discover your interfaces name)
     - key: rename_interfaces
       type: Dict
       required: No
