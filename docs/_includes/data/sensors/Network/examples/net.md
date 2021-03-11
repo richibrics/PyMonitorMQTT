@@ -1,5 +1,3 @@
-## Example
-
 In this example I set different parameters:
 
 - **value_format**: I personally prefer to read traffic data as MB and not as B so I set the 'size' to MB and also without decimals
