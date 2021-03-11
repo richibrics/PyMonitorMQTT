@@ -160,14 +160,30 @@
 
 - name: Network
   compatibility: "mwl"
-  short_description: "Network byte traffic"
-  long_description: "This sensor reports the amount of network bytes transmitted both up and down"
+  short_description: "Network interfaces and traffic"
+  long_description: "This sensor reports network information about interfaces, wireless signal and the amount of network bytes transmitted both up and down"
   topics:
-    - topic: network/bytes_recv
+    - topic: network/interfaces/{interface_name}/private_address
+      description: Private address of the interface
+    - topic: network/interfaces/{interface_name}/signal_strenght
+      description: For wireless interfaces, it sends the wireless signal strenght if the interface is connected to a Wireless network [dB or %]
+    - topic: network/traffic/bytes_recv
       description: Received bytes amount [Bytes]
-    - topic: network/bytes_sent
+    - topic: network/traffic/bytes_sent
       description: Sent bytes amount [Bytes]
   config:
+    - key: contents
+      required: No
+      description: Here you can pass configuration that will edit the functioning of the entity
+    - key: exclude_interfaces
+      type: List
+      required: No
+      level: 2
+    - key: rename_interfaces
+      type: Dict
+      required: No
+      level: 2
+      description: Put in this dictionary the name of the interfaces you want to rename as key and the new name as value (enable the DEBUG log and run this entity to discover your interfaces name)
     - key: custom_topics
       required: No
     - key: formatted_values
