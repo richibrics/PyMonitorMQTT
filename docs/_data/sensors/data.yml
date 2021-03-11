@@ -189,6 +189,8 @@
       required: No
     - key: formatted_values
       required: No
+  examples:
+    - net   
 
 - name: Ram
   compatibility: "mwl"
