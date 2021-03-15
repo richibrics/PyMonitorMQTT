@@ -1,6 +1,6 @@
 import os
 from Entities.Entity import Entity
-import Schemas
+
 
 TOPIC = 'message'
 default_message = "default"
@@ -18,8 +18,8 @@ class MessageSensor(Entity):
     def EntitySchema(self):
         schema = super().EntitySchema()
         schema = schema.extend({
-            Schemas.Required(self.consts.CONTENTS_OPTION_KEY):  {
-                Schemas.Required(config_content_message_key): str
+            self.schemas.Required(self.consts.CONTENTS_OPTION_KEY):  {
+                self.schemas.Required(config_content_message_key): str
             }
         })
         return schema

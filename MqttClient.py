@@ -63,6 +63,19 @@ class MqttClient():
             self.subscribed_topics.append(topic)
             self.client.subscribe(topic, 0)
 
+    def UnsubscribeToTopic(self,topic):
+        # Look for the topic in the list of tuples
+        #for _tuple in self.subscribed_topics:
+            #if _tuple[]
+
+        if topic in self.subscribed_topics:
+            for top in self.topics:
+                if top['topic']==topic:        
+                    self.topics.remove(top)
+            self.subscribed_topics.remove(topic)
+            self.client.unsubscribe(topic)
+        
+
     def SubscribeToAllTopics(self):
         for topic in self.topics:
             self.SubscribeToTopic(topic['topic'])

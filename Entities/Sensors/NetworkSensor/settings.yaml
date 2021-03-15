@@ -1,14 +1,18 @@
 requirements:
+  sensors:
+    - Os:
+        dont_send: True
 
 discovery:
   homeassistant: # Must match discovery preset name
-    - topic: "network/bytes_recv"
+    - topic: "network/traffic/bytes_recv"
       payload:
         name: "Network received data"
         icon: "mdi:download"        
         unit_of_measurement: "MB"
-    - topic: "network/bytes_sent"
+    - topic: "network/traffic/bytes_sent"
       payload:
         name: "Network sent data"
         icon: "mdi:upload"
         unit_of_measurement: "MB"
+    # Other network interface specific settings are in the ManageDiscoveryData function of the entity

@@ -7,7 +7,7 @@ from ClassManager import ClassManager # To list entities in help
 import consts
 import sys
 from Monitor import Monitor
-from Schemas import ROOT_SCHEMA
+from schemas import ROOT_SCHEMA
 
 config = None
 config_filename = 'configuration.yaml'

@@ -38,6 +38,9 @@ class Logger():
         if type(message) == dict:
             self.LogDict(messageLevel,source,message)
             return # Log dict will call this function so I don't need to go down at the moment
+        elif type(message) == list:
+            self.LogList(messageLevel,source,message)
+            return # Log list will call this function so I don't need to go down at the moment
 
         if messageLevel == self.LOG_INFO:
             messageType = 'Info'
@@ -79,10 +82,22 @@ class Logger():
     
     def LogDict(self, messageLevel, source, dict):
         try:
-            string = json.dumps(dict, indent=4, sort_keys=False)
+            string = json.dumps(dict, indent=4, sort_keys=False, default=lambda o: '<not serializable>')
             lines=string.splitlines()
             for line in lines:
                 self.Log(messageLevel,source,"> "+line)
+        except Exception as e:
+            self.Log(self.LOG_ERROR,source,"Can't print dictionary content")
+
+    def LogList(self, messageLevel, source, _list):
+        try:
+            for index, item in enumerate(_list):
+                if type(item)==dict or type(item)==list:
+                    self.Log(messageLevel,source,"Item #"+str(index))
+                    self.Log(messageLevel,source, item)
+                else:
+                    self.Log(messageLevel,source,str(index) + ": " + str(item))
+
         except:
             self.Log(self.LOG_ERROR,source,"Can't print dictionary content")
 

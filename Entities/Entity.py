@@ -4,7 +4,6 @@ import json
 from Configurator import Configurator as cf
 import sys
 import yaml
-import Schemas
 import hashlib
 from os import path
 import consts
@@ -13,6 +12,7 @@ import consts
 class Entity():
     import voluptuous 
     import consts
+    import schemas
     from Settings import Settings
     from ValueFormatter import ValueFormatter
     from Logger import Logger, ExceptionTracker
@@ -114,7 +114,7 @@ class Entity():
             self.Log(Logger.LOG_INFO,"Validation successfully completed")
         except Exception as e:
             self.Log(Logger.LOG_ERROR,"Error while validating entity configuration: " +str(e))
-            raise Exception("can't validate " + self.name + " configuration. Check your configuration.yaml file")
+            raise Exception("Can't validate " + self.name + " configuration. Check your configuration.yaml file")
 
         
     # Can be edited from sub sensors to edit different options of the discovery data
@@ -125,8 +125,6 @@ class Entity():
         # I can have options both in broker configs and single sensor configs
         # At first I search in broker config. Then I check the per-sensor option and if I find
         # something there, I replace - if was set from first step -  broker configs (or simply add a new entry)
-
-        a=1+1
 
         for optionToSearch in self.consts.SCAN_OPTIONS: 
             # 1: Set from broker's configs
@@ -184,6 +182,24 @@ class Entity():
 
         return topic  # Return the topic cause upper function should now that topic may have been edited
 
+
+    def RemoveOutboundTopic(self,topic): # Should receive the element in the list outTopics: string with the original topic (like 'message_time')
+        if type(topic) == str: # Not the topic,value combo -> get the combo
+            for top in self.outTopics:
+                if top['topic']==topic:
+                    topic=top
+
+        if topic in self.outTopics:
+            self.outTopicsAddedNumber -= 1
+            self.Log(Logger.LOG_DEBUG,"Removing topic: " + topic['topic'])
+            self.outTopics.remove(topic)
+
+    def RemoveInboundTopic(self,topic): # Should receive the element in the list inTopics: string with the original topic (like 'lock_command')
+        if topic in self.inTopics:
+            self.inTopicsAddedNumber-=1
+            self.Log(Logger.LOG_DEBUG,"Unsubscribed to topic: " + topic)
+            self.inTopics.remove(topic)
+            self.mqtt_client.UnsubscribeToTopic(self.SelectTopic(topic)) # The client has to remove the full topic (customized)
 
     def AddReplacedTopic(self,original,custom):
         self.replacedTopics.append(
@@ -441,6 +457,7 @@ class Entity():
 
         return self.settings
 
+
     def PrepareDiscoveryPayloads(self):
         discovery_data = []
 
@@ -583,9 +600,8 @@ class Entity():
     def Log(self, messageType, message):
         self.logger.Log(messageType, self.name + " Entity", message)
 
-
     def GetDefaultEntitySchema(self):
-        return Schemas.ENTITY_DEFAULT_SCHEMA
+        return self.schemas.ENTITY_DEFAULT_SCHEMA
 
     # Used to scan the options and join the found options in the configuration.yaml to the default option value (which is the source)
     def JoinDictsOrLists(self,source,toJoin): # If source is a list, join toJoin to the list; if source is a dict, join toJoin keys and values to the source

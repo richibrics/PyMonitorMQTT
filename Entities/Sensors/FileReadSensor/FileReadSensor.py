@@ -1,7 +1,7 @@
 import psutil
 from Entities.Entity import Entity
 import os
-import Schemas
+
 
 
 # Tip: customize topic because with more than one file, you must have different topics
@@ -18,8 +18,8 @@ class FileReadSensor(Entity):
     def EntitySchema(self):
         schema = super().EntitySchema()
         schema = schema.extend({
-            Schemas.Required(self.consts.CONTENTS_OPTION_KEY):  {
-                Schemas.Required(FILE_READ_SENSOR_FILENAME_CONTENTS_OPTION): str
+            self.schemas.Required(self.consts.CONTENTS_OPTION_KEY):  {
+                self.schemas.Required(FILE_READ_SENSOR_FILENAME_CONTENTS_OPTION): str
             }
         })
         return schema

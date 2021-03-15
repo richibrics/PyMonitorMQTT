@@ -2,7 +2,6 @@ from Entities.Entity import Entity
 import subprocess
 import fnmatch
 from Logger import Logger, ExceptionTracker
-import Schemas
 
 TOPIC = 'terminal_command'
 
@@ -24,9 +23,9 @@ class TerminalCommand(Entity):
     def EntitySchema(self):
         schema = super().EntitySchema()
         schema = schema.extend({
-            Schemas.Required(self.consts.CONTENTS_OPTION_KEY):  { # One of the lower keys is required then contents is required
-                Schemas.Optional(CONTENTS_WHITELIST_OPTION_KEY): Schemas.Or(str,dict), # Whitelist required only if message not in configuration
-                Schemas.Optional(CONTENTS_COMMAND_OPTION_KEY): str # Command optional becuase can be also in the payload
+            self.schemas.Required(self.consts.CONTENTS_OPTION_KEY):  { # One of the lower keys is required then contents is required
+                self.schemas.Optional(CONTENTS_WHITELIST_OPTION_KEY): self.schemas.Or(str,dict), # Whitelist required only if message not in configuration
+                self.schemas.Optional(CONTENTS_COMMAND_OPTION_KEY): str # Command optional becuase can be also in the payload
             }
         })
         return schema

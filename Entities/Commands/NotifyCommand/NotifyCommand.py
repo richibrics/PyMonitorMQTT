@@ -1,7 +1,6 @@
 import os
 from Entities.Entity import Entity
 from Logger import Logger, ExceptionTracker
-import Schemas
 
 supports_win = True
 try:
@@ -37,9 +36,9 @@ class NotifyCommand(Entity):
     def EntitySchema(self):
         schema = super().EntitySchema()
         schema = schema.extend({
-            Schemas.Optional(self.consts.CONTENTS_OPTION_KEY):  {
-                Schemas.Optional(CONTENTS_TITLE_OPTION_KEY): str,
-                Schemas.Optional(CONTENTS_MESSAGE_OPTION_KEY): str
+            self.schemas.Optional(self.consts.CONTENTS_OPTION_KEY):  {
+                self.schemas.Optional(CONTENTS_TITLE_OPTION_KEY): str,
+                self.schemas.Optional(CONTENTS_MESSAGE_OPTION_KEY): str
             }
         })
         return schema
