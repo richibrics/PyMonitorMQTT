@@ -559,6 +559,7 @@ class Entity():
             entity_type = cf.GetOption(
                 topicSettings, self.consts.SETTINGS_DISCOVERY_PRESET_TYPE_KEY, "sensor")
             # Send the topic where the Sensor will send his state
+
             payload['expire_after']=self.GetOption([self.consts.CONFIG_DISCOVERY_KEY, self.consts.DISCOVERY_EXPIRE_AFTER_KEY], self.consts.DISCOVERY_EXPIRE_AFTER_DEFAULT)
             payload['state_topic'] = self.SelectTopic(topic)
         else:

@@ -26,7 +26,8 @@ MONITOR_DISCOVERY_SCHEMA = Schema({
     Required(DISCOVERY_PRESET_KEY): str,
     Optional(DISCOVERY_DISCOVER_PREFIX_KEY, default=DISCOVERY_DISCOVER_PREFIX_DEFAULT): str, 
     Optional(DISCOVERY_NAME_PREFIX_KEY, default=False): bool,
-    Optional(DISCOVERY_PUBLISH_INTERVAL_KEY, default=DISCOVERY_NAME_PREFIX_DEFAULT): int
+    Optional(DISCOVERY_PUBLISH_INTERVAL_KEY, default=DISCOVERY_NAME_PREFIX_DEFAULT): int,
+    Optional(DISCOVERY_EXPIRE_AFTER_KEY): int
 })
 
 
@@ -77,6 +78,7 @@ ENTITY_DISCOVERY_SCHEMA = Schema({
     Optional(DISCOVERY_DISCOVER_PREFIX_KEY): str, 
     Optional(DISCOVERY_NAME_PREFIX_KEY): bool,
     Optional(DISCOVERY_PUBLISH_INTERVAL_KEY): int,
+    Optional(SETTINGS_DISCOVERY_EXPIRE_AFTER_KEY): int,
     Optional(ENTITY_DISCOVERY_PAYLOAD_KEY): Or(dict,list)  # Where I can put the name for the entity in the hub and the custom icon without editing the entity code
 })
 
