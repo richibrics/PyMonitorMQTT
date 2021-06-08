@@ -3,7 +3,7 @@ entrypoint2==0.2.1
 jeepney==0.4.3
 mss==6.0.0
 paho-mqtt==1.5.0
-Pillow==8.1.1
+Pillow==8.2.0
 psutil==5.7.2
 pyscreenshot==2.2
 PyYAML==5.4
