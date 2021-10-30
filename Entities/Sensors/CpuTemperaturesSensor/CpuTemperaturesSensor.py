@@ -45,6 +45,10 @@ class CpuTemperaturesSensor(Entity):
         elif 'cpu_thermal' in temps:
             for temp in temps['cpu_thermal']:
                 return temp.current
+        elif 'nvme' in temps:
+            for temp in temps['nvme']:
+                if 'Composite' in temp.label:
+                    return temp.current
         else:
             self.Log(Logger.LOG_ERROR, "Can't get temperature for your system.")
             self.Log(Logger.LOG_ERROR,
