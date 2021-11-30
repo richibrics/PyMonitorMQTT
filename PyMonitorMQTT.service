@@ -1,0 +1,16 @@
+[Unit]
+Description=Python computer monitor that sends real time information via MQTT
+After=network.target
+
+[Service]
+Type=simple
+RemainAfterExit=yes
+# Change path:
+ExecStart=python3 /path/to/PyMonitorMQTT/main.py
+# Change user and group:
+User=user  
+Group=group
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target
