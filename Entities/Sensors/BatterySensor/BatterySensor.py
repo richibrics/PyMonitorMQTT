@@ -14,7 +14,7 @@ class BatterySensor(Entity):
     def PostInitialize(self):
         # Check if battery infomration are present
         if not psutil.sensors_battery():
-            raise("No battery sensor for this host")
+            raise Exception("No battery sensor for this host")
 
     def Update(self):
         batteryInfo = self.GetBatteryInformation()
